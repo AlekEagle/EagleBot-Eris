@@ -9,6 +9,12 @@ const client = new Eris.CommandClient(u_wut_m8.token, {
     owner: 'AlekEagle#6978',
     prefix: 'a}'
 });
+function clean(text) {
+    if (typeof(text) === "string")
+      return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+    else
+        return text;
+}
 const fs = require('fs');
 const sys = require('sys');
 const exec = require('child_process').exec;
@@ -16,8 +22,20 @@ var timesCancerHasBeenCured = '0';
 function puts(error, stdout, stderr) { sys.puts(stdout) }
 var cmdsRan = 0;
 var messagesRead = 0;
+String.prototype.toHHMMSS = function () {
+    var sec_num = parseInt(this, 10);
+    var hours = Math.floor(sec_num /3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+    if (hours < 10) {hours = "0"+hours;}
+    if (minutes < 10) {minutes = "0"+minutes;}
+    if (seconds < 10) {seconds = "0"+seconds;}
+    var time = hours+':'+minutes+':'+seconds;
+    return time;
+}
 client.on('ready', () => {
-    console.log('READY BOIIIIII')
+    console.log('THIS BOT IS READY BOIIIIII')
     setInterval(() => {
         snekfetch.post(`https://discordbots.org/api/bots/stats`)
             .set('Authorization', u_wut_m8.dblToken)
@@ -222,11 +240,11 @@ client.registerCommand('setplaying', (msg) => {
             type: parseInt(args[2])
         });
     }else {
-        client.createMessage(msg.channel.id, 'You are not the creator!')
+        client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
     }
 }, {
     description: 'sets what the bot is playing.',
-    fullDescription: 'sets what the bot is playing. (Owner only)',
+    fullDescription: 'sets what the bot is playing. (Owner only command)',
     usage: '<status> <game name> <type>'
 });
 client.registerCommand('touch', (msg) => {
@@ -343,10 +361,12 @@ client.registerCommand('meme', (msg) => {
     }
 }, {
     description: 'MEME STORAGE CENTER!',
+    fullDescription: 'MEME STORAGE CENTER!',
     usage: '`<<savememe <name_of_meme> <contents of meme|link to picture for pictures>>|<showmeme <name_of_meme>>|<listmeme>|(owner only currently)<delmeme <name_of_meme>>`'
 });
 client.registerCommandAlias('maymay', 'meme');
 client.registerCommand('mute', (msg) => {
+    cmdsRan = ++cmdsRan
     var mute = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1)
     if (msg.member.permission.has('voiceMuteMembers')) {
         client.editGuildMember(msg.channel.guild.id, mute[0], {
@@ -359,8 +379,13 @@ client.registerCommand('mute', (msg) => {
     }else {
         client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MUTE_MEMBERS`.')
     }
+}, {
+    description: 'Server mutes user',
+    fullDescription: 'Server mutes user (requires permission `MUTE_MEMBERS`)',
+    usage: '<@user>'
 })
 client.registerCommand('unmute', (msg) => {
+    cmdsRan = ++cmdsRan
     var unmute = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1)
     if (msg.member.permission.has('voiceMuteMembers')) {
         client.editGuildMember(msg.channel.guild.id, unmute[0], {
@@ -373,8 +398,13 @@ client.registerCommand('unmute', (msg) => {
     }else {
         client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MUTE_MEMBERS`.')
     }
+}, {
+    description: 'Server unmutes user (if previously server muteed)',
+    fullDescription: 'Server unmutes user (if previously server muted) (requires permission `MUTE_MEMBERS`)',
+    usage: '<@user>'
 })
 client.registerCommand('deafen', (msg) => {
+    cmdsRan = ++cmdsRan
     var deafen = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1)
     if (msg.member.permission.has('voiceDeafenMembers')) {
         client.editGuildMember(msg.channel.guild.id, deafen[0], {
@@ -387,8 +417,13 @@ client.registerCommand('deafen', (msg) => {
     }else {
         client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `DEAFEN_MEMBERS`.')
     }
+}, {
+    description: 'Server deafens user',
+    fullDescription: 'Server deafens user (requires permission `DEAFEN_MEMBERS`)',
+    usage: '<@user>'
 })
 client.registerCommand('undeafen', (msg) => {
+    cmdsRan = ++cmdsRan
     var undeafen = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1)
     if (msg.member.permission.has('voiceDeafenMembers')) {
         client.editGuildMember(msg.channel.guild.id, undeafen[0], {
@@ -401,5 +436,88 @@ client.registerCommand('undeafen', (msg) => {
     }else {
         client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `DEAFEN_MEMBERS`.')
     }
-})
+}, {
+    description: 'Server undeafens user (if previously server deafened)',
+    fullDescription: 'Server undeafens user (if previously server deafened) (requires permission `DEAFEN_MEMBERS`)',
+    usage: '<@user>'
+});
+client.registerCommand('github', () => {
+    cmdsRan = ++cmdsRan
+    return 'here you go: https://github.com/AlekEagleYT/EagleBot-Eris';
+}, {
+    description: 'Gives you my GitHub page.'
+});
+client.registerCommand('invite', () => {
+    cmdsRan = ++cmdsRan
+    return 'here you go: https://discordapp.com/api/oauth2/authorize?client_id=416274552126177282&permissions=499645511&scope=bot';
+}, {
+    description: 'Invite me!'
+});
+client.registerCommand('emojify', (msg) => {
+    cmdsRan = ++cmdsRan
+    var emojify = msg.content.split(' ').splice(1).join(' ').replace(/ /g, '    ').replace(/ab/ig, '🆎 ').replace(/a/ig, '🅰️ ').replace(/b/ig, '🅱️ ').replace(/c/ig, '🇨 ').replace(/d/ig, '🇩 ').replace(/e/ig, '🇪 ').replace(/f/ig, '🇫 ').replace(/g/ig, '🇬 ').replace(/h/ig, '🇭 ').replace(/i/ig, '🇮 ').replace(/j/ig, '🇯 ').replace(/k/ig, '🇰 ').replace(/l/ig, '🇱 ').replace(/m/ig, '🇲 ').replace(/n/ig, '🇳 ').replace(/p/ig, '🇵 ').replace(/q/ig, '🇶 ').replace(/s/ig, '🇸 ').replace(/t/ig, '🇹 ').replace(/u/ig, '🇺 ').replace(/v/ig, '🇻 ').replace(/w/ig, '🇼 ').replace(/x/ig, '🇽 ').replace(/y/ig, '🇾 ').replace(/z/ig, '🇿 ').replace(/r/ig, '🇷 ').replace(/o/ig, '🅾️ ').replace(/0/ig, ':zero:').replace(/1/ig, ':one:').replace(/2/ig, ':two:').replace(/3/ig, ':three:').replace(/4/ig, ':four:').replace(/5/ig, ':five:').replace(/6/ig, ':six:').replace(/7/ig, ':seven:').replace(/8/ig, ':eight:').replace(/9/ig, ':nine:').replace(/!/ig, '❗').replace('?', '❓');
+    return emojify;
+}, {
+    description: 'Turns normal letters into emojis!'
+});
+client.registerCommand('info', () => {
+    cmdsRan = ++cmdsRan
+    var time = process.uptime();
+    var uptime = (time + "").toHHMMSS();
+    var osTime = require('os').uptime();
+    var osUptime = (osTime + "").toHHMMSS();
+    return 'Ummm... I\'m a Discord Bot.\n I was made by **__AlekEagle#6978__**\n*What else is there about me?* I use the Eris library\nThis right there ==> **__' + uptime + '__** is how long I\'ve been running.\nThe computer running me has been on for this ==> **__' + osUptime + '__**\nI\'m ran on a Raspberry Pi 3 B\nI\'m on Discord Bot List, here is the link: https://discordbots.org/bot/416274552126177282 \nI\'m in... uhh... let me check. Ok here it is: **__' + client.guilds.size + '__** servers.\nThe support server is https://discord.gg/xGUC7Uh in the category "bot related stuff"\nUse `a}invite` to take a clone of me with you to your server\nI\'m using: **__' + Math.floor(process.memoryUsage().rss / 1024 / 1024) + 'MB__** of RAM\n**__' + cmdsRan + '__** commands have been run since the last time I\'ve been rebooted.\n**__' + messagesRead + '__** messages have been read since the last time I\'ve been rebooted.\nThat\'s all I know about myself.'
+}, {
+    description: 'shows basic info about me.'
+});
+client.registerCommand('reboot', (msg) => {
+    if (msg.author.id === creatorID) {
+        client.createMessage(msg.channel.id, 'Alright AlekEagle, bye world, for now at least.')
+        setTimeout(() => {
+            process.exit(0);
+        }, 5000)
+    }else {
+        client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
+    }
+}, {
+    description: 'Reboots the bot (owner only command)'
+});
+client.registerCommand('eval', (msg) => {
+    if (msg.author.id ===  creatorID) {
+        try {
+            var evalCommand = msg.content.split(' ').splice(1).join(' ').replace(/client.token/g, '\'censored\'');
+            let evaluation = eval(evalCommand);
+            if (typeof evaluation !== "string") {
+                evaluation = require('util').inspect(evaluation)
+            }
+            if (evaluation.length > 2000) {
+                client.createMessage(msg.channel.id, 'Output too large, please wait while I pack the output into a file.').then(() => {
+                    fs.writeFile('eval_output.txt', evaluation, (err) => {
+                        if (err != undefined) {
+                            client.createMessage(msg.channel.id, 'An error occurred while this action was being preformed error code: `' + err.code + '`')
+                        }else {
+                            fs.readFile('./eval_output.txt', (err, data) => {
+                                client.createMessage(msg.channel.id, 'Output from eval: ', {
+                                    file: data,
+                                    name: 'eval_output.txt'
+                                }).then(() => {
+                                    fs.unlink('./eval_output.txt')
+                                });
+                            });
+                        }
+                    });
+                });
+            }else {
+                client.createMessage(msg.channel.id, clean(evaluation))
+            }
+        } catch (err) {
+            client.createMessage(msg.channel.id, 'OOF: ```' + clean(err) + '```')
+        }
+    }else {
+        client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
+    }
+});
+client.registerCommand('reportbug', (msg) => {
+    var reportbug = msg.content.split(' ').splice(1).join(' ')
+});
 client.connect();
