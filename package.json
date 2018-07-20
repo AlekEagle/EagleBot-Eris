@@ -1,0 +1,12 @@
+{
+  "name": "alekaagleyts_bot",
+  "version": "2.0.0",
+  "description": "My own Discord bot",
+  "main": "bot.js",
+  "author": "AlekEagleYT",
+  "dependencies": {
+    "eris": "^0.8.6",
+    "snekfetch": "^4.0.4",
+    "winston": "^3.0.0"
+  }
+}
