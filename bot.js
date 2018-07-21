@@ -34,6 +34,18 @@ String.prototype.toHHMMSS = function () {
     var time = hours+':'+minutes+':'+seconds;
     return time;
 }
+function notClickBait(channel, file, filename) {
+    fs.readFile(file, (err, data) => {
+        if (err != undefined) {
+            client.createMessage(channel, 'An error occurred sending the file, this is the error code: `' + err.code + '`')
+        }else {
+            client.createMessage(channel, 'File: ', {
+                file: data,
+                name: filename
+            });
+        }
+    });
+}
 client.on('ready', () => {
     console.log('THIS BOT IS READY BOIIIIII')
     setInterval(() => {
@@ -253,7 +265,7 @@ client.registerCommand('touch', (msg) => {
     return '*Touched ' + touch + '*'
 }, {
     description: 'Kinda kinky',
-    usage: '<thing to succ>'
+    usage: '<thing to touch>'
 });
 client.registerCommand('ban', (msg) => {
     cmdsRan = ++cmdsRan
@@ -297,7 +309,7 @@ client.registerCommand('kick', (msg) => {
 client.registerCommand('succ', (msg) => {
     cmdsRan = ++cmdsRan
     var succ = msg.content.split(' ').splice(1).join(' ').replace(/my/g, 'your').replace(/im/g, 'you\'re').replace(/i'm/g, 'you\'re').replace(/Im/g, 'you\'re').replace(/I'm/g, 'you\'re')
-    return '*Succed' + succ + '*'
+    return '*Succed ' + succ + '*'
 }, {
     description: 'really gay uwu.',
     usage: '<thing to succ>'
@@ -519,6 +531,8 @@ client.registerCommand('eval', (msg) => {
 }, {
     description: 'Evaluates code with a command (owner only)'
 });
+client.registerCommandAlias('evaluate', 'eval');
+client.registerCommandAlias('ev', 'eval');
 client.registerCommand('reportbug', (msg) => {
     var reportbug = msg.content.split(' ').splice(1).join(' ')
     client.createMessage('460517257853009920', '**__' + msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ')' + ' reported the bug: __**' + reportbug)
@@ -539,10 +553,68 @@ client.registerCommand('exec', (msg) => {
     if (msg.author.id === creatorID) {
         var execstuff = msg.content.split(' ').splice(1).join(' ')
         client.createMessage(msg.channel.id, 'Executing please wait... <a:loading1:470030932775272469>').then((message) => {
-            exec(execstuff, (err, stderr, stdout) => {
-                
-            })
-        })
+            exec(execstuff, (err, stdout, stderr) => {
+                if (err != undefined) {
+                    client.editMessage(message.channel.id, message.id, 'OOF I BROKE: ```' + err + '```')
+                }else {
+                    if (stdout.length > 2000) {
+                        client.editMessage(message.channel.id, message.id, 'Output too large, please wait while I pack the output into a file.').then(() => {
+                        fs.writeFile('exec_output.txt', stdout, (err) => {
+                            if (err != undefined) {
+                                client.createMessage(message.channel.id, 'An error occurred while this action was being preformed error code: `' + err.code + '`')
+                            }else {
+                                fs.readFile('./exec_output.txt', (err, data) => {
+                                    client.createMessage(message.channel.id, 'Output from exec: ', {
+                                        file: data,
+                                        name: 'exec_output.txt'
+                                    }).then(() => {
+                                        fs.unlink('./exec_output.txt')
+                                    });
+                                });
+                            }
+                        });
+                    });
+                    }else {
+                        if (stdout === '') {
+                            client.editMessage(message.channel.id, message.id, 'Done')
+                        }else {
+                            client.editMessage(message.channel.id, message.id, stdout)
+                        }
+                    }
+                }
+            });
+        });
+    }
+}, {
+    description: 'executes shit (owner only)',
+    usage: '<shit to execute>'
+});
+client.registerCommandAlias('ex', 'exec');
+client.registerCommandAlias('execute', 'exec');
+client.registerCommand('vote', () => {
+    return 'Vote for me at: https://discordbots.org/bot/416274552126177282/vote because yeet.';
+}, {
+    description: 'gives you the link to vote for me.'
+});
+client.registerCommand('yeet', (msg) => {
+    return '<@' + msg.author.id + '> Thou shalt be yaught young one.'
+}, {
+    description: 'Yeets you'
+});
+client.registerCommand('dbl', (msg) => {
+    var botID = msg.content.split(' ').splice(1).join(' ').replace(/<@/ig, '').replace(/!/g, '').replace(/>/g, '');
+    if (msg.channel.guild.members.get(botID).bot === true) {
+        exec('wget https://discordbots.org/api/widget/' + botID + '.png', (err, stdout, stderr) => {
+            fs.readFile('./' + botID + '.png', (err, data) => {
+                client.createMessage(msg.channel.id, 'https://discordbots.org/bot/' + botID, {
+                    file: data,
+                    name: msg.channel.guild.members.get(botID).username + '_dbl_widget.png'
+                });
+            });
+        
+        });
+    }else {
+        client.createMessage(msg.channel.id, '**🔴 WOOP WOOP 🔴 WE GOT AN IDIOT OVER HERE TRYING TO VIEW THE BOT PAGE OF A USER!**')
     }
 });
 client.connect();
