@@ -1,7 +1,12 @@
 const Eris = require('eris');
 const u_wut_m8 = require('./.auth.json');
-const snekfetch = require('snekfetch');
-const creatorID = '222882552472535041';
+const DBL = require('dblapi.js');
+//const express = require('express');
+//const http = require('http');
+
+//const app = express();
+//const server = http.createServer(app);
+//const creatorID = '222882552472535041';
 const client = new Eris.CommandClient(u_wut_m8.token, {
     disableEveryone: false
 }, {
@@ -9,6 +14,7 @@ const client = new Eris.CommandClient(u_wut_m8.token, {
     owner: 'AlekEagle#6978',
     prefix: 'a}'
 });
+const dbl = new DBL(u_wut_m8.dblToken, {/*webhookServer: server*/webhookPort:5000, webhookPath: '/'}, client);
 function clean(text) {
     if (typeof(text) === "string")
       return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
@@ -47,36 +53,26 @@ function notClickBait(channel, file, filename) {
     });
 }
 client.on('ready', () => {
-    console.log('THIS BOT IS READY BOIIIIII')
-    setInterval(() => {
-        snekfetch.post(`https://discordbots.org/api/bots/stats`)
-            .set('Authorization', u_wut_m8.dblToken)
-            .send({ server_count: client.guilds.size })
-            .then(() => console.log('Updated discordbots.org stats.'))
-            .catch(err => console.error(`Whoops something went wrong: ${err.body}`));
-    }, 3600000)
+    console.log('THIS BOT IS READY BOIIIIII');
 });
-client.on('guildCreate', () => {
-    setInterval(() => {
-        snekfetch.post(`https://discordbots.org/api/bots/stats`)
-            .set('Authorization', u_wut_m8.dblToken)
-            .send({ server_count: client.guilds.size })
-            .then(() => console.log('Updated discordbots.org stats.'))
-            .catch(err => console.error(`Whoops something went wrong: ${err.body}`));
-    }, 3600000)
+dbl.webhook.on('ready', hook => {
+    console.log(`Webhook running with path ${hook.hostname}:${hook.port}${hook.path}`)
+})
+dbl.webhook.on('vote', vote => {
+    client.getDMChannel(vote.user).then((message) => {
+        message.createMessage('Thank you so much for voting!');
+    });
+    console.log('someone voted!');
 });
-client.on('guildDelete', () => {
-    setInterval(() => {
-        snekfetch.post(`https://discordbots.org/api/bots/stats`)
-            .set('Authorization', u_wut_m8.dblToken)
-            .send({ server_count: client.guilds.size })
-            .then(() => console.log('Updated discordbots.org stats.'))
-            .catch(err => console.error(`Whoops something went wrong: ${err.body}`));
-    }, 3600000)
-});
+//app.get('/', (req, res) => {
+    //...
+//});
+//server.listen(5000, () => {
+//    console.log('Listening...');
+//});
 client.on('messageCreate', () => {
     ++messagesRead
-})
+});
 client.registerCommandAlias('hlep', 'help')
 client.registerCommand('ping', (msg) => {
         var apiPingTime = '';
@@ -272,6 +268,7 @@ client.registerCommand('ban', (msg) => {
     if (msg.member.permission.has('banMembers')) {
         var ban = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1)
         client.banGuildMember(msg.channel.guild.id, ban[0], parseInt(ban[1]), msg.content.split(' ').splice(3).join(' '))
+        return 'Banned '+ msg.content.split(' ').splice(1).join(' ')
     }else {
         client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `BAN_MEMBERS`.')
     }
@@ -285,6 +282,7 @@ client.registerCommand('unban', (msg) => {
     if (msg.member.permission.has('banMembers')) {
         var unban = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1)
         client.banGuildMember(msg.channel.guild.id, unban[0], msg.content.split(' ').splice(2).join(' '))
+        return 'Unanned '+ msg.content.split(' ').splice(1).join(' ')
     }else {
         client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `BAN_MEMBERS`.')
     }
@@ -298,6 +296,7 @@ client.registerCommand('kick', (msg) => {
     if (msg.member.permission.has('kickMembers')) {
         var kick = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1)
         client.kickGuildMember(msg.channel.guild.id, kick[0], msg.content.split(' ').splice(2).join(' '))
+        return 'Kicked '+ msg.content.split(' ').splice(1).join(' ')
     }else {
         client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `KICK_MEMBERS`.')
     }
@@ -603,18 +602,29 @@ client.registerCommand('yeet', (msg) => {
 });
 client.registerCommand('dbl', (msg) => {
     var botID = msg.content.split(' ').splice(1).join(' ').replace(/<@/ig, '').replace(/!/g, '').replace(/>/g, '');
-    if (msg.channel.guild.members.get(botID).bot === true) {
-        exec('wget https://discordbots.org/api/widget/' + botID + '.png', (err, stdout, stderr) => {
-            fs.readFile('./' + botID + '.png', (err, data) => {
-                client.createMessage(msg.channel.id, 'https://discordbots.org/bot/' + botID, {
-                    file: data,
-                    name: msg.channel.guild.members.get(botID).username + '_dbl_widget.png'
-                });
+    if (client.users.get(botID).bot === true) {
+        dbl.getBot(botID).then(bot => {
+            client.createMessage(msg.channel.id, {
+                embed: {
+                    title: bot.username + '#' + bot.discriminator,
+                    description: bot.username + '#' + bot.discriminator + `${bot.certifiedBot ? ' Certified Bot' : ' Not Certified Bot'}` + '\nOwner(s): <@' + bot.owners.join('>\n    <@') + '>\nPrefix: ' + bot.prefix + '\nID: ' + bot.id,
+                    url: `https://discordbots.org/bot/${botID}`,
+                    image: {
+                        url: `https://discordbots.org/api/widget/${botID}.png`
+                    }
+                }
             });
+        })
         
-        });
     }else {
         client.createMessage(msg.channel.id, '**🔴 WOOP WOOP 🔴 WE GOT AN IDIOT OVER HERE TRYING TO VIEW THE BOT PAGE OF A USER!**')
     }
 });
+client.registerCommand('bean', (msg) => {
+    var bean = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1)
+    return 'Banned '+ msg.content.split(' ').splice(1).join(' ') + '1!!!111!1!!1!11!!!11!!'
+});
+client.registerCommandAlias('bam', 'bean')
+client.registerCommandAlias('blam', 'bean')
+client.registerCommandAlias('ben', 'bean')
 client.connect();
