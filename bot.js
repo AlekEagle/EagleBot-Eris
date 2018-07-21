@@ -516,8 +516,23 @@ client.registerCommand('eval', (msg) => {
     }else {
         client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
     }
+}, {
+    description: 'Evaluates code with a command (owner only)'
 });
 client.registerCommand('reportbug', (msg) => {
     var reportbug = msg.content.split(' ').splice(1).join(' ')
+    client.createMessage('460517257853009920', '**__' + msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ')' + ' reported the bug: __**' + reportbug)
+    client.createMessage(msg.channel.id, 'The bug has been reported! <@' + msg.author.id + '>')
+}, {
+    description: 'Reports all teh bugs to AlekEagle!',
+    usage: '<bug>'
+});
+client.registerCommand('suggestcmd', (msg) => {
+    var suggestcmd = msg.content.split(' ').splice(1).join(' ')
+    client.createMessage('460517321824403456', '**__' + msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ')' + ' suggested the command: __**' + suggestcmd)
+    client.createMessage(msg.channel.id, 'That has been suggested! Thank you <@' + msg.author.id + '>!')
+}, {
+    description: 'spoonfeed AlekEagle all teh ideas for commands',
+    usage: '<idea>'
 });
 client.connect();
