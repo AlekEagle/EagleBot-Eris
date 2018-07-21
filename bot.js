@@ -535,4 +535,14 @@ client.registerCommand('suggestcmd', (msg) => {
     description: 'spoonfeed AlekEagle all teh ideas for commands',
     usage: '<idea>'
 });
+client.registerCommand('exec', (msg) => {
+    if (msg.author.id === creatorID) {
+        var execstuff = msg.content.split(' ').splice(1).join(' ')
+        client.createMessage(msg.channel.id, 'Executing please wait... <a:loading1:470030932775272469>').then((message) => {
+            exec(execstuff, (err, stderr, stdout) => {
+                
+            })
+        })
+    }
+});
 client.connect();
