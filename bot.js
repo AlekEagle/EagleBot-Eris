@@ -1,11 +1,6 @@
 const Eris = require('eris');
 const u_wut_m8 = require('./.auth.json');
 const DBL = require('dblapi.js');
-//const express = require('express');
-//const http = require('http');
-
-//const app = express();
-//const server = http.createServer(app);
 const creatorID = '222882552472535041';
 const client = new Eris.CommandClient(u_wut_m8.token, {
     disableEveryone: false
@@ -14,7 +9,7 @@ const client = new Eris.CommandClient(u_wut_m8.token, {
     owner: 'AlekEagle#6978',
     prefix: 'a}'
 });
-const dbl = new DBL(u_wut_m8.dblToken, {webhookPort:5000, webhookPath: '/'}, client);
+const dbl = new DBL(u_wut_m8.dblToken, {webhookPath: '/', webhookPort: 5000}, client);
 function clean(text) {
     if (typeof(text) === "string")
       return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
@@ -64,12 +59,6 @@ dbl.webhook.on('vote', vote => {
     });
     console.log('someone voted!');
 });
-//app.get('/', (req, res) => {
-    //...
-//});
-//server.listen(5000, () => {
-//    console.log('Listening...');
-//});
 dbl.on('posted', () => {
     console.log('Server count posted!!!! yeet')
 });
@@ -77,7 +66,7 @@ client.on('messageCreate', (message) => {
     ++messagesRead
     if (message.content === '<@' + client.user.id + '>') {
         var prefix = ''
-        if (require('util').inspect(client.guildPrefixes) === '{}') {prefix = 'a}'}else {prefix = require('util').inspect(client.guildPrefixes).replace(/{/g, '').replace(/}/g, '').replace(/'/g, '').replace(/:/g, '');}
+        if (require('util').inspect(client.guildPrefixes) === '{}') {prefix = 'a}'}else {prefix = require('util').inspect(client.guildPrefixes).replace(/{/g, '').replace(/}/g, '').replace(/'/g, '').replace(/:/g, ', ');}
         client.createMessage(message.channel.id, 'My prefix here is: `' + prefix + '`')
     }
 });
@@ -166,7 +155,7 @@ client.registerCommand('say', (msg) => {
     });
     return sayMessage;
 }, {
-    description: 'Makes the bot say what ever you want!',
+    description: 'Ill say that and make it look like i said that!',
     fullDescription: 'Makes the bot say what ever you want! (all messages are logged to prevent sneaky Billys)',
     usage: '<your message>'
 });
@@ -195,7 +184,7 @@ client.registerCommand('del', (msg) => {
         client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MANAGE_MESSAGES`.')
     }
 }, {
-    description: 'Deletes a certian amount of messages.',
+    description: 'Deletes # amount of messages.',
     fullDescription: 'Deletes a certian amount of messages. (requires permission `MANAGE_MESSAGES`)',
     usage: '<number of messages to delete|leave blank for 50>'
 });
@@ -212,7 +201,7 @@ client.registerCommand('revivechat', (msg) => {
     }
     
 }, {
-    description: 'May or may not revive chat.',
+    description: 'May revive chat.',
     fullDescription: 'May or may not revive chat. (requires permission `MENTION_EVERYONE` to use arguement yes)',
     usage: '[yes|no|blank for no]'
 });
@@ -244,7 +233,7 @@ client.registerCommand('revokerole', (msg) => {
         client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MANAGE_ROLES`.')
     }
 }, {
-    description: 'Removes the role from the user.',
+    description: 'Removes role from the user.',
     fullDescription: 'Removes the role from the user (Must be able to mention/ping role! needs permission `MANAGE_ROLES`)',
     usage: '<Mention user> <Mention role>'
 });
@@ -419,8 +408,8 @@ client.registerCommand('unmute', (msg) => {
         client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MUTE_MEMBERS`.')
     }
 }, {
-    description: 'Server unmutes user (if previously server muteed)',
-    fullDescription: 'Server unmutes user (if previously server muted) (requires permission `MUTE_MEMBERS`)',
+    description: 'Server unmutes user (if previously muted)',
+    fullDescription: 'Server unmutes user (if previously muted) (requires permission `MUTE_MEMBERS`)',
     usage: '<@user>'
 })
 client.registerCommand('deafen', (msg) => {
@@ -457,15 +446,15 @@ client.registerCommand('undeafen', (msg) => {
         client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `DEAFEN_MEMBERS`.')
     }
 }, {
-    description: 'Server undeafens user (if previously server deafened)',
-    fullDescription: 'Server undeafens user (if previously server deafened) (requires permission `DEAFEN_MEMBERS`)',
+    description: 'Server undeafens user (if previously deafened)',
+    fullDescription: 'Server undeafens user (if previously deafened)',
     usage: '<@user>'
 });
 client.registerCommand('github', () => {
     cmdsRan = ++cmdsRan
     return 'here you go: https://github.com/AlekEagleYT/EagleBot-Eris';
 }, {
-    description: 'Gives you my GitHub page.'
+    description: 'My GitHub page.'
 });
 client.registerCommand('invite', () => {
     cmdsRan = ++cmdsRan
@@ -560,7 +549,7 @@ client.registerCommand('suggestcmd', (msg) => {
     client.createMessage('460517321824403456', '**__' + msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ')' + ' suggested the command: __**' + suggestcmd)
     client.createMessage(msg.channel.id, 'That has been suggested! Thank you <@' + msg.author.id + '>!')
 }, {
-    description: 'spoonfeed AlekEagle all teh ideas for commands',
+    description: 'spoonfeed creator boi all teh ideas for commands',
     usage: '<idea>'
 });
 client.registerCommand('exec', (msg) => {
@@ -610,7 +599,7 @@ client.registerCommand('vote', () => {
     cmdsRan = ++cmdsRan
     return 'Vote for me at: https://discordbots.org/bot/416274552126177282/vote because yeet.';
 }, {
-    description: 'gives you the link to vote for me.'
+    description: 'Vote for me.'
 });
 client.registerCommand('yeet', (msg) => {
     cmdsRan = ++cmdsRan
@@ -639,14 +628,14 @@ client.registerCommand('dbl', (msg) => {
         client.createMessage(msg.channel.id, '**🔴 WOOP WOOP 🔴 WE GOT AN IDIOT OVER HERE TRYING TO VIEW THE BOT PAGE OF A USER!**')
     }
 }, {
-    description: 'gives info about other bots i guess'
+    description: 'gives info about other bots'
 });
 client.registerCommand('bean', (msg) => {
     cmdsRan = ++cmdsRan
     var bean = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1)
     return 'Banned '+ msg.content.split(' ').splice(1).join(' ') + '1!!!111!1!!1!11!!!11!!'
 }, {
-    description: 'Totally bans someone (not clickbait)'
+    description: 'Totally bans a user (not clickbait)'
 });
 client.registerCommandAlias('bam', 'bean')
 client.registerCommandAlias('blam', 'bean')
@@ -695,7 +684,7 @@ client.registerCommand('howtrap', (msg) => {
         }
     }
 }, {
-    description: 'shows how much of a trap you or a friend are.',
+    description: 'howtrap.',
     usage: '<literally anything>'
 });
 client.registerCommand('howfurry', (msg) => {
@@ -712,7 +701,7 @@ client.registerCommand('howfurry', (msg) => {
         }
     }
 }, {
-    description: 'shows how much of a furry you or a friend are.',
+    description: 'howfurry.',
     usage: '<literally anything>'
 });
 client.registerCommand('remindme', (msg) => {
@@ -722,15 +711,16 @@ client.registerCommand('remindme', (msg) => {
     waitTimeAmount = waitTimeAmount[0];
     var reminder = msg.content.split(' ').splice(3).join(' ');
     if (waitTimeAmount === 's') {time = (time * 1000)}else if (waitTimeAmount === 'sec') {time = (time * 1000)}else if (waitTimeAmount === 'm') {time = (time * 1000 * 60)}else if (waitTimeAmount === 'min') {time = (time * 1000 * 60)}else if (waitTimeAmount === 'h') {time = (time * 1000 * 60 * 60)}else if (waitTimeAmount === 'hr') {time = (time * 1000 * 60 * 60)}else if (waitTimeAmount === 'd') {time = (time * 1000 * 60 * 60 * 24)}else if (waitTimeAmount === 'day') {time = (time * 1000 * 60 * 60 * 24)}else if (waitTimeAmount === 'w') {time = (time * 1000 * 60 * 60 * 24 * 7)}else if (waitTimeAmount === 'week') {time = (time * 1000 * 60 * 60 * 24 * 7)}
-    
     client.createMessage(msg.channel.id, 'I will remind you about that in ' + (time / 1000) + ' seconds.')
     setTimeout(() => {
-        client.createMessage(msg.channel.id, '<@' + msg.author.id + '> You asked me to remind you ' + time / 1000 + ' seconds ago about `' + reminder + '`')
+        client.getDMChannel(msg.author.id).then((message) => {
+            client.createMessage(message.id, '<@' + msg.author.id + '> You asked me to remind you ' + time / 1000 + ' seconds ago about `' + reminder + '`')
+        })
     }, time);
 }, {
     description: 'Reminds you of stuff!',
     fullDescription: 'Reminds you of stuff! (only supports one time unit at the moment)',
-    usage: '<time in numbers> <[s|sec]|[m|min]|[h|hr]|[d|day]|[month}> <reminder thing>'
+    usage: '<time in numbers> <[s|sec]|[m|min]|[h|hr]|[d|day]> <reminder thing>'
 });
 client.registerCommand('setprefix', (msg) => {
     if (msg.member.permission.has('administrator')) {
