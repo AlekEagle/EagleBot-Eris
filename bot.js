@@ -6,7 +6,7 @@ const DBL = require('dblapi.js');
 
 //const app = express();
 //const server = http.createServer(app);
-//const creatorID = '222882552472535041';
+const creatorID = '222882552472535041';
 const client = new Eris.CommandClient(u_wut_m8.token, {
     disableEveryone: false
 }, {
@@ -14,7 +14,7 @@ const client = new Eris.CommandClient(u_wut_m8.token, {
     owner: 'AlekEagle#6978',
     prefix: 'a}'
 });
-const dbl = new DBL(u_wut_m8.dblToken, {/*webhookServer: server*/webhookPort:5000, webhookPath: '/'}, client);
+const dbl = new DBL(u_wut_m8.dblToken, {webhookPort:5000, webhookPath: '/'}, client);
 function clean(text) {
     if (typeof(text) === "string")
       return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
@@ -70,13 +70,22 @@ dbl.webhook.on('vote', vote => {
 //server.listen(5000, () => {
 //    console.log('Listening...');
 //});
-client.on('messageCreate', () => {
+dbl.on('posted', () => {
+    console.log('Server count posted!!!! yeet')
+});
+client.on('messageCreate', (message) => {
     ++messagesRead
+    if (message.content === '<@' + client.user.id + '>') {
+        var prefix = ''
+        if (require('util').inspect(client.guildPrefixes) === '{}') {prefix = 'a}'}else {prefix = require('util').inspect(client.guildPrefixes).replace(/{/g, '').replace(/}/g, '').replace(/'/g, '').replace(/:/g, '');}
+        client.createMessage(message.channel.id, 'My prefix here is: `' + prefix + '`')
+    }
 });
 client.registerCommandAlias('hlep', 'help')
+client.registerCommandAlias('halp', 'help')
 client.registerCommand('ping', (msg) => {
         var apiPingTime = '';
-        ++cmdsRan
+        cmdsRan = ++cmdsRan
         exec('ping -c 1 104.16.59.5', function(error, stdout, stderr) {
             if (error != undefined) {
                 console.log(error, stderr)
@@ -494,12 +503,16 @@ client.registerCommand('reboot', (msg) => {
     description: 'Reboots the bot (owner only command)'
 });
 client.registerCommand('eval', (msg) => {
+    cmdsRan = ++cmdsRan
     if (msg.author.id ===  creatorID) {
         try {
-            var evalCommand = msg.content.split(' ').splice(1).join(' ').replace(/client.token/g, '\'censored\'');
+            var evalCommand = msg.content.split(' ').splice(1).join(' ');
             let evaluation = eval(evalCommand);
             if (typeof evaluation !== "string") {
                 evaluation = require('util').inspect(evaluation)
+            }
+            if (typeof evaluation === "string" && evaluation !== undefined) {
+                evaluation = evaluation.replace(client.token, 'lol the token is blank')
             }
             if (evaluation.length > 2000) {
                 client.createMessage(msg.channel.id, 'Output too large, please wait while I pack the output into a file.').then(() => {
@@ -522,7 +535,7 @@ client.registerCommand('eval', (msg) => {
                 client.createMessage(msg.channel.id, clean(evaluation))
             }
         } catch (err) {
-            client.createMessage(msg.channel.id, 'OOF: ```' + clean(err) + '```')
+            client.createMessage(msg.channel.id, 'OOF ERROR:\ninput: ```' + evalCommand + '``` output: ```' + clean(err) + '```')
         }
     }else {
         client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
@@ -533,6 +546,7 @@ client.registerCommand('eval', (msg) => {
 client.registerCommandAlias('evaluate', 'eval');
 client.registerCommandAlias('ev', 'eval');
 client.registerCommand('reportbug', (msg) => {
+    cmdsRan = ++cmdsRan
     var reportbug = msg.content.split(' ').splice(1).join(' ')
     client.createMessage('460517257853009920', '**__' + msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ')' + ' reported the bug: __**' + reportbug)
     client.createMessage(msg.channel.id, 'The bug has been reported! <@' + msg.author.id + '>')
@@ -541,6 +555,7 @@ client.registerCommand('reportbug', (msg) => {
     usage: '<bug>'
 });
 client.registerCommand('suggestcmd', (msg) => {
+    cmdsRan = ++cmdsRan
     var suggestcmd = msg.content.split(' ').splice(1).join(' ')
     client.createMessage('460517321824403456', '**__' + msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ')' + ' suggested the command: __**' + suggestcmd)
     client.createMessage(msg.channel.id, 'That has been suggested! Thank you <@' + msg.author.id + '>!')
@@ -549,6 +564,7 @@ client.registerCommand('suggestcmd', (msg) => {
     usage: '<idea>'
 });
 client.registerCommand('exec', (msg) => {
+    cmdsRan = ++cmdsRan
     if (msg.author.id === creatorID) {
         var execstuff = msg.content.split(' ').splice(1).join(' ')
         client.createMessage(msg.channel.id, 'Executing please wait... <a:loading1:470030932775272469>').then((message) => {
@@ -591,16 +607,19 @@ client.registerCommand('exec', (msg) => {
 client.registerCommandAlias('ex', 'exec');
 client.registerCommandAlias('execute', 'exec');
 client.registerCommand('vote', () => {
+    cmdsRan = ++cmdsRan
     return 'Vote for me at: https://discordbots.org/bot/416274552126177282/vote because yeet.';
 }, {
     description: 'gives you the link to vote for me.'
 });
 client.registerCommand('yeet', (msg) => {
+    cmdsRan = ++cmdsRan
     return '<@' + msg.author.id + '> Thou shalt be yaught young one.'
 }, {
     description: 'Yeets you'
 });
 client.registerCommand('dbl', (msg) => {
+    cmdsRan = ++cmdsRan
     var botID = msg.content.split(' ').splice(1).join(' ').replace(/<@/ig, '').replace(/!/g, '').replace(/>/g, '');
     if (client.users.get(botID).bot === true) {
         dbl.getBot(botID).then(bot => {
@@ -619,12 +638,109 @@ client.registerCommand('dbl', (msg) => {
     }else {
         client.createMessage(msg.channel.id, '**🔴 WOOP WOOP 🔴 WE GOT AN IDIOT OVER HERE TRYING TO VIEW THE BOT PAGE OF A USER!**')
     }
+}, {
+    description: 'gives info about other bots i guess'
 });
 client.registerCommand('bean', (msg) => {
+    cmdsRan = ++cmdsRan
     var bean = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1)
     return 'Banned '+ msg.content.split(' ').splice(1).join(' ') + '1!!!111!1!!1!11!!!11!!'
+}, {
+    description: 'Totally bans someone (not clickbait)'
 });
 client.registerCommandAlias('bam', 'bean')
 client.registerCommandAlias('blam', 'bean')
 client.registerCommandAlias('ben', 'bean')
+client.registerCommand('avatar', (msg) => {
+    var avatarLol = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1).join(' ')
+    client.createMessage(msg.channel.id, {embed: {
+        title: client.users.get(avatarLol).username + '#' + client.users.get(avatarLol).discriminator + '\'s avatar (click for link to avatar)',
+        url: client.users.get(avatarLol).avatarURL,
+        image: {
+            url: client.users.get(avatarLol).avatarURL + '?width=1024&higth=1024'
+        }
+    }});
+}, {
+    description: 'gets a user/bot\'s avatar',
+    usage: '<@mention|ID>'
+});
+client.registerCommand('howgay', (msg) => {
+    cmdsRan = ++cmdsRan
+    var howGayCommand = msg.content.split(' ').splice(1).join(' ')
+    var amountOfGay = Math.floor(Math.random() * 101);
+    if (amountOfGay === 0) {
+        client.createMessage(msg.channel.id, howGayCommand + ' is not gay.')
+    }else {
+        if (amountOfGay === 69) {
+            client.createMessage(msg.channel.id, howGayCommand + ' is: ' + amountOfGay + '% gay ( ͡° ͜ʖ ͡°)\n' + '🏳️‍🌈'.repeat(amountOfGay))
+        }else {
+            client.createMessage(msg.channel.id, howGayCommand + ' is: ' + amountOfGay + '% gay\n' + '🏳️‍🌈'.repeat(amountOfGay))
+        }
+    }
+}, {
+    description: 'shows how gay you or a friend are.',
+    usage: '<literally anything>'
+});
+client.registerCommand('howtrap', (msg) => {
+    cmdsRan = ++cmdsRan
+    var howTrapCommand = msg.content.split(' ').splice(1).join(' ')
+    var amountOfTrap = Math.floor(Math.random() * 101);
+    if (amountOfTrap === 0) {
+        client.createMessage(msg.channel.id, howTrapCommand + ' is not a trap.')
+    }else {
+        if (amountOfTrap === 69) {
+            client.createMessage(msg.channel.id, howTrapCommand + ' is: ' + amountOfTrap + '% trap ( ͡° ͜ʖ ͡°)\n' + '⬛'.repeat(amountOfTrap))
+        }else {
+            client.createMessage(msg.channel.id, howTrapCommand + ' is: ' + amountOfTrap + '% trap\n' + '⬛'.repeat(amountOfTrap))
+        }
+    }
+}, {
+    description: 'shows how much of a trap you or a friend are.',
+    usage: '<literally anything>'
+});
+client.registerCommand('howfurry', (msg) => {
+    cmdsRan = ++cmdsRan
+    var howFurryCommand = msg.content.split(' ').splice(1).join(' ')
+    var amountOfFurry = Math.floor(Math.random() * 101);
+    if (amountOfFurry === 0) {
+        client.createMessage(msg.channel.id, howFurryCommand + ' is not a furry.')
+    }else {
+        if (amountOfFurry === 69) {
+            client.createMessage(msg.channel.id, howFurryCommand + ' is: ' + amountOfFurry + '% furry ( ͡° ͜ʖ ͡°)\n' + ':fox:'.repeat(amountOfFurry))
+        }else {
+            client.createMessage(msg.channel.id, howFurryCommand + ' is: ' + amountOfFurry + '% furry\n' + ':fox:'.repeat(amountOfFurry))
+        }
+    }
+}, {
+    description: 'shows how much of a furry you or a friend are.',
+    usage: '<literally anything>'
+});
+client.registerCommand('remindme', (msg) => {
+    var time = msg.content.split(' ').splice(1);
+    time = parseInt(time[0]);
+    var waitTimeAmount = msg.content.split(' ').splice(2);
+    waitTimeAmount = waitTimeAmount[0];
+    var reminder = msg.content.split(' ').splice(3).join(' ');
+    if (waitTimeAmount === 's') {time = (time * 1000)}else if (waitTimeAmount === 'sec') {time = (time * 1000)}else if (waitTimeAmount === 'm') {time = (time * 1000 * 60)}else if (waitTimeAmount === 'min') {time = (time * 1000 * 60)}else if (waitTimeAmount === 'h') {time = (time * 1000 * 60 * 60)}else if (waitTimeAmount === 'hr') {time = (time * 1000 * 60 * 60)}else if (waitTimeAmount === 'd') {time = (time * 1000 * 60 * 60 * 24)}else if (waitTimeAmount === 'day') {time = (time * 1000 * 60 * 60 * 24)}else if (waitTimeAmount === 'w') {time = (time * 1000 * 60 * 60 * 24 * 7)}else if (waitTimeAmount === 'week') {time = (time * 1000 * 60 * 60 * 24 * 7)}
+    
+    client.createMessage(msg.channel.id, 'I will remind you about that in ' + (time / 1000) + ' seconds.')
+    setTimeout(() => {
+        client.createMessage(msg.channel.id, '<@' + msg.author.id + '> You asked me to remind you ' + time / 1000 + ' seconds ago about `' + reminder + '`')
+    }, time);
+}, {
+    description: 'Reminds you of stuff!',
+    fullDescription: 'Reminds you of stuff! (only supports one time unit at the moment)',
+    usage: '<time in numbers> <[s|sec]|[m|min]|[h|hr]|[d|day]|[month}> <reminder thing>'
+});
+client.registerCommand('setprefix', (msg) => {
+    if (msg.member.permission.has('administrator')) {
+        var newPrefix = msg.content.split(' ').splice(1)
+        client.registerGuildPrefix(msg.channel.guild.id, newPrefix[0])
+    }else {
+        client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `ADMINISTRATOR`.')
+    }
+}, {
+    description: 'Sets the servers prefix, cannot contain spaces in the prefix',
+    usage: '<PrefixWithNoSpaces>'
+});
 client.connect();
