@@ -1,7 +1,8 @@
 const Eris = require('eris');
 const u_wut_m8 = require('./.auth.json');
 const DBL = require('dblapi.js');
-const creatorID = '222882552472535041';
+const real_token = require('./token.json')
+const creatorID = '222882552472535041,361773766256361472';
 const client = new Eris.CommandClient(u_wut_m8.token, {
     disableEveryone: false
 }, {
@@ -10,12 +11,6 @@ const client = new Eris.CommandClient(u_wut_m8.token, {
     prefix: 'a}'
 });
 const dbl = new DBL(u_wut_m8.dblToken, {webhookPath: '/', webhookPort: 5000}, client);
-function clean(text) {
-    if (typeof(text) === "string")
-      return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
-    else
-        return text;
-}
 const fs = require('fs');
 const sys = require('sys');
 const exec = require('child_process').exec;
@@ -60,14 +55,17 @@ dbl.webhook.on('vote', vote => {
     console.log('someone voted!');
 });
 dbl.on('posted', () => {
-    console.log('Server count posted!!!! yeet')
+    console.log('yeet!!!! Server count posted')
 });
 client.on('messageCreate', (message) => {
     ++messagesRead
     if (message.content === '<@' + client.user.id + '>') {
         var prefix = ''
-        if (require('util').inspect(client.guildPrefixes) === '{}') {prefix = 'a}'}else {prefix = require('util').inspect(client.guildPrefixes).replace(/{/g, '').replace(/}/g, '').replace(/'/g, '').replace(/:/g, ', ');}
+        if (require('util').inspect(client.guildPrefixes) === '{}') {prefix = 'a}'}else {prefix = require('util').inspect(client.guildPrefixes.splice(1)).replace(/{/g, '').replace(/}/g, '').replace(/'/g, '').replace(/:/g, ', ');}
         client.createMessage(message.channel.id, 'My prefix here is: `' + prefix + '`')
+    }
+    if (message.content.substring(0, 2) === 'a}' && message.content.split('').splice(2).join('').split(' ')[0] === 'rape' && message.author.bot === false) {
+        client.createMessage(message.channel.id, message.content.split(' ').splice(1).join(' ') + ' has been raped!!!!!!')
     }
 });
 client.registerCommandAlias('hlep', 'help')
@@ -91,7 +89,7 @@ client.registerCommand('ping', (msg) => {
             console.log(msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ') Used ping!');
         
     }, {
-    description: 'it Pongs back to you.',
+    description: ' ',
     fullDescription: 'it will pong when you say a}ping'
 });
 client.registerCommand('curecancer', (msg) => {
@@ -112,7 +110,7 @@ client.registerCommand('curecancer', (msg) => {
         });
     }
 }, {
-    description: 'Will cure cancer (sometimes)',
+    description: ' ',
     fullDescription: 'This will cure cancer (not really), you have a 1 in 100 chance of it actually happening.'
 });
 client.registerCommand('setnick', (msg) => {
@@ -123,10 +121,17 @@ client.registerCommand('setnick', (msg) => {
             nick: nickToSetTo
         }, msg.author.username + '#' + msg.author.discriminator + ' changed nickname')
     }else {
-        client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MANAGE_NICKNAMES`.')
+        if (creatorID.includes(msg.author.id)) {
+            var nickToSetTo = msg.content.split(' ').splice(2).join(' ')
+            client.editGuildMember(msg.channel.guild.id, msg.mentions[0].id, {
+                nick: nickToSetTo
+            }, msg.author.username + '#' + msg.author.discriminator + ' changed nickname')
+        }else {
+            client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MANAGE_NICKNAMES`.')
+        }
     }
 }, {
-    description: 'Changes nickname of a user.',
+    description: ' ',
     fullDescription: 'Changes nickname of a user. (requires permission `MANAGE_NICKNAMES`)',
     usage: '<user mention> <nickname|blank to reset>'
     
@@ -143,7 +148,7 @@ client.registerCommand('cancercured', (msg) => {
         console.log(msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ') Used cancercured!');
     });
 }, {
-    description: 'Shows times cancer has been cured.',
+    description: ' ',
     fullDescription: 'Will show the times cancer has been cured in all servers the bot is in.'
 });
 client.registerCommand('say', (msg) => {
@@ -155,7 +160,7 @@ client.registerCommand('say', (msg) => {
     });
     return sayMessage;
 }, {
-    description: 'Ill say that and make it look like i said that!',
+    description: ' ',
     fullDescription: 'Makes the bot say what ever you want! (all messages are logged to prevent sneaky Billys)',
     usage: '<your message>'
 });
@@ -181,10 +186,31 @@ client.registerCommand('del', (msg) => {
             })
         })
     }else {
-        client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MANAGE_MESSAGES`.')
+        if (creatorID.includes(msg.author.id)) {
+            var num2Delete = 0;
+            if (msg.content.split(' ').splice(1)[0] === undefined) {
+                num2Delete = 50;
+            }else {
+                num2Delete = parseInt(msg.content.split(' ', 2).splice(1).toString());
+            }
+            msg.channel.getMessages(num2Delete + 1).then((message) => {
+                client.deleteMessages(msg.channel.id, message.map(m => m.id), msg.author.username + '#' + msg.author.discriminator + ' deleted' + num2Delete.toString() + 'plus original message.').then(() => {
+                    client.createMessage(msg.channel.id, 'Deleted ' + num2Delete.toString() + ' messages! 👍').then((message) => {
+                        setTimeout(() => {
+                            client.deleteMessage(msg.channel.id, message.id, 'Deleted response message.')
+                        }, 5000)
+                    })
+                }, (reason) => {
+                    console.error(reason);
+                    client.createMessage(msg.channel.id, 'Unable to delete messages. I may not have the `MANAGE_MESSAGES` permission.')
+                })
+            })
+        }else {
+            client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MANAGE_MESSAGES`.')
+        }
     }
 }, {
-    description: 'Deletes # amount of messages.',
+    description: ' ',
     fullDescription: 'Deletes a certian amount of messages. (requires permission `MANAGE_MESSAGES`)',
     usage: '<number of messages to delete|leave blank for 50>'
 });
@@ -201,7 +227,7 @@ client.registerCommand('revivechat', (msg) => {
     }
     
 }, {
-    description: 'May revive chat.',
+    description: ' ',
     fullDescription: 'May or may not revive chat. (requires permission `MENTION_EVERYONE` to use arguement yes)',
     usage: '[yes|no|blank for no]'
 });
@@ -209,7 +235,8 @@ client.registerCommand('deadchat', (msg) => {
     cmdsRan = ++cmdsRan
     return '*A strange and spooky silence falls over <#' + msg.channel.id + '> as everyone stopped typing and most likely died*'
 }, {
-    description: 'Engraves the fact that chat is dead and nothing will change that.'
+    description: ' ',
+    fullDescription: 'Engraves the fact that chat is dead and nothing will change that.'
 });
 client.registerCommand('grantrole', (msg) => {
     cmdsRan = ++cmdsRan
@@ -217,10 +244,15 @@ client.registerCommand('grantrole', (msg) => {
         msg.channel.guild.members.get(msg.mentions[0].id).addRole(msg.content.split(' ').splice(2).toString().replace(/<@&/g, '').replace(/>/g, ''), msg.author.username + '#' + msg.author.discriminator + ' granted role')
         client.createMessage(msg.channel.id, 'Gave role!')
     }else {
-        client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MANAGE_ROLES`.')
+        if (creatorID.includes(msg.author.id)) {
+            msg.channel.guild.members.get(msg.mentions[0].id).addRole(msg.content.split(' ').splice(2).toString().replace(/<@&/g, '').replace(/>/g, ''), msg.author.username + '#' + msg.author.discriminator + ' granted role')
+            client.createMessage(msg.channel.id, 'Gave role!')
+        }else {
+            client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MANAGE_ROLES`.')
+        }
     }
 }, {
-    description: 'Gives role to user.',
+    description: ' ',
     fullDescription: 'gives role to user (Must be able to mention/ping role! needs permission `MANAGE_ROLES`)',
     usage: '<Mention user> <Mention role>'
 });
@@ -230,26 +262,32 @@ client.registerCommand('revokerole', (msg) => {
         msg.channel.guild.members.get(msg.mentions[0].id).removeRole(msg.content.split(' ').splice(2).toString().replace(/<@&/g, '').replace(/>/g, ''), msg.author.username + '#' + msg.author.discriminator + ' revoked role')
         client.createMessage(msg.channel.id, 'Took role!')
     }else {
-        client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MANAGE_ROLES`.')
+        if (creatorID.includes(msg.author.id)) {
+            msg.channel.guild.members.get(msg.mentions[0].id).removeRole(msg.content.split(' ').splice(2).toString().replace(/<@&/g, '').replace(/>/g, ''), msg.author.username + '#' + msg.author.discriminator + ' revoked role')
+            client.createMessage(msg.channel.id, 'Took role!')
+        }else {
+            client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MANAGE_ROLES`.')
+        }
     }
 }, {
-    description: 'Removes role from the user.',
+    description: ' ',
     fullDescription: 'Removes the role from the user (Must be able to mention/ping role! needs permission `MANAGE_ROLES`)',
     usage: '<Mention user> <Mention role>'
 });
 client.registerCommand('setplaying', (msg) => {
     cmdsRan = ++cmdsRan
-    if (msg.author.id === creatorID) {
+    if (creatorID.includes(msg.author.id)) {
         var args = msg.content.split(' ').splice(1);
+        var text = msg.content.split(' ').splice(3).join(' ')
         client.editStatus(args[0], {
-            name: args[1].toString().replace(/_/g, ' '),
-            type: parseInt(args[2])
+            name: text,
+            type: parseInt(args[1])
         });
     }else {
         client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
     }
 }, {
-    description: 'sets what the bot is playing.',
+    description: ' ',
     fullDescription: 'sets what the bot is playing. (Owner only command)',
     usage: '<status> <game name> <type>'
 });
@@ -258,7 +296,7 @@ client.registerCommand('touch', (msg) => {
     var touch = msg.content.split(' ').splice(1).join(' ').replace(/my/g, 'your').replace(/im/g, 'you\'re').replace(/i'm/g, 'you\'re').replace(/Im/g, 'you\'re').replace(/I'm/g, 'you\'re')
     return '*Touched ' + touch + '*'
 }, {
-    description: 'Kinda kinky',
+    fullDescription: 'Kinda kinky',
     usage: '<thing to touch>'
 });
 client.registerCommand('ban', (msg) => {
@@ -266,12 +304,18 @@ client.registerCommand('ban', (msg) => {
     if (msg.member.permission.has('banMembers')) {
         var ban = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1)
         client.banGuildMember(msg.channel.guild.id, ban[0], parseInt(ban[1]), msg.content.split(' ').splice(3).join(' '))
-        return 'Banned '+ msg.content.split(' ').splice(1).join(' ')
+        return 'Banned '+ msg.content.split(' ').splice(1)[0] + ' for: ' + `${msg.content.split(' ').splice(2).join(' ') ? msg.content.split(' ').splice(2).join(' ') : 'reason'}`;
     }else {
-        client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `BAN_MEMBERS`.')
+        if (creatorID.includes(msg.author.id)) {
+            var ban = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1)
+            client.banGuildMember(msg.channel.guild.id, ban[0], parseInt(ban[1]), msg.content.split(' ').splice(3).join(' '))
+            return 'Banned '+ msg.content.split(' ').splice(1)[0] + ' for: ' + `${msg.content.split(' ').splice(2).join(' ') ? msg.content.split(' ').splice(2).join(' ') : 'reason'}`;
+        }else {
+            client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `BAN_MEMBERS`.')
+        }
     }
 }, {
-    description: 'Bans users.',
+    description: ' ',
     fullDescription: 'Bans users. (requires permission `BAN_MEMBERS`)',
     usage: '<@user> <days of messages to delete 0-7> <reason>'
 });
@@ -282,10 +326,16 @@ client.registerCommand('unban', (msg) => {
         client.banGuildMember(msg.channel.guild.id, unban[0], msg.content.split(' ').splice(2).join(' '))
         return 'Unanned '+ msg.content.split(' ').splice(1).join(' ')
     }else {
-        client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `BAN_MEMBERS`.')
+        if (creatorID.includes(msg.author.id)) {
+            var ban = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1)
+            client.banGuildMember(msg.channel.guild.id, unban[0],  msg.content.split(' ').splice(2).join(' '))
+            return 'Unanned '+ msg.content.split(' ').splice(1)[0] + ' for: ' + `${msg.content.split(' ').splice(2).join(' ') ? msg.content.split(' ').splice(2).join(' ') : 'reason'}`;
+        }else {
+            client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `BAN_MEMBERS`.')
+        }
     }
 }, {
-    description: 'Unbans users.',
+    description: ' ',
     fullDescription: 'Unbans users. (requires permission `BAN_MEMBERS`)',
     usage: '<ID> <reason>'
 });
@@ -294,12 +344,18 @@ client.registerCommand('kick', (msg) => {
     if (msg.member.permission.has('kickMembers')) {
         var kick = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1)
         client.kickGuildMember(msg.channel.guild.id, kick[0], msg.content.split(' ').splice(2).join(' '))
-        return 'Kicked '+ msg.content.split(' ').splice(1).join(' ')
+        return 'Kicked '+ msg.content.split(' ').splice(1)[0] + ' for: ' + `${msg.content.split(' ').splice(2).join(' ') ? msg.content.split(' ').splice(2).join(' ') : 'reason'}`;
     }else {
-        client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `KICK_MEMBERS`.')
+        if (creatorID.includes(msg.author.id)) {
+            var kick = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1)
+            client.kickGuildMember(msg.channel.guild.id, kick[0], msg.content.split(' ').splice(2).join(' '))
+            return 'Kicked '+ msg.content.split(' ').splice(1)[0] + ' for: ' + `${msg.content.split(' ').splice(2).join(' ') ? msg.content.split(' ').splice(2).join(' ') : 'reason'}`;
+        }else {
+            client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `KICK_MEMBERS`.')
+        }
     }
 }, {
-    description: 'Kicks members.',
+    description: ' ',
     fullDescription: 'Kicks members. (requires permission `KICK_MEMBERS`)',
     usage: '<@user> <reason>'
 });
@@ -308,7 +364,8 @@ client.registerCommand('succ', (msg) => {
     var succ = msg.content.split(' ').splice(1).join(' ').replace(/my/g, 'your').replace(/im/g, 'you\'re').replace(/i'm/g, 'you\'re').replace(/Im/g, 'you\'re').replace(/I'm/g, 'you\'re')
     return '*Succed ' + succ + '*'
 }, {
-    description: 'really gay uwu.',
+    description: ' ',
+    fullDescription: 'really gay uwu.',
     usage: '<thing to succ>'
 });
 client.registerCommand('meme', (msg) => {
@@ -358,7 +415,7 @@ client.registerCommand('meme', (msg) => {
             })
         break;
         case 'delmeme':
-            if (userID == creatorID) {
+            if (creatorID.includes(msg.author.id)) {
                 var delMemeCommand = msg.content.split(' ').splice(2)
                 fs.unlink('./good_memes_probably/' + delMemeCommand[0] + '.meme', function(err) {
                     client.createMessage(msg.channel.id, `${err ? 'OOF error whoops! ' + err.code : 'It\'s most likely gone, yeah I\'m pretty sure it\'s gone'}`)
@@ -369,7 +426,7 @@ client.registerCommand('meme', (msg) => {
             }
     }
 }, {
-    description: 'MEME STORAGE CENTER!',
+    description: ' ',
     fullDescription: 'MEME STORAGE CENTER!',
     usage: '`<<savememe <name_of_meme> <contents of meme|link to picture for pictures>>|<showmeme <name_of_meme>>|<listmeme>|(owner only currently)<delmeme <name_of_meme>>`'
 });
@@ -386,10 +443,20 @@ client.registerCommand('mute', (msg) => {
             client.createMessage(msg.channel.id, 'Action failed, Do I have the permission: `MUTE_MEMBERS`?')
         })
     }else {
-        client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MUTE_MEMBERS`.')
+        if (creatorID.includes(msg.author.id)) {
+            client.editGuildMember(msg.channel.guild.id, mute[0], {
+                mute: true
+            }, msg.author.username + '#' + msg.author.discriminator + ' muted ' + msg.channel.guild.members.get(mute[0]).username).then(() =>{
+                client.createMessage(msg.channel.id, 'ok they am mute')
+            }, () => {
+                client.createMessage(msg.channel.id, 'Action failed, Do I have the permission: `MUTE_MEMBERS`?')
+            })
+        }else {
+            client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MUTE_MEMBERS`.')
+        }
     }
 }, {
-    description: 'Server mutes user',
+    description: ' ',
     fullDescription: 'Server mutes user (requires permission `MUTE_MEMBERS`)',
     usage: '<@user>'
 })
@@ -405,10 +472,20 @@ client.registerCommand('unmute', (msg) => {
             client.createMessage(msg.channel.id, 'Action failed, Do I have the permission: `MUTE_MEMBERS`?')
         })
     }else {
-        client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MUTE_MEMBERS`.')
+        if (creatorID.includes(msg.author.id)) {
+            client.editGuildMember(msg.channel.guild.id, unmute[0], {
+                mute: false
+            }, msg.author.username + '#' + msg.author.discriminator + ' muted ' + msg.channel.guild.members.get(mute[0]).username).then(() =>{
+                client.createMessage(msg.channel.id, 'ok they am unmute')
+            }, () => {
+                client.createMessage(msg.channel.id, 'Action failed, Do I have the permission: `MUTE_MEMBERS`?')
+            })
+        }else {
+            client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MUTE_MEMBERS`.')
+        }
     }
 }, {
-    description: 'Server unmutes user (if previously muted)',
+    description: ' ',
     fullDescription: 'Server unmutes user (if previously muted) (requires permission `MUTE_MEMBERS`)',
     usage: '<@user>'
 })
@@ -424,10 +501,20 @@ client.registerCommand('deafen', (msg) => {
             client.createMessage(msg.channel.id, 'Action failed, Do I have the permission: `DEAFEN_MEMBERS`?')
         })
     }else {
-        client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `DEAFEN_MEMBERS`.')
+        if (creatorID.includes(msg.author.id)) {
+            client.editGuildMember(msg.channel.guild.id, deafen[0], {
+                deaf: true
+            }, msg.author.username + '#' + msg.author.discriminator + ' deafened ' + msg.channel.guild.members.get(deafen[0]).username).then(() =>{
+                client.createMessage(msg.channel.id, 'ok they am deaf')
+            }, () => {
+                client.createMessage(msg.channel.id, 'Action failed, Do I have the permission: `DEAFEN_MEMBERS`?')
+            })
+        }else {
+            client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `DEAFEN_MEMBERS`.')
+        }
     }
 }, {
-    description: 'Server deafens user',
+    description: ' ',
     fullDescription: 'Server deafens user (requires permission `DEAFEN_MEMBERS`)',
     usage: '<@user>'
 })
@@ -443,10 +530,20 @@ client.registerCommand('undeafen', (msg) => {
             client.createMessage(msg.channel.id, 'Action failed, Do I have the permission: `DEAFEN_MEMBERS`?')
         })
     }else {
-        client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `DEAFEN_MEMBERS`.')
+        if (creatorID.includes(msg.author.id)) {
+            client.editGuildMember(msg.channel.guild.id, deafen[0], {
+                deaf: false
+            }, msg.author.username + '#' + msg.author.discriminator + ' undeafened ' + msg.channel.guild.members.get(deafen[0]).username).then(() =>{
+                client.createMessage(msg.channel.id, 'ok they am undeaf')
+            }, () => {
+                client.createMessage(msg.channel.id, 'Action failed, Do I have the permission: `DEAFEN_MEMBERS`?')
+            })
+        }else {
+            client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `DEAFEN_MEMBERS`.')
+        }
     }
 }, {
-    description: 'Server undeafens user (if previously deafened)',
+    description: ' ',
     fullDescription: 'Server undeafens user (if previously deafened)',
     usage: '<@user>'
 });
@@ -454,20 +551,23 @@ client.registerCommand('github', () => {
     cmdsRan = ++cmdsRan
     return 'here you go: https://github.com/AlekEagleYT/EagleBot-Eris';
 }, {
-    description: 'My GitHub page.'
+    description: ' ',
+    fullDescription: 'My GitHub page.'
 });
 client.registerCommand('invite', () => {
     cmdsRan = ++cmdsRan
-    return 'here you go: https://discordapp.com/api/oauth2/authorize?client_id=416274552126177282&permissions=499645511&scope=bot';
+    return 'here you go: https://discordapp.com/api/oauth2/authorize?client_id=416274552126177282&permissions=482868295&scope=bot';
 }, {
-    description: 'Invite me!'
+    description: ' ',
+    fullDescription: 'Invite me!'
 });
 client.registerCommand('emojify', (msg) => {
     cmdsRan = ++cmdsRan
     var emojify = msg.content.split(' ').splice(1).join(' ').replace(/ /g, '    ').replace(/ab/ig, '🆎 ').replace(/a/ig, '🅰️ ').replace(/b/ig, '🅱️ ').replace(/c/ig, '🇨 ').replace(/d/ig, '🇩 ').replace(/e/ig, '🇪 ').replace(/f/ig, '🇫 ').replace(/g/ig, '🇬 ').replace(/h/ig, '🇭 ').replace(/i/ig, '🇮 ').replace(/j/ig, '🇯 ').replace(/k/ig, '🇰 ').replace(/l/ig, '🇱 ').replace(/m/ig, '🇲 ').replace(/n/ig, '🇳 ').replace(/p/ig, '🇵 ').replace(/q/ig, '🇶 ').replace(/s/ig, '🇸 ').replace(/t/ig, '🇹 ').replace(/u/ig, '🇺 ').replace(/v/ig, '🇻 ').replace(/w/ig, '🇼 ').replace(/x/ig, '🇽 ').replace(/y/ig, '🇾 ').replace(/z/ig, '🇿 ').replace(/r/ig, '🇷 ').replace(/o/ig, '🅾️ ').replace(/0/ig, ':zero:').replace(/1/ig, ':one:').replace(/2/ig, ':two:').replace(/3/ig, ':three:').replace(/4/ig, ':four:').replace(/5/ig, ':five:').replace(/6/ig, ':six:').replace(/7/ig, ':seven:').replace(/8/ig, ':eight:').replace(/9/ig, ':nine:').replace(/!/ig, '❗').replace('?', '❓');
     return emojify;
 }, {
-    description: 'Turns normal letters into emojis!'
+    description: ' ',
+    fullDescription: 'Turns normal letters into emojis!'
 });
 client.registerCommand('info', () => {
     cmdsRan = ++cmdsRan
@@ -475,12 +575,14 @@ client.registerCommand('info', () => {
     var uptime = (time + "").toHHMMSS();
     var osTime = require('os').uptime();
     var osUptime = (osTime + "").toHHMMSS();
-    return 'Ummm... I\'m a Discord Bot.\n I was made by **__AlekEagle#6978__**\n*What else is there about me?* I use the Eris library\nThis right there ==> **__' + uptime + '__** is how long I\'ve been running.\nThe computer running me has been on for this ==> **__' + osUptime + '__**\nI\'m ran on a Raspberry Pi 3 B\nI\'m on Discord Bot List, here is the link: https://discordbots.org/bot/416274552126177282 \nI\'m in... uhh... let me check. Ok here it is: **__' + client.guilds.size + '__** servers.\nThe support server is https://discord.gg/xGUC7Uh in the category "bot related stuff"\nUse `a}invite` to take a clone of me with you to your server\nI\'m using: **__' + Math.floor(process.memoryUsage().rss / 1024 / 1024) + 'MB__** of RAM\n**__' + cmdsRan + '__** commands have been run since the last time I\'ve been rebooted.\n**__' + messagesRead + '__** messages have been read since the last time I\'ve been rebooted.\nThat\'s all I know about myself.'
+    return 'Ummm... I\'m a Discord Bot.\n I was made by **__AlekEagle#6978__**\n*What else is there about me?* I use the Eris library\nThis right there ==> **__' + uptime + '__** is how long I\'ve been running.\nThe computer running me has been on for this ==> **__' + osUptime + '__**\nI\'m ran on a Raspberry Pi 3 B\nI\'m on Discord Bot List, here is the link: https://discordbots.org/bot/416274552126177282 \nI\'m in... uhh... let me check. Ok here it is: **__' + client.guilds.size + '__** servers.\nThe support server is https://discord.gg/72Px4Ag in the category "bot related stuff"\nUse `a}invite` to take a clone of me with you to your server\nI\'m using: **__' + Math.floor(process.memoryUsage().rss / 1024 / 1024) + 'MB__** of RAM\n**__' + cmdsRan + '__** commands have been run since the last time I\'ve been rebooted.\n**__' + messagesRead + '__** messages have been read since the last time I\'ve been rebooted.\nThat\'s all I know about myself.'
 }, {
-    description: 'shows basic info about me.'
+    description: ' ',
+    fullDescription: 'shows basic info about me.'
 });
+client.registerCommandAlias('information', 'info')
 client.registerCommand('reboot', (msg) => {
-    if (msg.author.id === creatorID) {
+    if (creatorID.includes(msg.author.id)) {
         client.createMessage(msg.channel.id, 'Alright AlekEagle, bye world, for now at least.')
         setTimeout(() => {
             process.exit(0);
@@ -489,23 +591,22 @@ client.registerCommand('reboot', (msg) => {
         client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
     }
 }, {
-    description: 'Reboots the bot (owner only command)'
+    description: ' ',
+    fullDescription: 'Reboots the bot (owner only command)'
 });
+client.registerCommandAlias('restart', 'reboot');
 client.registerCommand('eval', (msg) => {
     cmdsRan = ++cmdsRan
-    if (msg.author.id ===  creatorID) {
+    if (creatorID.includes(msg.author.id)) {
         try {
             var evalCommand = msg.content.split(' ').splice(1).join(' ');
             let evaluation = eval(evalCommand);
             if (typeof evaluation !== "string") {
                 evaluation = require('util').inspect(evaluation)
             }
-            if (typeof evaluation === "string" && evaluation !== undefined) {
-                evaluation = evaluation.replace(client.token, 'lol the token is blank')
-            }
             if (evaluation.length > 2000) {
                 client.createMessage(msg.channel.id, 'Output too large, please wait while I pack the output into a file.').then(() => {
-                    fs.writeFile('eval_output.txt', evaluation, (err) => {
+                    fs.writeFile('eval_output.txt', evaluation.replace(client.token, real_token.token), (err) => {
                         if (err != undefined) {
                             client.createMessage(msg.channel.id, 'An error occurred while this action was being preformed error code: `' + err.code + '`')
                         }else {
@@ -521,49 +622,52 @@ client.registerCommand('eval', (msg) => {
                     });
                 });
             }else {
-                client.createMessage(msg.channel.id, clean(evaluation))
+                client.createMessage(msg.channel.id, evaluation.replace(client.token, real_token.token))
             }
         } catch (err) {
-            client.createMessage(msg.channel.id, 'OOF ERROR:\ninput: ```' + evalCommand + '``` output: ```' + clean(err) + '```')
+            client.createMessage(msg.channel.id, 'OOF ERROR:\ninput: ```' + evalCommand + '``` output: ```' + err + '```')
         }
     }else {
         client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
     }
 }, {
-    description: 'Evaluates code with a command (owner only)'
+    description: ' ',
+    fullDescription: 'Evaluates code with a command (owner only)'
 });
 client.registerCommandAlias('evaluate', 'eval');
 client.registerCommandAlias('ev', 'eval');
 client.registerCommand('reportbug', (msg) => {
     cmdsRan = ++cmdsRan
     var reportbug = msg.content.split(' ').splice(1).join(' ')
-    client.createMessage('460517257853009920', '**__' + msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ')' + ' reported the bug: __**' + reportbug)
+    client.createMessage('474203545093013504', '**__' + msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ')' + ' reported the bug: __**' + reportbug)
     client.createMessage(msg.channel.id, 'The bug has been reported! <@' + msg.author.id + '>')
 }, {
-    description: 'Reports all teh bugs to AlekEagle!',
+    description: ' ',
+    fullDescription: 'Reports all teh bugs to AlekEagle!',
     usage: '<bug>'
 });
 client.registerCommand('suggestcmd', (msg) => {
     cmdsRan = ++cmdsRan
     var suggestcmd = msg.content.split(' ').splice(1).join(' ')
-    client.createMessage('460517321824403456', '**__' + msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ')' + ' suggested the command: __**' + suggestcmd)
+    client.createMessage('474203569671897104', '**__' + msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ')' + ' suggested the command: __**' + suggestcmd)
     client.createMessage(msg.channel.id, 'That has been suggested! Thank you <@' + msg.author.id + '>!')
 }, {
-    description: 'spoonfeed creator boi all teh ideas for commands',
+    description: ' ',
+    fullDescription: 'spoonfeed creator boi all teh ideas for commands',
     usage: '<idea>'
 });
 client.registerCommand('exec', (msg) => {
     cmdsRan = ++cmdsRan
-    if (msg.author.id === creatorID) {
+    if (creatorID.includes(msg.author.id)) {
         var execstuff = msg.content.split(' ').splice(1).join(' ')
         client.createMessage(msg.channel.id, 'Executing please wait... <a:loading1:470030932775272469>').then((message) => {
             exec(execstuff, (err, stdout, stderr) => {
                 if (err != undefined) {
-                    client.editMessage(message.channel.id, message.id, 'OOF I BROKE: ```' + err + '```')
+                    client.editMessage(message.channel.id, message.id, 'OOF I BROKE: ```' + err.replace(client.token, real_token.token) + '```')
                 }else {
                     if (stdout.length > 2000) {
                         client.editMessage(message.channel.id, message.id, 'Output too large, please wait while I pack the output into a file.').then(() => {
-                        fs.writeFile('exec_output.txt', stdout, (err) => {
+                        fs.writeFile('exec_output.txt', stdout.replace(client.token, real_token.token), (err) => {
                             if (err != undefined) {
                                 client.createMessage(message.channel.id, 'An error occurred while this action was being preformed error code: `' + err.code + '`')
                             }else {
@@ -582,7 +686,7 @@ client.registerCommand('exec', (msg) => {
                         if (stdout === '') {
                             client.editMessage(message.channel.id, message.id, 'Done')
                         }else {
-                            client.editMessage(message.channel.id, message.id, stdout)
+                            client.editMessage(message.channel.id, message.id, stdout.replace(client.token, real_token.token))
                         }
                     }
                 }
@@ -590,7 +694,8 @@ client.registerCommand('exec', (msg) => {
         });
     }
 }, {
-    description: 'executes shit (owner only)',
+    description: ' ',
+    fullDescription: 'executes shit (owner only)',
     usage: '<shit to execute>'
 });
 client.registerCommandAlias('ex', 'exec');
@@ -599,13 +704,15 @@ client.registerCommand('vote', () => {
     cmdsRan = ++cmdsRan
     return 'Vote for me at: https://discordbots.org/bot/416274552126177282/vote because yeet.';
 }, {
-    description: 'Vote for me.'
+    description: ' ',
+    fullDescription: 'Vote for me.'
 });
 client.registerCommand('yeet', (msg) => {
     cmdsRan = ++cmdsRan
     return '<@' + msg.author.id + '> Thou shalt be yaught young one.'
 }, {
-    description: 'Yeets you'
+    description: ' ',
+    fullDescription: 'Yeets you'
 });
 client.registerCommand('dbl', (msg) => {
     cmdsRan = ++cmdsRan
@@ -628,19 +735,22 @@ client.registerCommand('dbl', (msg) => {
         client.createMessage(msg.channel.id, '**🔴 WOOP WOOP 🔴 WE GOT AN IDIOT OVER HERE TRYING TO VIEW THE BOT PAGE OF A USER!**')
     }
 }, {
-    description: 'gives info about other bots'
+    description: ' ',
+    fullDescription: 'gives info about other bots if they are on discordbots.org'
 });
 client.registerCommand('bean', (msg) => {
     cmdsRan = ++cmdsRan
     var bean = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1)
     return 'Banned '+ msg.content.split(' ').splice(1).join(' ') + '1!!!111!1!!1!11!!!11!!'
 }, {
-    description: 'Totally bans a user (not clickbait)'
+    description: ' ',
+    fullDescription: 'Totally bans a user (not clickbait)'
 });
 client.registerCommandAlias('bam', 'bean')
 client.registerCommandAlias('blam', 'bean')
 client.registerCommandAlias('ben', 'bean')
 client.registerCommand('avatar', (msg) => {
+    cmdsRan = ++cmdsRan
     var avatarLol = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1).join(' ')
     client.createMessage(msg.channel.id, {embed: {
         title: client.users.get(avatarLol).username + '#' + client.users.get(avatarLol).discriminator + '\'s avatar (click for link to avatar)',
@@ -650,7 +760,8 @@ client.registerCommand('avatar', (msg) => {
         }
     }});
 }, {
-    description: 'gets a user/bot\'s avatar',
+    description: ' ',
+    fullDescription: 'gets a user/bot\'s avatar',
     usage: '<@mention|ID>'
 });
 client.registerCommand('howgay', (msg) => {
@@ -667,7 +778,8 @@ client.registerCommand('howgay', (msg) => {
         }
     }
 }, {
-    description: 'shows how gay you or a friend are.',
+    description: ' ',
+    fullDescription: 'shows how gay you or a friend are.',
     usage: '<literally anything>'
 });
 client.registerCommand('howtrap', (msg) => {
@@ -684,7 +796,8 @@ client.registerCommand('howtrap', (msg) => {
         }
     }
 }, {
-    description: 'howtrap.',
+    description: ' ',
+    fullDescription: 'howtrap.',
     usage: '<literally anything>'
 });
 client.registerCommand('howfurry', (msg) => {
@@ -701,10 +814,12 @@ client.registerCommand('howfurry', (msg) => {
         }
     }
 }, {
-    description: 'howfurry.',
+    description: ' ',
+    fullDescription: 'howfurry.',
     usage: '<literally anything>'
 });
 client.registerCommand('remindme', (msg) => {
+    cmdsRan = ++cmdsRan
     var time = msg.content.split(' ').splice(1);
     time = parseInt(time[0]);
     var waitTimeAmount = msg.content.split(' ').splice(2);
@@ -718,7 +833,7 @@ client.registerCommand('remindme', (msg) => {
         })
     }, time);
 }, {
-    description: 'Reminds you of stuff!',
+    description: ' ',
     fullDescription: 'Reminds you of stuff! (only supports one time unit at the moment)',
     usage: '<time in numbers> <[s|sec]|[m|min]|[h|hr]|[d|day]> <reminder thing>'
 });
@@ -727,10 +842,22 @@ client.registerCommand('setprefix', (msg) => {
         var newPrefix = msg.content.split(' ').splice(1)
         client.registerGuildPrefix(msg.channel.guild.id, newPrefix[0])
     }else {
-        client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `ADMINISTRATOR`.')
+        if (creatorID.includes(msg.author.id)) {
+            var newPrefix = msg.content.split(' ').splice(1)
+            client.registerGuildPrefix(msg.channel.guild.id, newPrefix[0])
+        }else {
+            client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `ADMINISTRATOR`.')
+        }
     }
 }, {
-    description: 'Sets the servers prefix, cannot contain spaces in the prefix',
+    description: ' ',
+    fullDescription: 'Sets the servers prefix, cannot contain spaces in the prefix',
     usage: '<PrefixWithNoSpaces>'
+});
+client.registerCommand('botpermcheck', (msg) => {
+    client.createMessage(msg.channel.id, `Perms I need/have:\n\`READ_MESSAGES: ${msg.channel.guild.members.get(client.user.id).permission.has('readMessages')}\` needed to read messages to see if you used a command.\n\`SEND_MESSAGES: ${msg.channel.guild.members.get(client.user.id).permission.has('sendMessages')}\` needed to send responses to commands.\n\`READ_MESSAGE_HISTORY: ${msg.channel.guild.members.get(client.user.id).permission.has('readMessageHistory')}\` needed for some commands that need to have arguements after the command.\n\`USE_EXTERNAL_EMOJIS: ${msg.channel.guild.members.get(client.user.id).permission.has('externalEmojis')}\` needed to use some external emojis only available in other servers.\n\`SEND_TTS_MESSAGES: ${msg.channel.guild.members.get(client.user.id).permission.has('sendTTSMessages')}\`\n\`MANAGE_ROLES: ${msg.channel.guild.members.get(client.user.id).permission.has('manageRoles')}\`needed to give and revoke roles from users *the rest are self explanitory*\n\`KICK_MEMBERS: ${msg.channel.guild.members.get(client.user.id).permission.has('kickMembers')}\`\n\`BAN_MEMBERS: ${msg.channel.guild.members.get(client.user.id).permission.has('banMembers')}\`\n\`CREATE_INSTANT_INVITE: ${msg.channel.guild.members.get(client.user.id).permission.has('createInstantInvite')}\`\n\`MANAGE_NICKNAMES: ${msg.channel.guild.members.get(client.user.id).permission.has('manageNicknames')}\`\n\`CHANGE_NICKNAME: ${msg.channel.guild.members.get(client.user.id).permission.has('changeNickname')}\`\n\`MANAGE_MESSAGES: ${msg.channel.guild.members.get(client.user.id).permission.has('manageMessages')}\`\n\`EMBED_LINKS: ${msg.channel.guild.members.get(client.user.id).permission.has('embedLinks')}\`\n\`ATTACH_FILES: ${msg.channel.guild.members.get(client.user.id).permission.has('attachFiles')}\`\n\`MENTION_EVERYONE: ${msg.channel.guild.members.get(client.user.id).permission.has('mentionEveryone')}\`\n\`ADD_REACTIONS: ${msg.channel.guild.members.get(client.user.id).permission.has('addReactions')}\`\n\`MUTE_MEMBERS: ${msg.channel.guild.members.get(client.user.id).permission.has('voiceMuteMembers')}\`\n\`DEAFEN_MEMBERS: ${msg.channel.guild.members.get(client.user.id).permission.has('voiceDeafenMembers')}\``)
+}, {
+    description: ' ',
+    fullDescription: 'shows you what permissions I may need and which ones I already have'
 });
 client.connect();
