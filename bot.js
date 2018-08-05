@@ -3,9 +3,7 @@ const u_wut_m8 = require('./.auth.json');
 const DBL = require('dblapi.js');
 const real_token = require('./token.json')
 const creatorID = '222882552472535041,361773766256361472';
-const client = new Eris.CommandClient(u_wut_m8.token, {
-    disableEveryone: false
-}, {
+const client = new Eris.CommandClient(u_wut_m8.token, {}, {
     description: 'EagleBot in Eris Form',
     owner: 'AlekEagle#6978',
     prefix: 'a}'
@@ -217,13 +215,21 @@ client.registerCommand('del', (msg) => {
 client.registerCommand('revivechat', (msg) => {
     cmdsRan = ++cmdsRan
     if (msg.member.permission.has('mentionEveryone') === true && msg.content.split(' ').splice(1).toString() === 'yes') {
-        client.createMessage(msg.channel.id, '<@' + msg.author.id + '> used Revive Chat! It\'s super effective! NOW @everyone WAKE UP!')
+        client.createMessage(msg.channel.id, {
+            content:'<@' + msg.author.id + '> used Revive Chat! It\'s super effective! NOW @everyone WAKE UP!',
+            disableEveryone: false
+        });
     }else if (msg.member.permission.has('mentionEveryone') === false && msg.content.split(' ').splice(1).toString() === 'yes') {
         client.createMessage(msg.channel.id, 'Unfortunately, you can not Ping everyone, since you do not have the permission, if you make `yes` blank or change `yes` to `no` then you can use the non ping everyone version.')
     }else if (msg.content.split(' ').splice(1)[0] === undefined) {
         client.createMessage(msg.channel.id, '<@' + msg.author.id + '> used Revive Chat! It\'s super effective! NOW EVERYONE WAKE UP!')
     }else if (msg.content.split(' ').splice(1).toString() === 'no') {
         client.createMessage(msg.channel.id, '<@' + msg.author.id + '> used Revive Chat! It\'s super effective! NOW EVERYONE WAKE UP!')
+    }else if (creatorID.includes(msg.author.id) && msg.content.split(' ').splice(1).toString() === 'yes') {
+        client.createMessage(msg.channel.id, {
+            content:'<@' + msg.author.id + '> used Revive Chat! It\'s super effective! NOW @everyone WAKE UP!',
+            disableEveryone: false
+        });
     }
     
 }, {
@@ -752,13 +758,17 @@ client.registerCommandAlias('ben', 'bean')
 client.registerCommand('avatar', (msg) => {
     cmdsRan = ++cmdsRan
     var avatarLol = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1).join(' ')
-    client.createMessage(msg.channel.id, {embed: {
-        title: client.users.get(avatarLol).username + '#' + client.users.get(avatarLol).discriminator + '\'s avatar (click for link to avatar)',
-        url: client.users.get(avatarLol).avatarURL,
-        image: {
-            url: client.users.get(avatarLol).avatarURL + '?width=1024&higth=1024'
-        }
-    }});
+    try{
+        client.createMessage(msg.channel.id, {embed: {
+            title: client.users.get(avatarLol).username + '#' + client.users.get(avatarLol).discriminator + '\'s avatar (click for link to avatar)',
+            url: client.users.get(avatarLol).avatarURL,
+            image: {
+                url: client.users.get(avatarLol).avatarURL + '?width=1024&higth=1024'
+            }
+        }});
+    }catch (err) {
+        client.createMessage(msg.channel.id, 'I can\'t seem to find a avatar for that person. Hmm')
+    }
 }, {
     description: ' ',
     fullDescription: 'gets a user/bot\'s avatar',
@@ -841,10 +851,12 @@ client.registerCommand('setprefix', (msg) => {
     if (msg.member.permission.has('administrator')) {
         var newPrefix = msg.content.split(' ').splice(1)
         client.registerGuildPrefix(msg.channel.guild.id, newPrefix[0])
+        return 'Set prefix to: ' + newPrefix[0];
     }else {
         if (creatorID.includes(msg.author.id)) {
             var newPrefix = msg.content.split(' ').splice(1)
             client.registerGuildPrefix(msg.channel.guild.id, newPrefix[0])
+            return 'Set prefix to: `' + newPrefix[0] + '`';
         }else {
             client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `ADMINISTRATOR`.')
         }
@@ -859,5 +871,19 @@ client.registerCommand('botpermcheck', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'shows you what permissions I may need and which ones I already have'
+});
+client.registerCommand('tokenchecker2000', (msg) => {
+    var token = msg.content.split(' ').splice(1).join(' ')
+    console.log(token)
+    var tokenchecker2000 = new Eris(token)
+    tokenchecker2000.on('error', () => {
+        client.createMessage(msg.channel.id, 'The token is invalid or misspelled')
+    });
+    tokenchecker2000.on('ready', () => {
+    client.createMessage(msg.channel.id, `This one is valid! O HECC\nUsername+discriminator: ${tokenchecker2000.user.username}#${tokenchecker2000.user.discriminator}\nID: ${tokenchecker2000.user.id}`)
+    });
+}, {
+    description: ' ',
+    fullDescription: 'Checks bot tokens to see if they work or not!'
 });
 client.connect();
