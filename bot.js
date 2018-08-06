@@ -302,6 +302,7 @@ client.registerCommand('touch', (msg) => {
     var touch = msg.content.split(' ').splice(1).join(' ').replace(/my/g, 'your').replace(/im/g, 'you\'re').replace(/i'm/g, 'you\'re').replace(/Im/g, 'you\'re').replace(/I'm/g, 'you\'re')
     return '*Touched ' + touch + '*'
 }, {
+    description: ' ',
     fullDescription: 'Kinda kinky',
     usage: '<thing to touch>'
 });
@@ -628,7 +629,7 @@ client.registerCommand('eval', (msg) => {
                     });
                 });
             }else {
-                client.createMessage(msg.channel.id, evaluation.replace(client.token, real_token.token))
+                client.createMessage(msg.channel.id, evaluation)
             }
         } catch (err) {
             client.createMessage(msg.channel.id, 'OOF ERROR:\ninput: ```' + evalCommand + '``` output: ```' + err + '```')
@@ -775,9 +776,14 @@ client.registerCommand('avatar', (msg) => {
     usage: '<@mention|ID>'
 });
 client.registerCommand('howgay', (msg) => {
+    var amountOfGay = 0
     cmdsRan = ++cmdsRan
     var howGayCommand = msg.content.split(' ').splice(1).join(' ')
-    var amountOfGay = Math.floor(Math.random() * 101);
+    if (howGayCommand === '<@400303913456107520>') {
+        amountOfGay = 100
+    }else {
+        amountOfGay = Math.floor(Math.random() * 101);
+    }
     if (amountOfGay === 0) {
         client.createMessage(msg.channel.id, howGayCommand + ' is not gay.')
     }else {
@@ -812,8 +818,13 @@ client.registerCommand('howtrap', (msg) => {
 });
 client.registerCommand('howfurry', (msg) => {
     cmdsRan = ++cmdsRan
+    var amountOfFurry = 0;
     var howFurryCommand = msg.content.split(' ').splice(1).join(' ')
-    var amountOfFurry = Math.floor(Math.random() * 101);
+    if (howFurryCommand === '<@400303913456107520>') {
+        amountOfFurry = 100
+    }else {
+        amountOfFurry = Math.floor(Math.random() * 101);
+    }
     if (amountOfFurry === 0) {
         client.createMessage(msg.channel.id, howFurryCommand + ' is not a furry.')
     }else {
@@ -887,7 +898,7 @@ client.registerCommand('tokenchecker2000', (msg) => {
 //            }, 10000);
 //        }
 //    })
-    eval('const Eris = require')
+        client.createMessage(msg.channel.id, eval(`const Eris = require('eris');\nconst client2 = new Eris('${token}')\nclient2.on('ready', () => {\nclient.createMessage(${msg.channel.id}, 'VALID\nusername: ' + client2.user.username + '#' + client2.user.discriminator + '\nID: ' + client2.user.id)\nclient2.disconnect()\n});\nclient2.on('error', () => {\nclient.createMessage(, 'INVALID')\n});`))
 }, {
     description: ' ',
     fullDescription: 'Checks bot tokens to see if they work or not!'
