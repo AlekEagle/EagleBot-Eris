@@ -1,7 +1,7 @@
 const Eris = require('eris');
 const u_wut_m8 = require('./.auth.json');
 const DBL = require('dblapi.js');
-const real_token = require('./token.json')
+//const real_token = require('./token.json')
 const creatorID = '222882552472535041,361773766256361472';
 const client = new Eris.CommandClient(u_wut_m8.token, {}, {
     description: 'EagleBot in Eris Form',
@@ -874,16 +874,22 @@ client.registerCommand('botpermcheck', (msg) => {
 });
 client.registerCommand('tokenchecker2000', (msg) => {
     var token = msg.content.split(' ').splice(1).join(' ')
-    console.log(token)
-    var tokenchecker2000 = new Eris(token)
-    tokenchecker2000.on('error', () => {
-        client.createMessage(msg.channel.id, 'The token is invalid or misspelled')
-    });
-    tokenchecker2000.on('ready', () => {
-    client.createMessage(msg.channel.id, `This one is valid! O HECC\nUsername+discriminator: ${tokenchecker2000.user.username}#${tokenchecker2000.user.discriminator}\nID: ${tokenchecker2000.user.id}`)
-    });
+//    fs.writeFile('./tokenchecker2000token.txt', `${token}`)
+//    exec('node tokenchecker2000.js', (err, stdout, stderr) => {
+//        if (err != undefined) {
+//            client.createMessage(msg.channel.id, 'Unable to connect to token checker, contact AlekEagle#6978')
+//        }else {
+//            setTimeout(() => {
+//                fs.readFile('./output.txt', (err, data) => {
+//                    var output = data.toString('utf8')
+//                    client.createMessage(msg.channel.id, output)
+//                });
+//            }, 10000);
+//        }
+//    })
+    eval('const Eris = require')
 }, {
     description: ' ',
     fullDescription: 'Checks bot tokens to see if they work or not!'
 });
-client.connect();
+ client.connect();

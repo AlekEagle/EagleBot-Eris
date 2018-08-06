@@ -1,0 +1,5 @@
+const Eris = require('eris');
+const client = new Eris('thisisatokenyaydeath')
+client.on('ready', () => {
+    console.log(`VALID${client.user.username})
+})
