@@ -3,7 +3,7 @@ const u_wut_m8 = require('./.auth.json');
 const DBL = require('dblapi.js');
 const creatorID = '222882552472535041,361773766256361472';
 const client = new Eris.CommandClient(u_wut_m8.token, {}, {
-//    defaultHelpCommand: false,
+    defaultHelpCommand: false,
     defaultImageFormat: 'png',
     description: 'EagleBot in Eris Form',
     owner: 'AlekEagle#6978',
@@ -67,20 +67,6 @@ client.on('messageCreate', (message) => {
         client.createMessage(message.channel.id, message.content.split(' ').splice(1).join(' ') + ' has been raped!!!!!!')
     }
 });
-//client.registerCommand('help', (msg) => {
-//    client.getDMChannel(msg.author.id).then((dm) => {
-//        if (msg.content.split(' ').splice(1).join(' ') == undefined) {
-//            client.createMessage(dm.id, Object.values(client.commands).map(c => c.label).toString().replace(/,/g, '\n'))
-//        }else {
-//            var command = client.commands.filter(msg.content.split(' ').splice(1).join(' '))
-//            client.createMessage(dm.id, command.label + ' ' + commmand.usage + '\n' + command.fullDescription)
-//        }
-//    }, () => {
-//        client.createMessage(msg.channel.id, 'I can\'t create a DM with you')
-//    })
-//})
-client.registerCommandAlias('hlep', 'help')
-client.registerCommandAlias('halp', 'help')
 client.registerCommand('ping', (msg) => {
         var apiPingTime = '';
         cmdsRan = ++cmdsRan
@@ -1002,7 +988,7 @@ client.on('messageReactionAdd', (msg, emoji, userID) => {
             console.error('oof')
         })
     }else if(creatorID.includes(userID) && emoji.name === '🗑') {
-        client.deleteMessage(msg.channel.id, msg.id, 'message reaction deletion').then(() => {}, () => {
+        client.deleteMessage(msg.channel.id, msg.id, 'message reaction deletion by owner').then(() => {}, () => {
             console.error('oof')
         })
     }
@@ -1020,5 +1006,56 @@ client.registerCommand('setname', (msg) => {
     description: ' ',
     fullDescription: 'changes my name! (bot owner only)'
 })
-
+client.registerCommand('help', 'Push a number to show a page', {
+    description: 'this help text',
+    reactionButtons:[
+        {
+            emoji: '1⃣',
+            type: 'edit',
+            response: `${Object.values(client.commands).map(m => m.label)[0]} ${Object.values(client.commands).map(m => m.usage)[0]}\n${Object.values(client.commands).map(m => m.fullDescription)[0]}\n\n${Object.values(client.commands).map(m => m.label)[1]} ${Object.values(client.commands).map(m => m.usage)[1]}\n${Object.values(client.commands).map(m => m.fullDescription)[1]}\n\n${Object.values(client.commands).map(m => m.label)[2]} ${Object.values(client.commands).map(m => m.usage)[2]}\n${Object.values(client.commands).map(m => m.fullDescription)[2]}\n\n${Object.values(client.commands).map(m => m.label)[3]} ${Object.values(client.commands).map(m => m.usage)[3]}\n${Object.values(client.commands).map(m => m.fullDescription)[3]}\n\n${Object.values(client.commands).map(m => m.label)[4]} ${Object.values(client.commands).map(m => m.usage)[4]}\n${Object.values(client.commands).map(m => m.fullDescription)[4]}`
+        },
+        {
+            emoji: '2⃣',
+            type: 'edit',
+            response: `${Object.values(client.commands).map(m => m.label)[5]} ${Object.values(client.commands).map(m => m.usage)[5]}\n${Object.values(client.commands).map(m => m.fullDescription)[5]}\n\n${Object.values(client.commands).map(m => m.label)[6]} ${Object.values(client.commands).map(m => m.usage)[6]}\n${Object.values(client.commands).map(m => m.fullDescription)[6]}\n\n${Object.values(client.commands).map(m => m.label)[7]} ${Object.values(client.commands).map(m => m.usage)[7]}\n${Object.values(client.commands).map(m => m.fullDescription)[7]}\n\n${Object.values(client.commands).map(m => m.label)[8]} ${Object.values(client.commands).map(m => m.usage)[8]}\n${Object.values(client.commands).map(m => m.fullDescription)[8]}\n\n${Object.values(client.commands).map(m => m.label)[9]} ${Object.values(client.commands).map(m => m.usage)[9]}\n${Object.values(client.commands).map(m => m.fullDescription)[9]}`
+        },
+        {
+            emoji: '3⃣',
+            type: 'edit',
+            response: `${Object.values(client.commands).map(m => m.label)[10]} ${Object.values(client.commands).map(m => m.usage)[10]}\n${Object.values(client.commands).map(m => m.fullDescription)[10]}\n\n${Object.values(client.commands).map(m => m.label)[11]} ${Object.values(client.commands).map(m => m.usage)[11]}\n${Object.values(client.commands).map(m => m.fullDescription)[11]}\n\n${Object.values(client.commands).map(m => m.label)[12]} ${Object.values(client.commands).map(m => m.usage)[12]}\n${Object.values(client.commands).map(m => m.fullDescription)[12]}\n\n${Object.values(client.commands).map(m => m.label)[13]} ${Object.values(client.commands).map(m => m.usage)[13]}\n${Object.values(client.commands).map(m => m.fullDescription)[13]}\n\n${Object.values(client.commands).map(m => m.label)[14]} ${Object.values(client.commands).map(m => m.usage)[14]}\n${Object.values(client.commands).map(m => m.fullDescription)[14]}`
+        },
+        {
+            emoji: '4⃣',
+            type: 'edit',
+            response: `${Object.values(client.commands).map(m => m.label)[15]} ${Object.values(client.commands).map(m => m.usage)[15]}\n${Object.values(client.commands).map(m => m.fullDescription)[15]}\n\n${Object.values(client.commands).map(m => m.label)[16]} ${Object.values(client.commands).map(m => m.usage)[16]}\n${Object.values(client.commands).map(m => m.fullDescription)[16]}\n\n${Object.values(client.commands).map(m => m.label)[17]} ${Object.values(client.commands).map(m => m.usage)[17]}\n${Object.values(client.commands).map(m => m.fullDescription)[17]}\n\n${Object.values(client.commands).map(m => m.label)[18]} ${Object.values(client.commands).map(m => m.usage)[18]}\n${Object.values(client.commands).map(m => m.fullDescription)[18]}\n\n${Object.values(client.commands).map(m => m.label)[19]} ${Object.values(client.commands).map(m => m.usage)[19]}\n${Object.values(client.commands).map(m => m.fullDescription)[19]}`
+        },
+        {
+            emoji: '5⃣',
+            type: 'edit',
+            response: `${Object.values(client.commands).map(m => m.label)[20]} ${Object.values(client.commands).map(m => m.usage)[20]}\n${Object.values(client.commands).map(m => m.fullDescription)[20]}\n\n${Object.values(client.commands).map(m => m.label)[21]} ${Object.values(client.commands).map(m => m.usage)[21]}\n${Object.values(client.commands).map(m => m.fullDescription)[21]}\n\n${Object.values(client.commands).map(m => m.label)[22]} ${Object.values(client.commands).map(m => m.usage)[22]}\n${Object.values(client.commands).map(m => m.fullDescription)[22]}\n\n${Object.values(client.commands).map(m => m.label)[23]} ${Object.values(client.commands).map(m => m.usage)[23]}\n${Object.values(client.commands).map(m => m.fullDescription)[23]}\n\n${Object.values(client.commands).map(m => m.label)[24]} ${Object.values(client.commands).map(m => m.usage)[24]}\n${Object.values(client.commands).map(m => m.fullDescription)[24]}`
+        },
+        {
+            emoji: '6⃣',
+            type: 'edit',
+            response: `${Object.values(client.commands).map(m => m.label)[25]} ${Object.values(client.commands).map(m => m.usage)[25]}\n${Object.values(client.commands).map(m => m.fullDescription)[25]}\n\n${Object.values(client.commands).map(m => m.label)[26]} ${Object.values(client.commands).map(m => m.usage)[26]}\n${Object.values(client.commands).map(m => m.fullDescription)[26]}\n\n${Object.values(client.commands).map(m => m.label)[27]} ${Object.values(client.commands).map(m => m.usage)[27]}\n${Object.values(client.commands).map(m => m.fullDescription)[27]}\n\n${Object.values(client.commands).map(m => m.label)[28]} ${Object.values(client.commands).map(m => m.usage)[28]}\n${Object.values(client.commands).map(m => m.fullDescription)[28]}\n\n${Object.values(client.commands).map(m => m.label)[29]} ${Object.values(client.commands).map(m => m.usage)[29]}\n${Object.values(client.commands).map(m => m.fullDescription)[29]}`
+        },
+        {
+            emoji: '7⃣',
+            type: 'edit',
+            response: `${Object.values(client.commands).map(m => m.label)[30]} ${Object.values(client.commands).map(m => m.usage)[30]}\n${Object.values(client.commands).map(m => m.fullDescription)[30]}\n\n${Object.values(client.commands).map(m => m.label)[31]} ${Object.values(client.commands).map(m => m.usage)[31]}\n${Object.values(client.commands).map(m => m.fullDescription)[31]}\n\n${Object.values(client.commands).map(m => m.label)[32]} ${Object.values(client.commands).map(m => m.usage)[32]}\n${Object.values(client.commands).map(m => m.fullDescription)[32]}\n\n${Object.values(client.commands).map(m => m.label)[33]} ${Object.values(client.commands).map(m => m.usage)[33]}\n${Object.values(client.commands).map(m => m.fullDescription)[33]}\n\n${Object.values(client.commands).map(m => m.label)[34]} ${Object.values(client.commands).map(m => m.usage)[34]}\n${Object.values(client.commands).map(m => m.fullDescription)[34]}`
+        },
+        {
+            emoji: '8⃣',
+            type: 'edit',
+            response: `${Object.values(client.commands).map(m => m.label)[35]} ${Object.values(client.commands).map(m => m.usage)[35]}\n${Object.values(client.commands).map(m => m.fullDescription)[35]}\n\n${Object.values(client.commands).map(m => m.label)[36]} ${Object.values(client.commands).map(m => m.usage)[36]}\n${Object.values(client.commands).map(m => m.fullDescription)[36]}\n\n${Object.values(client.commands).map(m => m.label)[37]} ${Object.values(client.commands).map(m => m.usage)[37]}\n${Object.values(client.commands).map(m => m.fullDescription)[37]}\n\n${Object.values(client.commands).map(m => m.label)[38]} ${Object.values(client.commands).map(m => m.usage)[38]}\n${Object.values(client.commands).map(m => m.fullDescription)[38]}\n\n${Object.values(client.commands).map(m => m.label)[39]} ${Object.values(client.commands).map(m => m.usage)[39]}\n${Object.values(client.commands).map(m => m.fullDescription)[39]}`
+        },
+        {
+            emoji: '9⃣',
+            type: 'edit',
+            response: `${Object.values(client.commands).map(m => m.label)[40]} ${Object.values(client.commands).map(m => m.usage)[40]}\n${Object.values(client.commands).map(m => m.fullDescription)[40]}\n\n${Object.values(client.commands).map(m => m.label)[41]} ${Object.values(client.commands).map(m => m.usage)[41]}\n${Object.values(client.commands).map(m => m.fullDescription)[41]}\n\n${Object.values(client.commands).map(m => m.label)[42]} ${Object.values(client.commands).map(m => m.usage)[42]}\n${Object.values(client.commands).map(m => m.fullDescription)[42]}\n\n${Object.values(client.commands).map(m => m.label)[43]} ${Object.values(client.commands).map(m => m.usage)[43]}\n${Object.values(client.commands).map(m => m.fullDescription)[43]}\n\n${Object.values(client.commands).map(m => m.label)[44]} ${Object.values(client.commands).map(m => m.usage)[44]}\n${Object.values(client.commands).map(m => m.fullDescription)[44]}`
+        },
+    ]
+})
+client.registerCommandAlias('hlep', 'help')
+client.registerCommandAlias('halp', 'help')
  client.connect();
