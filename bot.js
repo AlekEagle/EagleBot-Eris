@@ -1052,7 +1052,7 @@ client.registerCommand('help', 'Push a number to show a page', {
         {
             emoji: '9⃣',
             type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[40]} ${Object.values(client.commands).map(m => m.usage)[40]}\n${Object.values(client.commands).map(m => m.fullDescription)[40]}\n\n${Object.values(client.commands).map(m => m.label)[41]} ${Object.values(client.commands).map(m => m.usage)[41]}\n${Object.values(client.commands).map(m => m.fullDescription)[41]}\n\n${Object.values(client.commands).map(m => m.label)[42]} ${Object.values(client.commands).map(m => m.usage)[42]}\n${Object.values(client.commands).map(m => m.fullDescription)[42]}\n\n${Object.values(client.commands).map(m => m.label)[43]} ${Object.values(client.commands).map(m => m.usage)[43]}\n${Object.values(client.commands).map(m => m.fullDescription)[43]}\n\n${Object.values(client.commands).map(m => m.label)[44]} ${Object.values(client.commands).map(m => m.usage)[44]}\n${Object.values(client.commands).map(m => m.fullDescription)[44]}`
+            response: `${Object.values(client.commands).map(m => m.label)[40]} ${Object.values(client.commands).map(m => m.usage)[40]}\n${Object.values(client.commands).map(m => m.fullDescription)[40]}\n\n${Object.values(client.commands).map(m => m.label)[41]} ${Object.values(client.commands).map(m => m.usage)[41]}\n${Object.values(client.commands).map(m => m.fullDescription)[41]}`
         },
     ]
 })
