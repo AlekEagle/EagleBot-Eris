@@ -541,7 +541,7 @@ client.registerCommand('unmute', (msg) => {
         if (creatorID.includes(msg.author.id)) {
             client.editGuildMember(msg.channel.guild.id, unmute[0], {
                 mute: false
-            }, msg.author.username + '#' + msg.author.discriminator + ' muted ' + msg.channel.guild.members.get(mute[0]).username).then(() =>{
+            }, msg.author.username + '#' + msg.author.discriminator + ' unmuted ' + msg.channel.guild.members.get(unmute[0]).username).then(() =>{
                 client.createMessage(msg.channel.id, 'ok they am unmute')
             }, () => {
                 client.createMessage(msg.channel.id, 'Action failed, Do I have the permission: `MUTE_MEMBERS`?')
