@@ -848,9 +848,19 @@ client.registerCommand('howgay', (msg) => {
     cmdsRan = ++cmdsRan
     var howGayCommand = msg.content.split(' ').splice(1).join(' ')
     if (howGayCommand.includes('400303913456107520')) {
-        amountOfGay = 100
+        amountOfGay = 176;
     }else if (howGayCommand.includes('244311039125094410')) {
+        amountOfGay = 100;
+    }else if (howGayCommand.includes('404148789314846721')) {
+        amountOfGay = 100;
+    }else if (howGayCommand.includes('454985083607056395')) {
+        amountOfGay = 50;
+    }else if (howGayCommand.includes('348577384678686721')) {
         amountOfGay = 0;
+    }else if (howGayCommand.includes('366156674853240832')) {
+        amountOfGay = 5;
+    }else if (howGayCommand.includes('267494526359306241')) {
+        amountOfGay = 25;
     }else {
         amountOfGay = Math.floor(Math.random() * 101);
     }
@@ -891,13 +901,15 @@ client.registerCommand('howfurry', (msg) => {
     var amountOfFurry = 0;
     var howFurryCommand = msg.content.split(' ').splice(1).join(' ')
     if (howFurryCommand.includes('400303913456107520')) {
-        amountOfFurry = 100
+        amountOfFurry = 200;
     }else if (howFurryCommand.includes('222882552472535041')) {
-        amountOfFurry = 100
+        amountOfFurry = 100;
     }else if (howFurryCommand.includes('158750488563679232')) {
-        amountOfFurry = 100
+        amountOfFurry = 100;
     }else if (howFurryCommand.includes('439373663905513473')) {
-        amountOfFurry = 100
+        amountOfFurry = 100;
+    }else if (howFurryCommand.includes('267494526359306241')) {
+        amountOfFurry = 25;
     }else {
         amountOfFurry = Math.floor(Math.random() * 101);
     }
@@ -1054,8 +1066,9 @@ client.registerCommand('help', 'Push a number to show a page', {
             type: 'edit',
             response: `${Object.values(client.commands).map(m => m.label)[40]} ${Object.values(client.commands).map(m => m.usage)[40]}\n${Object.values(client.commands).map(m => m.fullDescription)[40]}\n\n${Object.values(client.commands).map(m => m.label)[41]} ${Object.values(client.commands).map(m => m.usage)[41]}\n${Object.values(client.commands).map(m => m.fullDescription)[41]}`
         },
-    ]
-})
+    ],
+    reactionButtonTimeout: 60000
+});
 client.registerCommandAlias('hlep', 'help')
 client.registerCommandAlias('halp', 'help')
  client.connect();
