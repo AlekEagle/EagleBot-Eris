@@ -29,12 +29,12 @@ String.prototype.toHHMMSS = function () {
     var time = hours+':'+minutes+':'+seconds;
     return time;
 }
-function notClickBait(channel, file, filename) {
+function notClickBait(channel, file, filename, content) {
     fs.readFile(file, (err, data) => {
         if (err != undefined) {
             client.createMessage(channel, 'An error occurred sending the file, this is the error code: `' + err.code + '`')
         }else {
-            client.createMessage(channel, 'File: ', {
+            client.createMessage(channel, content, {
                 file: data,
                 name: filename
             });
@@ -848,7 +848,7 @@ client.registerCommand('howgay', (msg) => {
     cmdsRan = ++cmdsRan
     var howGayCommand = msg.content.split(' ').splice(1).join(' ')
     if (howGayCommand.includes('400303913456107520')) {
-        amountOfGay = 176;
+        amountOfGay = 150;
     }else if (howGayCommand.includes('244311039125094410')) {
         amountOfGay = 100;
     }else if (howGayCommand.includes('404148789314846721')) {
@@ -861,6 +861,8 @@ client.registerCommand('howgay', (msg) => {
         amountOfGay = 5;
     }else if (howGayCommand.includes('267494526359306241')) {
         amountOfGay = 25;
+    }else if (howGayCommand.includes('69')) {
+        amountOfGay = 69;
     }else {
         amountOfGay = Math.floor(Math.random() * 101);
     }
@@ -881,7 +883,11 @@ client.registerCommand('howgay', (msg) => {
 client.registerCommand('howtrap', (msg) => {
     cmdsRan = ++cmdsRan
     var howTrapCommand = msg.content.split(' ').splice(1).join(' ')
-    var amountOfTrap = Math.floor(Math.random() * 101);
+    if (howTrapCommand.includes('69')) {
+        amountOfTrap = 69;
+    }else {
+        var amountOfTrap = Math.floor(Math.random() * 101);
+    }
     if (amountOfTrap === 0) {
         client.createMessage(msg.channel.id, howTrapCommand + ' is not a trap.')
     }else {
@@ -1017,6 +1023,31 @@ client.registerCommand('setname', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'changes my name! (bot owner only)'
+});
+client.registerCommand('thefudgeynugget', (msg) => {
+   client.createMessage(msg.channel.id, {
+       embed: {
+           title: 'TheFudgeyNugget, A YouTuber who is also a furry and is so gay I can\'t calculate how hay he is. Also this:',
+           image: {
+               url: 'https://cdn.discordapp.com/attachments/456451079178158081/477564900156112896/emote.png'
+           }
+        }
+    });
+}, {
+    fullDescription: 'short story about TheFudgeyNugget.'
+});
+client.registerCommand('windows98', (msg) => {
+    var rng = Math.floor(Math.random() * 2)
+    if (rng === 1) {
+        console.log(rng)
+        client.createMessage(msg.channel.id, 'Booting up please wait <a:loading1:470030932775272469>').then((mess) => {
+            setTimeout(() => {
+                client.editMessage(mess.channel.id, mess.id, 'OOF I CRASHED');
+            }, 60000)
+        })
+    }else {
+        client.createMessage(msg.channel.id, 'Booting up please wait <a:loading1:470030932775272469>')
+    }
 })
 client.registerCommand('help', 'Push a number to show a page', {
     description: 'this help text',
@@ -1064,7 +1095,7 @@ client.registerCommand('help', 'Push a number to show a page', {
         {
             emoji: '9⃣',
             type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[40]} ${Object.values(client.commands).map(m => m.usage)[40]}\n${Object.values(client.commands).map(m => m.fullDescription)[40]}\n\n${Object.values(client.commands).map(m => m.label)[41]} ${Object.values(client.commands).map(m => m.usage)[41]}\n${Object.values(client.commands).map(m => m.fullDescription)[41]}`
+            response: `${Object.values(client.commands).map(m => m.label)[40]} ${Object.values(client.commands).map(m => m.usage)[40]}\n${Object.values(client.commands).map(m => m.fullDescription)[40]}\n\n${Object.values(client.commands).map(m => m.label)[41]} ${Object.values(client.commands).map(m => m.usage)[41]}\n${Object.values(client.commands).map(m => m.fullDescription)[41]}\n\n${Object.values(client.commands).map(m => m.label)[42]} ${Object.values(client.commands).map(m => m.usage)[42]}\n${Object.values(client.commands).map(m => m.fullDescription)[42]}\n\n${Object.values(client.commands).map(m => m.label)[43]} ${Object.values(client.commands).map(m => m.usage)[43]}\n${Object.values(client.commands).map(m => m.fullDescription)[43]}`
         },
     ],
     reactionButtonTimeout: 60000
