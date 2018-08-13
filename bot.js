@@ -13,6 +13,7 @@ const dbl = new DBL(u_wut_m8.dblToken, {webhookPath: '/', webhookPort: 5000}, cl
 const fs = require('fs');
 const sys = require('sys');
 const exec = require('child_process').exec;
+const request = require('request');
 var timesCancerHasBeenCured = '0';
 function puts(error, stdout, stderr) { sys.puts(stdout) }
 var cmdsRan = 0;
@@ -223,7 +224,7 @@ client.registerCommand('del', (msg) => {
 });
 client.registerCommand('revivechat', (msg) => {
     cmdsRan = ++cmdsRan
-    if (msg.member.permission.has('mentionEveryone') === true && msg.content.split(' ').splice(1).toString() === 'yes') {
+    if (msg.member.permission.has('mentionEveryone') === true && msg.content.split(' ').splice(1).toString() === 'yes' && msg.author.id !== '282993398296739841') {
         client.createMessage(msg.channel.id, {
             content:'<@' + msg.author.id + '> used Revive Chat! It\'s super effective! NOW @everyone WAKE UP!',
             disableEveryone: false
@@ -649,7 +650,7 @@ client.registerCommand('info', () => {
 client.registerCommandAlias('information', 'info')
 client.registerCommand('reboot', (msg) => {
     if (creatorID.includes(msg.author.id)) {
-        client.createMessage(msg.channel.id, 'Alright AlekEagle, bye world, for now at least.')
+        client.createMessage(msg.channel.id, 'Goodbye cruel world :gun:')
         setTimeout(() => {
             process.exit(0);
         }, 5000)
@@ -880,6 +881,7 @@ client.registerCommand('howgay', (msg) => {
     fullDescription: 'shows how gay you or a friend are.',
     usage: '<literally anything>'
 });
+client.registerCommandAlias('howfaggot', 'howgay')
 client.registerCommand('howtrap', (msg) => {
     cmdsRan = ++cmdsRan
     var howTrapCommand = msg.content.split(' ').splice(1).join(' ')
@@ -916,6 +918,8 @@ client.registerCommand('howfurry', (msg) => {
         amountOfFurry = 100;
     }else if (howFurryCommand.includes('267494526359306241')) {
         amountOfFurry = 25;
+    }else if (howFurryCommand.includes('69')) {
+        amountOfFurry = 69;
     }else {
         amountOfFurry = Math.floor(Math.random() * 101);
     }
@@ -953,6 +957,7 @@ client.registerCommand('remindme', (msg) => {
     usage: '<time in numbers> <[s|sec]|[m|min]|[h|hr]|[d|day]> <reminder thing>'
 });
 client.registerCommand('setprefix', (msg) => {
+    cmdsRan = ++cmdsRan
     if (msg.member.permission.has('administrator')) {
         var newPrefix = msg.content.split(' ').splice(1)
         client.registerGuildPrefix(msg.channel.guild.id, newPrefix[0])
@@ -972,6 +977,7 @@ client.registerCommand('setprefix', (msg) => {
     usage: '<PrefixWithNoSpaces>'
 });
 client.registerCommand('botpermcheck', (msg) => {
+    cmdsRan = ++cmdsRan
     client.createMessage(msg.channel.id, `Perms I need/have:\n\`READ_MESSAGES: ${msg.channel.guild.members.get(client.user.id).permission.has('readMessages')}\` needed to read messages to see if you used a command.\n\`SEND_MESSAGES: ${msg.channel.guild.members.get(client.user.id).permission.has('sendMessages')}\` needed to send responses to commands.\n\`READ_MESSAGE_HISTORY: ${msg.channel.guild.members.get(client.user.id).permission.has('readMessageHistory')}\` needed for some commands that need to have arguements after the command.\n\`USE_EXTERNAL_EMOJIS: ${msg.channel.guild.members.get(client.user.id).permission.has('externalEmojis')}\` needed to use some external emojis only available in other servers.\n\`SEND_TTS_MESSAGES: ${msg.channel.guild.members.get(client.user.id).permission.has('sendTTSMessages')}\`\n\`MANAGE_ROLES: ${msg.channel.guild.members.get(client.user.id).permission.has('manageRoles')}\`needed to give and revoke roles from users *the rest are self explanitory*\n\`KICK_MEMBERS: ${msg.channel.guild.members.get(client.user.id).permission.has('kickMembers')}\`\n\`BAN_MEMBERS: ${msg.channel.guild.members.get(client.user.id).permission.has('banMembers')}\`\n\`CREATE_INSTANT_INVITE: ${msg.channel.guild.members.get(client.user.id).permission.has('createInstantInvite')}\`\n\`MANAGE_NICKNAMES: ${msg.channel.guild.members.get(client.user.id).permission.has('manageNicknames')}\`\n\`CHANGE_NICKNAME: ${msg.channel.guild.members.get(client.user.id).permission.has('changeNickname')}\`\n\`MANAGE_MESSAGES: ${msg.channel.guild.members.get(client.user.id).permission.has('manageMessages')}\`\n\`EMBED_LINKS: ${msg.channel.guild.members.get(client.user.id).permission.has('embedLinks')}\`\n\`ATTACH_FILES: ${msg.channel.guild.members.get(client.user.id).permission.has('attachFiles')}\`\n\`MENTION_EVERYONE: ${msg.channel.guild.members.get(client.user.id).permission.has('mentionEveryone')}\`\n\`ADD_REACTIONS: ${msg.channel.guild.members.get(client.user.id).permission.has('addReactions')}\`\n\`MUTE_MEMBERS: ${msg.channel.guild.members.get(client.user.id).permission.has('voiceMuteMembers')}\`\n\`DEAFEN_MEMBERS: ${msg.channel.guild.members.get(client.user.id).permission.has('voiceDeafenMembers')}\``)
 }, {
     description: ' ',
@@ -1002,6 +1008,7 @@ client.on('messageReactionAdd', (msg, emoji, userID) => {
 //    console.log(emoji)
 //    console.log(userID)
     if (msg.channel.guild.members.get(userID).permission.has('manageMessages') && emoji.name === '🗑') {
+    cmdsRan = ++cmdsRan
         client.deleteMessage(msg.channel.id, msg.id, 'message reaction deletion').then(() => {}, () => {
             console.error('oof')
         })
@@ -1012,6 +1019,7 @@ client.on('messageReactionAdd', (msg, emoji, userID) => {
     }
 })
 client.registerCommand('setname', (msg) => {
+    cmdsRan = ++cmdsRan
     if (creatorID.includes(msg.author.id)) {
         client.editSelf({
             username: msg.content.split(' ').splice(1).join(' ').replace(/ /g, '_')
@@ -1025,9 +1033,10 @@ client.registerCommand('setname', (msg) => {
     fullDescription: 'changes my name! (bot owner only)'
 });
 client.registerCommand('thefudgeynugget', (msg) => {
+   cmdsRan = ++cmdsRan
    client.createMessage(msg.channel.id, {
        embed: {
-           title: 'TheFudgeyNugget, A YouTuber who is also a furry and is so gay I can\'t calculate how hay he is. Also this:',
+           title: 'TheFudgeyNugget, A YouTuber who is also a furry and is so gay I can\'t calculate how gay he is. Also this:',
            image: {
                url: 'https://cdn.discordapp.com/attachments/456451079178158081/477564900156112896/emote.png'
            }
@@ -1037,6 +1046,7 @@ client.registerCommand('thefudgeynugget', (msg) => {
     fullDescription: 'short story about TheFudgeyNugget.'
 });
 client.registerCommand('windows98', (msg) => {
+    cmdsRan = ++cmdsRan
     var rng = Math.floor(Math.random() * 2)
     if (rng === 1) {
         console.log(rng)
@@ -1048,7 +1058,110 @@ client.registerCommand('windows98', (msg) => {
     }else {
         client.createMessage(msg.channel.id, 'Booting up please wait <a:loading1:470030932775272469>')
     }
+}, {
+    fullDescription: 'will it boot up? try and see!'
 })
+client.registerCommand('e6', (msg) => {
+    cmdsRan = ++cmdsRan
+    var tags = msg.content.split(' ').splice(1).join('+')
+    if (msg.channel.nsfw) {
+        var e6search = {
+            url: 'https://e621.net/post/index.json?tags=order:random+' + tags,
+            headers: {
+                'User-Agent': `EagleBot-Eris/${process.version} (by CantCreative on e621)`
+            }
+        }
+        client.sendChannelTyping(msg.channel.id)
+        request(e6search, (error, res, body) => {
+            if (!error && res.statusCode == 200) {
+                var e6searchResults = JSON.parse(body);
+                if(typeof (e6searchResults[0]) != "undefined") {
+                    msg.channel.createMessage({
+                        embed: {
+                            title: 'e621 search results',
+                            url: 'https://e621.net/post/show/' + e6searchResults[0].id.toString(),
+                            image: {
+                                url: e6searchResults[0].file_url.toString()
+                            }
+                        }
+                    })
+                }else {
+                    msg.channel.createMessage('notfin, try usin different porn terms')
+                }
+            }else {
+                msg.channel.createMessage('I tried talkin to e621, but they told me to fuk off')
+            }
+        });
+    }else {
+        msg.channel.createMessage('I CAN\'T SHOW THAT STUFF HERE! THERE COULD BE KIDS HERE BOI')
+    }
+}, {
+    fullDescription: 'you can search for furry porn',
+    usage: '<search terms for porn>'
+});
+client.registerCommand('userinfo', (msg) => {
+    cmdsRan = ++cmdsRan
+    var userID = '';
+    try {
+        userID = msg.content.split(' ').splice(1).join(' ').replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '');
+    }catch (err) {
+        if (err === undefined) {userID = msg.content.split(' ').spice(1).join(' ').replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '')}else {userID = msg.author.id}
+        console.log(err)
+    }
+    var createdat = new Date(client.users.get(userID).createdAt);
+    var joinedat = new Date(msg.channel.guild.members.get(userID).joinedAt);
+    var type = '';
+    if (client.users.get(userID).avatarURL.includes('gif')) {
+        type = 'gif'
+    }else {type = 'png'}
+    client.createMessage(msg.channel.id, {
+        content: `Info for user\nUsername: \`${client.users.get(userID).username}#${client.users.get(userID).discriminator}\`\nID: \`${client.users.get(userID).id}\`\nAre They a Bot?: \`${client.users.get(userID).bot}\`\nNickname in server (if set): \`${msg.channel.guild.members.get(userID).nickname ? msg.channel.guild.members.get(userID).nick : 'None'}\`\nCreated account at: \`${createdat}\`\nJoined At: \`${joinedat}\`\nProfile Picture:`,
+        embed: {
+            image: {
+                url: client.users.get(userID).dynamicAvatarURL(type, 1024)
+            }
+        }
+    });
+}, {
+    fullDescription: 'get user info',
+    usage: '<@user|user id>'
+});
+client.registerCommandAlias('e621', 'e6')
+client.registerCommand('r34', (msg) => {
+    cmdsRan = ++cmdsRan
+    var tags = msg.content.split(' ').splice(1).join('+')
+    if (msg.channel.nsfw) {
+        var r34search = {
+            url: 'https://e621.net/index.php?page=dapi&q=index&tags=order:random+' + tags,
+            headers: {
+                'User-Agent': `EagleBot-Eris/${process.version}`
+            }
+        }
+        client.sendChannelTyping(msg.channel.id)
+        request(r34search, (error, res, body) => {
+            if (!error && res.statusCode == 200) {
+                var r34searchResults = JSON.parse(body);
+                if(typeof (r34searchResults[0]) != "undefined") {
+//                    msg.channel.createMessage({
+//                        embed: {
+//                            title: 'rule34 search results',
+//                            url: 'https://rule34.xxx/index.php?page=post&s=view&id=' + ,
+//                            image: {
+//                                url: r34searchResults[0].file_url.toString()
+//                            }
+//                        }
+//                    })
+                    console.log(r34searchResults)
+                }else {
+                    msg.channel.createMessage('notfin, try usin different porn terms')
+                }
+            }else {
+                msg.channel.createMessage('I tried talkin to rule34, but they told me to fuk off')
+            }
+        })
+    }else {
+        msg.channel.createMessage('I CAN\'T SHOW THAT STUFF HERE! THERE COULD BE KIDS HERE BOI')
+    }
 client.registerCommand('help', 'Push a number to show a page', {
     description: 'this help text',
     reactionButtons:[
@@ -1095,11 +1208,16 @@ client.registerCommand('help', 'Push a number to show a page', {
         {
             emoji: '9⃣',
             type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[40]} ${Object.values(client.commands).map(m => m.usage)[40]}\n${Object.values(client.commands).map(m => m.fullDescription)[40]}\n\n${Object.values(client.commands).map(m => m.label)[41]} ${Object.values(client.commands).map(m => m.usage)[41]}\n${Object.values(client.commands).map(m => m.fullDescription)[41]}\n\n${Object.values(client.commands).map(m => m.label)[42]} ${Object.values(client.commands).map(m => m.usage)[42]}\n${Object.values(client.commands).map(m => m.fullDescription)[42]}\n\n${Object.values(client.commands).map(m => m.label)[43]} ${Object.values(client.commands).map(m => m.usage)[43]}\n${Object.values(client.commands).map(m => m.fullDescription)[43]}`
+            response: `${Object.values(client.commands).map(m => m.label)[40]} ${Object.values(client.commands).map(m => m.usage)[40]}\n${Object.values(client.commands).map(m => m.fullDescription)[40]}\n\n${Object.values(client.commands).map(m => m.label)[41]} ${Object.values(client.commands).map(m => m.usage)[41]}\n${Object.values(client.commands).map(m => m.fullDescription)[41]}\n\n${Object.values(client.commands).map(m => m.label)[42]} ${Object.values(client.commands).map(m => m.usage)[42]}\n${Object.values(client.commands).map(m => m.fullDescription)[42]}\n\n${Object.values(client.commands).map(m => m.label)[43]} ${Object.values(client.commands).map(m => m.usage)[43]}\n${Object.values(client.commands).map(m => m.fullDescription)[43]}\n\n${Object.values(client.commands).map(m => m.label)[44]} ${Object.values(client.commands).map(m => m.usage)[44]}\n${Object.values(client.commands).map(m => m.fullDescription)[44]}`
+        },
+        {
+            emoji: '🔟',
+            type: 'edit',
+            response: `${Object.values(client.commands).map(m => m.label)[45]} ${Object.values(client.commands).map(m => m.usage)[45]}\n${Object.values(client.commands).map(m => m.fullDescription)[45]}`
         },
     ],
     reactionButtonTimeout: 60000
-});
+})
 client.registerCommandAlias('hlep', 'help')
 client.registerCommandAlias('halp', 'help')
- client.connect();
+client.connect();
