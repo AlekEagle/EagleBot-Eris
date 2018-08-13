@@ -14,6 +14,7 @@ const fs = require('fs');
 const sys = require('sys');
 const exec = require('child_process').exec;
 const request = require('request');
+const parser = require('xml2json-light');
 var timesCancerHasBeenCured = '0';
 function puts(error, stdout, stderr) { sys.puts(stdout) }
 var cmdsRan = 0;
@@ -653,7 +654,7 @@ client.registerCommand('reboot', (msg) => {
         client.createMessage(msg.channel.id, 'Goodbye cruel world :gun:')
         setTimeout(() => {
             process.exit(0);
-        }, 5000)
+        }, 100)
     }else {
         client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
     }
@@ -1078,7 +1079,7 @@ client.registerCommand('e6', (msg) => {
                 if(typeof (e6searchResults[0]) != "undefined") {
                     msg.channel.createMessage({
                         embed: {
-                            title: 'e621 search results',
+                            title: 'e621 search results.  Votes: ' + e6searchResults[0].score,
                             url: 'https://e621.net/post/show/' + e6searchResults[0].id.toString(),
                             image: {
                                 url: e6searchResults[0].file_url.toString()
@@ -1115,7 +1116,7 @@ client.registerCommand('userinfo', (msg) => {
         type = 'gif'
     }else {type = 'png'}
     client.createMessage(msg.channel.id, {
-        content: `Info for user\nUsername: \`${client.users.get(userID).username}#${client.users.get(userID).discriminator}\`\nID: \`${client.users.get(userID).id}\`\nAre They a Bot?: \`${client.users.get(userID).bot}\`\nNickname in server (if set): \`${msg.channel.guild.members.get(userID).nickname ? msg.channel.guild.members.get(userID).nick : 'None'}\`\nCreated account at: \`${createdat}\`\nJoined At: \`${joinedat}\`\nProfile Picture:`,
+        content: `Info for user\nUsername: \`${client.users.get(userID).username}#${client.users.get(userID).discriminator}\`\nID: \`${client.users.get(userID).id}\`\nAre They a Bot?: \`${client.users.get(userID).bot}\`\nNickname in server (if set): \`${msg.channel.guild.members.get(userID).nick ? msg.channel.guild.members.get(userID).nick : 'None'}\`\nCreated account at: \`${createdat}\`\nJoined At: \`${joinedat}\`\nProfile Picture:`,
         embed: {
             image: {
                 url: client.users.get(userID).dynamicAvatarURL(type, 1024)
@@ -1132,7 +1133,7 @@ client.registerCommand('r34', (msg) => {
     var tags = msg.content.split(' ').splice(1).join('+')
     if (msg.channel.nsfw) {
         var r34search = {
-            url: 'https://e621.net/index.php?page=dapi&q=index&tags=order:random+' + tags,
+            url: 'https://rule34.xxx/index.php?page=dapi&q=index&limit=100&s=post&tags=' + tags + '&q=index',
             headers: {
                 'User-Agent': `EagleBot-Eris/${process.version}`
             }
@@ -1140,28 +1141,35 @@ client.registerCommand('r34', (msg) => {
         client.sendChannelTyping(msg.channel.id)
         request(r34search, (error, res, body) => {
             if (!error && res.statusCode == 200) {
-                var r34searchResults = JSON.parse(body);
-                if(typeof (r34searchResults[0]) != "undefined") {
-//                    msg.channel.createMessage({
-//                        embed: {
-//                            title: 'rule34 search results',
-//                            url: 'https://rule34.xxx/index.php?page=post&s=view&id=' + ,
-//                            image: {
-//                                url: r34searchResults[0].file_url.toString()
-//                            }
-//                        }
-//                    })
-                    console.log(r34searchResults)
+                var r34searchResults = parser.xml2json(body);
+                var randomizer = parseInt(r34searchResults.posts.count)
+                if (randomizer > 100) {randomizer = 100}
+                if(typeof (r34searchResults) != "undefined" && r34searchResults.posts.count !== '0') {
+                    var imgChooser = Math.floor(Math.random() * randomizer);
+                    if (imgChooser === 100) {imgChooser = 99}
+                    msg.channel.createMessage({
+                        embed: {
+                            title: 'rule34 search results. Votes: ' + r34searchResults.posts.post[imgChooser].score,
+                            url: 'https://rule34.xxx/index.php?page=post&s=view&id=' + r34searchResults.posts.post[imgChooser].id,
+                            image: {
+                                url: r34searchResults.posts.post[imgChooser].file_url
+                            }
+                        }
+                    })
                 }else {
                     msg.channel.createMessage('notfin, try usin different porn terms')
                 }
             }else {
+                console.error(error)
+                console.error(res.statusCode)
                 msg.channel.createMessage('I tried talkin to rule34, but they told me to fuk off')
             }
         })
     }else {
         msg.channel.createMessage('I CAN\'T SHOW THAT STUFF HERE! THERE COULD BE KIDS HERE BOI')
     }
+})
+client.registerCommandAlias('rule34', 'r34')
 client.registerCommand('help', 'Push a number to show a page', {
     description: 'this help text',
     reactionButtons:[
@@ -1213,7 +1221,7 @@ client.registerCommand('help', 'Push a number to show a page', {
         {
             emoji: '🔟',
             type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[45]} ${Object.values(client.commands).map(m => m.usage)[45]}\n${Object.values(client.commands).map(m => m.fullDescription)[45]}`
+            response: `${Object.values(client.commands).map(m => m.label)[45]} ${Object.values(client.commands).map(m => m.usage)[45]}\n${Object.values(client.commands).map(m => m.fullDescription)[45]}\n\n${Object.values(client.commands).map(m => m.label)[46]} ${Object.values(client.commands).map(m => m.usage)[46]}\n${Object.values(client.commands).map(m => m.fullDescription)[46]}`
         },
     ],
     reactionButtonTimeout: 60000
