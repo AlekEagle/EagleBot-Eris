@@ -1227,7 +1227,8 @@ client.registerCommand('amiowner', (msg) => {
 });
 client.registerCommand('getemoji', (msg) => {
     var emojiID = msg.content.split(' ').splice(1).join(' ').split(':').splice(2).join(':').replace(/>/g, '')
-    if (emojiID.length << 18) {
+    console.log(emojiID)
+    if (emojiID.length == 0) {
         return 'This emoji is either not a custom emoji, or is not accessable.'
     }else {
         client.createMessage(msg.channel.id, {
