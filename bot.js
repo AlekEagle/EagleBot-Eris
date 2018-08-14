@@ -1227,13 +1227,13 @@ client.registerCommand('amiowner', (msg) => {
 });
 client.registerCommand('getemoji', (msg) => {
     var emojiID = msg.content.split(' ').splice(1).join(' ').split(':').splice(2).join(':').replace(/>/g, '')
-    console.log(emojiID)
     if (emojiID.length == 0) {
         return 'This emoji is either not a custom emoji, or is not accessable.'
     }else {
         client.createMessage(msg.channel.id, {
             embed: {
                 title: 'Custom Server Emoji (click here for link to emoji)',
+                url: `https://cdn.discordapp.com/emojis/${emojiID}.png?v=1`,
                 image: {
                     url: `https://cdn.discordapp.com/emojis/${emojiID}.png?v=1`
                 }
