@@ -1225,6 +1225,24 @@ client.registerCommand('amiowner', (msg) => {
 }, {
     fullDescription: 'Are you the owner?'
 });
+client.registerCommand('getemoji', (msg) => {
+    var emojiID = msg.content.split(' ').splice(1).join(' ').split(':').splice(2).join(':').replace(/>/g, '')
+    if (emojiID.length << 18) {
+        return 'This emoji is either not a custom emoji, or is not accessable.'
+    }else {
+        client.createMessage(msg.channel.id, {
+            embed: {
+                title: 'Custom Server Emoji (click here for link to emoji)',
+                image: {
+                    url: `https://cdn.discordapp.com/emojis/${emojiID}.png?v=1`
+                }
+            }
+        });
+    }
+}, {
+    fullDescription: 'retrieves custom server emojis.',
+    usage: '<custom emoji or emoji id>'
+});
 client.registerCommand('help', 'Push a number to show a page', {
     description: 'this help text',
     reactionButtons:[
@@ -1276,7 +1294,7 @@ client.registerCommand('help', 'Push a number to show a page', {
         {
             emoji: '🔟',
             type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[45]} ${Object.values(client.commands).map(m => m.usage)[45]}\n${Object.values(client.commands).map(m => m.fullDescription)[45]}\n\n${Object.values(client.commands).map(m => m.label)[46]} ${Object.values(client.commands).map(m => m.usage)[46]}\n${Object.values(client.commands).map(m => m.fullDescription)[46]}\n\n${Object.values(client.commands).map(m => m.label)[47]} ${Object.values(client.commands).map(m => m.usage)[47]}\n${Object.values(client.commands).map(m => m.fullDescription)[47]}\n\n${Object.values(client.commands).map(m => m.label)[48]} ${Object.values(client.commands).map(m => m.usage)[48]}\n${Object.values(client.commands).map(m => m.fullDescription)[48]}`
+            response: `${Object.values(client.commands).map(m => m.label)[45]} ${Object.values(client.commands).map(m => m.usage)[45]}\n${Object.values(client.commands).map(m => m.fullDescription)[45]}\n\n${Object.values(client.commands).map(m => m.label)[46]} ${Object.values(client.commands).map(m => m.usage)[46]}\n${Object.values(client.commands).map(m => m.fullDescription)[46]}\n\n${Object.values(client.commands).map(m => m.label)[47]} ${Object.values(client.commands).map(m => m.usage)[47]}\n${Object.values(client.commands).map(m => m.fullDescription)[47]}\n\n${Object.values(client.commands).map(m => m.label)[48]} ${Object.values(client.commands).map(m => m.usage)[48]}\n${Object.values(client.commands).map(m => m.fullDescription)[48]}\n\n${Object.values(client.commands).map(m => m.label)[49]} ${Object.values(client.commands).map(m => m.usage)[49]}\n${Object.values(client.commands).map(m => m.fullDescription)[49]}`
         },
     ],
     reactionButtonTimeout: 60000
