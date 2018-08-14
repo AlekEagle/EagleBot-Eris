@@ -637,13 +637,18 @@ client.registerCommand('emojify', (msg) => {
     description: ' ',
     fullDescription: 'Turns normal letters into emojis!'
 });
-client.registerCommand('info', () => {
+client.registerCommand('info', (msg) => {
     cmdsRan = ++cmdsRan
     var time = process.uptime();
     var uptime = (time + "").toHHMMSS();
     var osTime = require('os').uptime();
     var osUptime = (osTime + "").toHHMMSS();
-    return 'Ummm... I\'m a Discord Bot.\n I was made by **__AlekEagle#6978__**\n*What else is there about me?* I use the Eris library\nThis right there ==> **__' + uptime + '__** is how long I\'ve been running.\nThe computer running me has been on for this ==> **__' + osUptime + '__**\nI\'m ran on a Raspberry Pi 3 B\nI\'m on Discord Bot List, here is the link: https://discordbots.org/bot/416274552126177282 \nI\'m in... uhh... let me check. Ok here it is: **__' + client.guilds.size + '__** servers.\nThe support server is https://discord.gg/72Px4Ag in the category "bot related stuff"\nUse `a}invite` to take a clone of me with you to your server\nI\'m using: **__' + Math.floor(process.memoryUsage().rss / 1024 / 1024) + 'MB__** of RAM\n**__' + cmdsRan + '__** commands have been run since the last time I\'ve been rebooted.\n**__' + messagesRead + '__** messages have been read since the last time I\'ve been rebooted.\nThat\'s all I know about myself.'
+    client.createMessage(msg.channel.id, {
+        embed: {
+            title: 'Basic Info',
+            description: 'Ummm... I\'m a Discord Bot.\n I was made by **__AlekEagle#6978__**\n*What else is there about me?* I use the Eris library\nThis right there ==> **__' + uptime + '__** is how long I\'ve been running.\nThe computer running me has been on for this ==> **__' + osUptime + '__**\nI\'m ran on a Raspberry Pi 3 B\nI\'m on Discord Bot List, here is the link: https://discordbots.org/bot/416274552126177282 \nI\'m in... uhh... let me check. Ok here it is: **__' + client.guilds.size + '__** servers.\nThe support server is https://discord.gg/72Px4Ag in the category "bot related stuff"\nUse `a}invite` to take a clone of me with you to your server\nI\'m using: **__' + Math.floor(process.memoryUsage().rss / 1024 / 1024) + 'MB__** of RAM\n**__' + cmdsRan + '__** commands have been run since the last time I\'ve been rebooted.\n**__' + messagesRead + '__** messages have been read since the last time I\'ve been rebooted.\nThat\'s all I know about myself.'
+        }
+    });
 }, {
     description: ' ',
     fullDescription: 'shows basic info about me.'
@@ -921,6 +926,10 @@ client.registerCommand('howfurry', (msg) => {
         amountOfFurry = 25;
     }else if (howFurryCommand.includes('69')) {
         amountOfFurry = 69;
+    }else if (howFurryCommand.includes('416274552126177282')) {
+        amountOfFurry = 100;
+    }else if (howFurryCommand.includes('225405394644631552')) {
+        amountOfFurry = 100;
     }else {
         amountOfFurry = Math.floor(Math.random() * 101);
     }
@@ -1103,12 +1112,7 @@ client.registerCommand('e6', (msg) => {
 client.registerCommand('userinfo', (msg) => {
     cmdsRan = ++cmdsRan
     var userID = '';
-    try {
-        userID = msg.content.split(' ').splice(1).join(' ').replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '');
-    }catch (err) {
-        if (err === undefined) {userID = msg.content.split(' ').spice(1).join(' ').replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '')}else {userID = msg.author.id}
-        console.log(err)
-    }
+    if (msg.content.split(' ')[1] === undefined) {userID = msg.author.id}else {userID = msg.content.split(' ').splice(1).join(' ').replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '')}
     var createdat = new Date(client.users.get(userID).createdAt);
     var joinedat = new Date(msg.channel.guild.members.get(userID).joinedAt);
     var type = '';
@@ -1168,7 +1172,49 @@ client.registerCommand('r34', (msg) => {
     }else {
         msg.channel.createMessage('I CAN\'T SHOW THAT STUFF HERE! THERE COULD BE KIDS HERE BOI')
     }
-})
+}, {
+    fullDescription: 'search for any kind of porn',
+    usage: '<tag tag_with_spaces>'
+});
+client.registerCommand('serverinfo', (msg) => {
+    var loop = true;
+    var emojis = '';
+    client.createMessage(msg.channel.id, 'Alright, Lemme open Inspect Element on this server').then((message) => {
+        client.sendChannelTyping(msg.channel.id)
+        var y = 0;
+        do {
+            if (typeof (msg.channel.guild.emojis[y]) === "object") {
+                emojis = emojis + `<${msg.channel.guild.emojis[y].animated ? 'a' : ''}:${msg.channel.guild.emojis[y].name}:${msg.channel.guild.emojis[y].id}>`;
+                ++y
+            }else {loop = false}
+        }while (loop)
+        setTimeout(() => {
+            var createdat = new Date(msg.channel.guild.createdAt);
+            var notifs = '';
+            var explicit = '';
+            var afk = '';
+            try {
+                afk = msg.channel.guild.channels.get(msg.channel.guild.afkChannelID).name
+            }catch (err) {
+                afk = 'Not set'
+            }
+            if (msg.channel.guild.explicitContentFilter === 0) {explicit = 'Disabled'}else if (msg.channel.guild.explicitContentFilter === 1) {explicit = 'Filters content from indiviuals with no roles'}else if (msg.channel.guild.explicitContentFilter === 2) {explicit = 'Filters content from everyone'}
+            if (msg.channel.guild.defaultNotifications === 0) {notifs = 'All messages'}else if (msg.channel.guild.defaultNotifications === 1) {notifs = 'Only @mentions'}
+            client.editMessage(msg.channel.id, message.id, `Info for this server:\nName: \`${msg.channel.guild.name}\`\nAFK Channel: \`${afk}\`\nAFK channel Timeout: \`${msg.channel.guild.afkTimeout ? msg.channel.guild.afkTimeout / 60 + ' minute(s)' : 'Not set'}\`\nServer creation date: \`${createdat}\`\nDefault Notification setting: \`${notifs}\`\nServer emojis: ${emojis}`).then(() => {
+                client.createMessage(msg.channel.id, {
+                    content: `Explicit Content Filter: \`${explicit}\`\nBots to Real Users ratio (bots:real users): \`${msg.channel.guild.members.map(m => m.bot).filter(bot => bot === true).length}:${msg.channel.guild.members.map(m => m.bot).filter(bot => bot === false).length}\`\nTotal Members combined: \`${msg.channel.guild.memberCount}\`\nIs the server large (contains 100+ members): \`${msg.channel.guild.large}\`\nIcon: `,
+                    embed: {
+                        image: {
+                            url: msg.channel.guild.iconURL
+                        }
+                     }
+                })
+            });
+        }, 5000)
+    });
+}, {
+    fullDescription: 'shows info about the current server'
+});
 client.registerCommandAlias('rule34', 'r34')
 client.registerCommand('help', 'Push a number to show a page', {
     description: 'this help text',
@@ -1221,7 +1267,7 @@ client.registerCommand('help', 'Push a number to show a page', {
         {
             emoji: '🔟',
             type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[45]} ${Object.values(client.commands).map(m => m.usage)[45]}\n${Object.values(client.commands).map(m => m.fullDescription)[45]}\n\n${Object.values(client.commands).map(m => m.label)[46]} ${Object.values(client.commands).map(m => m.usage)[46]}\n${Object.values(client.commands).map(m => m.fullDescription)[46]}`
+            response: `${Object.values(client.commands).map(m => m.label)[45]} ${Object.values(client.commands).map(m => m.usage)[45]}\n${Object.values(client.commands).map(m => m.fullDescription)[45]}\n\n${Object.values(client.commands).map(m => m.label)[46]} ${Object.values(client.commands).map(m => m.usage)[46]}\n${Object.values(client.commands).map(m => m.fullDescription)[46]}\n\n${Object.values(client.commands).map(m => m.label)[47]} ${Object.values(client.commands).map(m => m.usage)[47]}\n${Object.values(client.commands).map(m => m.fullDescription)[47]}`
         },
     ],
     reactionButtonTimeout: 60000
