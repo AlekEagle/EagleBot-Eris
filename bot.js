@@ -1216,6 +1216,15 @@ client.registerCommand('serverinfo', (msg) => {
     fullDescription: 'shows info about the current server'
 });
 client.registerCommandAlias('rule34', 'r34')
+client.registerCommand('amiowner', (msg) => {
+    if (creatorID.includes(msg.author.id)) {
+        return 'Ahh, yes, I remember you, your ' + msg.author.username + '#' + msg.author.discriminator + ', your my dad (I got no mom)'
+    }else {
+        return 'PFFFT, No you ain\'t the heccing owner <:DABBIT:478982290530107392>'
+    }
+}, {
+    fullDescription: 'Are you the owner?'
+});
 client.registerCommand('help', 'Push a number to show a page', {
     description: 'this help text',
     reactionButtons:[
@@ -1267,7 +1276,7 @@ client.registerCommand('help', 'Push a number to show a page', {
         {
             emoji: '🔟',
             type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[45]} ${Object.values(client.commands).map(m => m.usage)[45]}\n${Object.values(client.commands).map(m => m.fullDescription)[45]}\n\n${Object.values(client.commands).map(m => m.label)[46]} ${Object.values(client.commands).map(m => m.usage)[46]}\n${Object.values(client.commands).map(m => m.fullDescription)[46]}\n\n${Object.values(client.commands).map(m => m.label)[47]} ${Object.values(client.commands).map(m => m.usage)[47]}\n${Object.values(client.commands).map(m => m.fullDescription)[47]}`
+            response: `${Object.values(client.commands).map(m => m.label)[45]} ${Object.values(client.commands).map(m => m.usage)[45]}\n${Object.values(client.commands).map(m => m.fullDescription)[45]}\n\n${Object.values(client.commands).map(m => m.label)[46]} ${Object.values(client.commands).map(m => m.usage)[46]}\n${Object.values(client.commands).map(m => m.fullDescription)[46]}\n\n${Object.values(client.commands).map(m => m.label)[47]} ${Object.values(client.commands).map(m => m.usage)[47]}\n${Object.values(client.commands).map(m => m.fullDescription)[47]}\n\n${Object.values(client.commands).map(m => m.label)[48]} ${Object.values(client.commands).map(m => m.usage)[48]}\n${Object.values(client.commands).map(m => m.fullDescription)[48]}`
         },
     ],
     reactionButtonTimeout: 60000
