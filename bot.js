@@ -4,7 +4,6 @@ const DBL = require('dblapi.js');
 const creatorID = '222882552472535041,361773766256361472';
 const client = new Eris.CommandClient(u_wut_m8.token, {}, {
     defaultHelpCommand: false,
-    defaultImageFormat: 'png',
     description: 'EagleBot in Eris Form',
     owner: 'AlekEagle#6978',
     prefix: 'a}'
@@ -85,7 +84,6 @@ client.registerCommand('ping', (msg) => {
                     client.editMessage(msg.channel.id, message.id, 'Pong!\nMessage edit time: ' + (Date.now() - then) + ' ms\nAPI ping time: ' + apiPingTime + 'ms')
                 })
             })
-            console.log(msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ') Used ping!');
         
     }, {
     description: ' ',
@@ -98,7 +96,6 @@ client.registerCommand('curecancer', (msg) => {
     if (rNG < 99) {
         client.createMessage(msg.channel.id, ':skull: During your quest to cure cancer, you died from, *Ironically*, cancer, nice try, just so you know, cancer is uncureable, or is it?')
         console.log(rNG);
-        console.log(msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ') Used curecancer!');
     }else {
         client.createMessage(msg.channel.id, 'You somehow cured all types of cancer! <@' + msg.author.id + '> actually did it! *We all thought you were crazy*')
         console.log(rNG);
@@ -154,7 +151,6 @@ client.registerCommand('cancercured', (msg) => {
             timesCancerHasBeenCured = data.toString('utf8')
         }
         client.createMessage(msg.channel.id, 'cancer has been cured: ' + timesCancerHasBeenCured + ' times since me and AlekEagle started to keep track');
-        console.log(msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ') Used cancercured!');
     });
 }, {
     description: ' ',
@@ -460,7 +456,6 @@ client.registerCommand('meme', (msg) => {
                             console.error(msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ') Used meme savememe and failed to save a meme! name of meme: ' + saveMemeCommand[0])
                         }else {
                             client.createMessage(msg.channel.id, 'saved your meme even though it sucks')
-                            console.error(msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ') Used meme savememe and successfully saved a meme! name of meme: ' + saveMemeCommand[0])
                             client.deleteMessage(msg.channel.id, msg.id).catch((reason) => {
                                 console.error(reason);
                             });
@@ -473,13 +468,11 @@ client.registerCommand('meme', (msg) => {
             var showMemeCommand = msg.content.split(' ').splice(2)
             fs.readFile('./good_memes_probably/' + showMemeCommand[0] + '.meme', (err, data) => {
                 client.createMessage(msg.channel.id, `${err ? 'OOF error whoops! `' + err.code + '`' : 'dis da maymay you requested: ' + data.toString('utf8')}`)
-                console.log(msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ') used showmeme!')
             });
         break;
         case 'listmeme':
             fs.readdir('./good_memes_probably/', (err, files) => {
                 client.createMessage(msg.channel.id, 'The memes we have so far are: ' + files.join(', ').replace(/.meme/g, ''))
-                console.log(msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ') used listmeme!')
             })
         break;
         case 'delmeme':
@@ -646,7 +639,7 @@ client.registerCommand('info', (msg) => {
     client.createMessage(msg.channel.id, {
         embed: {
             title: 'Basic Info',
-            description: 'Ummm... I\'m a Discord Bot.\n I was made by **__AlekEagle#6978__**\n*What else is there about me?* I use the Eris library\nThis right there ==> **__' + uptime + '__** is how long I\'ve been running.\nThe computer running me has been on for this ==> **__' + osUptime + '__**\nI\'m ran on a Raspberry Pi 3 B\nI\'m on Discord Bot List, here is the link: https://discordbots.org/bot/416274552126177282 \nI\'m in... uhh... let me check. Ok here it is: **__' + client.guilds.size + '__** servers.\nThe support server is https://discord.gg/72Px4Ag in the category "bot related stuff"\nUse `a}invite` to take a clone of me with you to your server\nI\'m using: **__' + Math.floor(process.memoryUsage().rss / 1024 / 1024) + 'MB__** of RAM\n**__' + cmdsRan + '__** commands have been run since the last time I\'ve been rebooted.\n**__' + messagesRead + '__** messages have been read since the last time I\'ve been rebooted.\nThat\'s all I know about myself.'
+            description: 'Ummm... I\'m a Discord Bot.\n\n I was made by **__AlekEagle#6978__**\n\n*What else is there about me?* I use the Eris library\n\nThis right there ==> **__' + uptime + '__** is how long I\'ve been running.\n\nThe computer running me has been on for this ==> **__' + osUptime + '__**\n\nI\'m ran on a Raspberry Pi 3 B\n\nI\'m on DBL, here is the link: https://discordbots.org/bot/416274552126177282 \n\nI\'m in... uhh... let me check. Ok here it is: **__' + client.guilds.size + '__** servers.\n\nThe support server is https://discord.gg/72Px4Ag in the category "bot related stuff"\n\nUse `a}invite` to take a clone of me with you to your server\n\nI\'m using: **__' + Math.floor(process.memoryUsage().rss / 1024 / 1024) + 'MB__** of RAM\n\n**__' + cmdsRan + '__** commands have been run since the last time I\'ve been rebooted.\n\n**__' + messagesRead + '__** messages have been read since the last time I\'ve been rebooted.\n\nThat\'s all I know about myself.'
         }
     });
 }, {
@@ -656,7 +649,7 @@ client.registerCommand('info', (msg) => {
 client.registerCommandAlias('information', 'info')
 client.registerCommand('reboot', (msg) => {
     if (creatorID.includes(msg.author.id)) {
-        client.createMessage(msg.channel.id, 'Goodbye cruel world :gun:')
+        client.createMessage(msg.channel.id, `Alright ${msg.member.username}! Imma go take a nap!`)
         setTimeout(() => {
             process.exit(0);
         }, 100)
@@ -893,8 +886,10 @@ client.registerCommand('howtrap', (msg) => {
     var howTrapCommand = msg.content.split(' ').splice(1).join(' ')
     if (howTrapCommand.includes('69')) {
         amountOfTrap = 69;
+    }else if (howTrapCommand.includes('348577384678686721')) {
+        amountOfTrap = 100;
     }else {
-        var amountOfTrap = Math.floor(Math.random() * 101);
+        amountOfTrap = Math.floor(Math.random() * 101);
     }
     if (amountOfTrap === 0) {
         client.createMessage(msg.channel.id, howTrapCommand + ' is not a trap.')
@@ -1111,27 +1106,31 @@ client.registerCommand('e6', (msg) => {
 });
 client.registerCommand('userinfo', (msg) => {
     cmdsRan = ++cmdsRan
-    var userID = '';
-    if (msg.content.split(' ')[1] === undefined) {userID = msg.author.id}else {userID = msg.content.split(' ').splice(1).join(' ').replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '')}
-    var createdat = new Date(client.users.get(userID).createdAt);
-    var joinedat = new Date(msg.channel.guild.members.get(userID).joinedAt);
-    var type = '';
-    if (client.users.get(userID).avatarURL.includes('gif')) {
-        type = 'gif'
-    }else {type = 'png'}
-    var status = '';
-    var gameType = '';
-    var gameName = '';
-    if (msg.channel.guild.members.get(userID).game === null) {gameType = 'Just';gameName = 'Nothing';}else if (msg.channel.guild.members.get(userID).game.type === 0) {gameType = 'Playing';gameName = msg.channel.guild.members.get(userID).game.name;}else if (msg.channel.guild.members.get(userID).game.type === 1) {gameType = 'Streaming';gameName = msg.channel.guild.members.get(userID).game.name;}else if (msg.channel.guild.members.get(userID).game.type === 2) {gameType = 'Listening To';gameName = msg.channel.guild.members.get(userID).game.name;}else if (msg.channel.guild.members.get(userID).game.type === 3) {gameType = 'Watching';gameName = msg.channel.guild.members.get(userID).game.name;}
-    if (msg.channel.guild.members.get(userID).status === 'online') {status = '<:online:479044155184513047>'}else if (msg.channel.guild.members.get(userID).status === 'idle') {status = '<:idle:479044059134951425>'}else if (msg.channel.guild.members.get(userID).status === 'dnd') {status = '<:dnd:479044022757883907>'}else if (msg.channel.guild.members.get(userID).status === 'offline') {status = '<:offline:479044084829257753>'}
-    client.createMessage(msg.channel.id, {
-        content: `Info for user\nUsername: \`${client.users.get(userID).username}#${client.users.get(userID).discriminator}\`\nID: \`${client.users.get(userID).id}\`\nAre They a Bot?: \`${client.users.get(userID).bot}\`\nNickname in server (if set): \`${msg.channel.guild.members.get(userID).nick ? msg.channel.guild.members.get(userID).nick : 'None'}\`\nCreated account at: \`${createdat}\`\nJoined At: \`${joinedat}\`\nStatus: ${msg.channel.guild.members.get(userID).status} ${status}\nGame: \`${gameType} ${gameName}\`\nProfile Picture:`,
-        embed: {
-            image: {
-                url: client.users.get(userID).dynamicAvatarURL(type, 1024)
+    try {
+        var userID = '';
+        if (msg.content.split(' ')[1] === undefined) {userID = msg.author.id}else {userID = msg.content.split(' ').splice(1).join(' ').replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '')}
+        var createdat = new Date(client.users.get(userID).createdAt);
+        var joinedat = new Date(msg.channel.guild.members.get(userID).joinedAt);
+        var type = '';
+        if (client.users.get(userID).avatarURL.includes('gif')) {
+            type = 'gif'
+        }else {type = 'png'}
+        var status = '';
+        var gameType = '';
+        var gameName = '';
+        if (msg.channel.guild.members.get(userID).game === null) {gameType = 'Just';gameName = 'Nothing';}else if (msg.channel.guild.members.get(userID).game.type === 0) {gameType = 'Playing';gameName = msg.channel.guild.members.get(userID).game.name;}else if (msg.channel.guild.members.get(userID).game.type === 1) {gameType = 'Streaming';gameName = msg.channel.guild.members.get(userID).game.name;}else if (msg.channel.guild.members.get(userID).game.type === 2) {gameType = 'Listening To';gameName = msg.channel.guild.members.get(userID).game.name;}else if (msg.channel.guild.members.get(userID).game.type === 3) {gameType = 'Watching';gameName = msg.channel.guild.members.get(userID).game.name;}
+        if (msg.channel.guild.members.get(userID).status === 'online') {status = '<:online:479044155184513047>'}else if (msg.channel.guild.members.get(userID).status === 'idle') {status = '<:idle:479044059134951425>'}else if (msg.channel.guild.members.get(userID).status === 'dnd') {status = '<:dnd:479044022757883907>'}else if (msg.channel.guild.members.get(userID).status === 'offline') {status = '<:offline:479044084829257753>'}
+        client.createMessage(msg.channel.id, {
+            content: `Info for user\nUsername: \`${client.users.get(userID).username}#${client.users.get(userID).discriminator}\`\nID: \`${client.users.get(userID).id}\`\nAre They a Bot?: \`${client.users.get(userID).bot}\`\nNickname in server (if set): \`${msg.channel.guild.members.get(userID).nick ? msg.channel.guild.members.get(userID).nick : 'None'}\`\nCreated account at: \`${createdat}\`\nJoined At: \`${joinedat}\`\nStatus: ${msg.channel.guild.members.get(userID).status} ${status}\nGame: \`${gameType} ${gameName}\`\nProfile Picture:`,
+            embed: {
+                image: {
+                    url: client.users.get(userID).dynamicAvatarURL(type, 1024)
+                }
             }
-        }
-    });
+        });
+    }catch (err) {
+        client.createMessage(msg.channel.id, 'It appears that the user you are trying to get info about is not in this server, please go into the server that the user is in to get their info')
+    }
 }, {
     fullDescription: 'get user info',
     usage: '<@user|user id>'
@@ -1182,6 +1181,7 @@ client.registerCommand('r34', (msg) => {
     usage: '<tag tag_with_spaces>'
 });
 client.registerCommand('serverinfo', (msg) => {
+    cmdsRan = ++cmdsRan
     var loop = true;
     var emojis = '';
     client.createMessage(msg.channel.id, 'Alright, Lemme open Inspect Element on this server').then((message) => {
@@ -1213,15 +1213,17 @@ client.registerCommand('serverinfo', (msg) => {
             if (msg.channel.guild.verificationLevel === 0) {verifLev = 'NONE'}else if(msg.channel.guild.verificationLevel === 1) {verifLev = 'LOW'}else if (msg.channel.guild.verificationLevel === 2) {verifLev = 'MEDIUM'}else if (msg.channel.guild.verificationLevel === 3) {verifLev = '(╯°□°）╯︵ ┻━┻'}else if (msg.channel.guild.verificationLevel === 4) {verifLev = '┻━┻ ﾐヽ(ಠ益ಠ)ノ彡┻━┻'}
             if (msg.channel.guild.explicitContentFilter === 0) {explicit = 'Disabled'}else if (msg.channel.guild.explicitContentFilter === 1) {explicit = 'Filters content from indiviuals with no roles'}else if (msg.channel.guild.explicitContentFilter === 2) {explicit = 'Filters content from everyone'}
             if (msg.channel.guild.defaultNotifications === 0) {notifs = 'All messages'}else if (msg.channel.guild.defaultNotifications === 1) {notifs = 'Only @mentions'}
-            client.editMessage(msg.channel.id, message.id, `Info for this server:\nName: \`${msg.channel.guild.name}\`\nServer ID: \`${msg.channel.guild.id}\`\nAFK Channel: \`${afk}\`\nAFK channel Timeout: \`${msg.channel.guild.afkTimeout ? msg.channel.guild.afkTimeout / 60 + ' minute(s)' : 'Not set'}\`\nServer creation date: \`${createdat}\`\nDefault Notification setting: \`${notifs}\`\nServer emojis: ${emojis}`).then(() => {
-                client.createMessage(msg.channel.id, {
-                    content: `Owner: \`${msg.channel.guild.members.get(msg.channel.guild.ownerID).username}#${msg.channel.guild.members.get(msg.channel.guild.ownerID).discriminator}\`\nExplicit Content Filter: \`${explicit}\`\nBots to Real Users ratio (bots:real users): \`${msg.channel.guild.members.map(m => m.bot).filter(bot => bot === true).length}:${msg.channel.guild.members.map(m => m.bot).filter(bot => bot === false).length}\`\nTotal Members combined: \`${msg.channel.guild.memberCount}\`\nIs the server large (when discord says so idk when that is): \`${msg.channel.guild.large}\`\nRegion: \`${msg.channel.guild.region}\`\n2FA required: \`${msg.channel.guild.mfaLevel ? 'true' : 'false'}\`\nVerification level: \`${verifLev}\`\nSystem channel (Built-in welcome messages): \`${sysChan}\`\nIcon: `,
-                    embed: {
-                        image: {
-                            url: msg.channel.guild.iconURL
+            client.editMessage(msg.channel.id, message.id, `Info for this server:\nName: \`${msg.channel.guild.name}\`\nServer ID: \`${msg.channel.guild.id}\`\nAFK Channel: \`${afk}\`\nAFK channel Timeout: \`${msg.channel.guild.afkTimeout ? msg.channel.guild.afkTimeout / 60 + ' minute(s)' : 'Not set'}\`\nServer creation date: \`${createdat}\`\nDefault Notification setting: \`${notifs}\``).then(() => {
+                client.createMessage(msg.channel.id, `Server emojis: ${emojis}`).then(() => {
+                    client.createMessage(msg.channel.id, {
+                        content: `Owner: \`${msg.channel.guild.members.get(msg.channel.guild.ownerID).username}#${msg.channel.guild.members.get(msg.channel.guild.ownerID).discriminator}\`\nExplicit Content Filter: \`${explicit}\`\nBots to Real Users ratio (bots:real users): \`${msg.channel.guild.members.map(m => m.bot).filter(bot => bot === true).length}:${msg.channel.guild.members.map(m => m.bot).filter(bot => bot === false).length}\`\nTotal Members combined: \`${msg.channel.guild.memberCount}\`\nIs the server large (when discord says so idk when that is): \`${msg.channel.guild.large}\`\nRegion: \`${msg.channel.guild.region}\`\n2FA required: \`${msg.channel.guild.mfaLevel ? 'true' : 'false'}\`\nVerification level: \`${verifLev}\`\nSystem channel (Built-in welcome messages): \`${sysChan}\`\nIcon: `,
+                        embed: {
+                            image: {
+                                url: msg.channel.guild.iconURL
+                            }
                         }
-                     }
-                })
+                    });
+                });
             });
         }, 5000)
     });
@@ -1230,6 +1232,7 @@ client.registerCommand('serverinfo', (msg) => {
 });
 client.registerCommandAlias('rule34', 'r34')
 client.registerCommand('amiowner', (msg) => {
+    cmdsRan = ++cmdsRan
     if (creatorID.includes(msg.author.id)) {
         return 'Ahh, yes, I remember you, your ' + msg.author.username + '#' + msg.author.discriminator + ', your my dad (I got no mom)'
     }else {
@@ -1239,6 +1242,7 @@ client.registerCommand('amiowner', (msg) => {
     fullDescription: 'Are you the owner?'
 });
 client.registerCommand('getemoji', (msg) => {
+    cmdsRan = ++cmdsRan
     var emojiID = msg.content.split(' ').splice(1).join(' ').split(':').splice(2).join(':').replace(/>/g, '')
     if (emojiID.length == 0) {
         return 'This emoji is either not a custom emoji, or is not accessable.'
@@ -1256,6 +1260,66 @@ client.registerCommand('getemoji', (msg) => {
 }, {
     fullDescription: 'retrieves custom server emojis.',
     usage: '<custom emoji or emoji id>'
+});
+client.registerCommand('howcool', (msg) => {
+    cmdsRan = ++cmdsRan
+    var amountOfCool = 0;
+    var howCoolCommand = msg.content.split(' ').splice(1).join(' ')
+    if (howCoolCommand.includes('222882552472535041')) {
+        amountOfCool = 200;
+    }else {
+        amountOfCool = Math.floor(Math.random() * 101);
+    }
+    if (amountOfCool === 0) {
+        client.createMessage(msg.channel.id, howCoolCommand + ' is not cool.')
+    }else {
+        if (amountOfCool === 69) {
+            client.createMessage(msg.channel.id, howCoolCommand + ' is: ' + amountOfCool + '% cool ( ͡° ͜ʖ ͡°)\n' + '😎'.repeat(amountOfCool))
+        }else {
+            client.createMessage(msg.channel.id, howCoolCommand + ' is: ' + amountOfCool + '% cool\n' + '😎'.repeat(amountOfCool))
+        }
+    }
+}, {
+    fullDescription: 'howcool.',
+    usage: '<literally anything>'
+});
+client.registerCommand('dicklength', (msg) => {
+    var dicklength1 = Math.floor(Math.random() * 101);
+    var dicklength2 = Math.floor(Math.random() * 100);
+    client.createMessage(msg.channel.id, `Your dick length is ${dicklength1}.${dicklength2} inches long.`)
+}, {
+    fullDescription: 'Shows your accurate dick length',
+});
+client.registerCommand('duck', (msg) => {
+    var duckSearch = {
+            url: 'https://e621.net/post/index.json?tags=order:random+rating:s+duck',
+            headers: {
+                'User-Agent': `EagleBot-Eris/${process.version} (by CantCreative on e621)`
+            }
+        }
+    client.sendChannelTyping(msg.channel.id)
+    request(duckSearch, (error, res, body) => {
+        if (!error && res.statusCode == 200) {
+            var duckSearchResults = JSON.parse(body);
+            if(typeof (duckSearchResults[0]) != "undefined") {
+                msg.channel.createMessage({
+                    embed: {
+                        title: 'Here is your duck kind sir. This duck has been voted for President ' + duckSearchResults[0].score + ' times',
+                        url: 'https://e621.net/post/show/' + duckSearchResults[0].id.toString(),
+                        image: {
+                            url: duckSearchResults[0].file_url.toString()
+                        }
+                    }
+                })
+            }else {
+                msg.channel.createMessage('notfin, idk if i looked for the right stuff.')
+            }
+        }else {
+            msg.channel.createMessage('I tried talkin to e621, but they told me to go away.')
+        }
+    });
+}, {
+    fullDescription: 'random picture of a duck, courtesy of e621'
 });
 client.registerCommand('help', 'Push a number to show a page', {
     description: 'this help text',
@@ -1309,6 +1373,11 @@ client.registerCommand('help', 'Push a number to show a page', {
             emoji: '🔟',
             type: 'edit',
             response: `${Object.values(client.commands).map(m => m.label)[45]} ${Object.values(client.commands).map(m => m.usage)[45]}\n${Object.values(client.commands).map(m => m.fullDescription)[45]}\n\n${Object.values(client.commands).map(m => m.label)[46]} ${Object.values(client.commands).map(m => m.usage)[46]}\n${Object.values(client.commands).map(m => m.fullDescription)[46]}\n\n${Object.values(client.commands).map(m => m.label)[47]} ${Object.values(client.commands).map(m => m.usage)[47]}\n${Object.values(client.commands).map(m => m.fullDescription)[47]}\n\n${Object.values(client.commands).map(m => m.label)[48]} ${Object.values(client.commands).map(m => m.usage)[48]}\n${Object.values(client.commands).map(m => m.fullDescription)[48]}\n\n${Object.values(client.commands).map(m => m.label)[49]} ${Object.values(client.commands).map(m => m.usage)[49]}\n${Object.values(client.commands).map(m => m.fullDescription)[49]}`
+        },
+        {
+            emoji: '⏸️',
+            type: 'edit',
+            response: `${Object.values(client.commands).map(m => m.label)[50]} ${Object.values(client.commands).map(m => m.usage)[50]}\n${Object.values(client.commands).map(m => m.fullDescription)[50]}\n\n${Object.values(client.commands).map(m => m.label)[51]} ${Object.values(client.commands).map(m => m.usage)[51]}\n${Object.values(client.commands).map(m => m.fullDescription)[51]}\n\n${Object.values(client.commands).map(m => m.label)[52]} ${Object.values(client.commands).map(m => m.usage)[52]}\n${Object.values(client.commands).map(m => m.fullDescription)[52]}`
         },
     ],
     reactionButtonTimeout: 60000
