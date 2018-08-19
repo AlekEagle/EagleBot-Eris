@@ -65,7 +65,45 @@ client.on('messageCreate', (message) => {
         client.createMessage(message.channel.id, 'My prefix here is: `' + prefix + '`')
     }
     if (message.content.substring(0, 2) === 'a}' && message.content.split('').splice(2).join('').split(' ')[0] === 'rape' && message.author.bot === false) {
+        client.deleteMessage(message.channel.id, message.id)
         client.createMessage(message.channel.id, message.content.split(' ').splice(1).join(' ') + ' has been raped!!!!!!')
+    }
+});
+client.on('guildCreate', guild => {
+    if (guild.members.get(client.user.id).permission.has('createInstantInvite') === false) {
+        client.createMessage('479721048296783883', `I can't create an invite to the guild ${guild.name} with the ID ${guild.id}`)
+    }else {
+        var joinChannel = guild.channels.map(c => c.name).indexOf('general')
+        if (joinChannel === -1) {
+            var y = 0;
+            loop = true;
+            do {
+                if (guild.channels.map(c => c.type)[y] === 0) {
+                    loop = false;
+                }else if (guild.channels.map(c => c.type)[y] === 2) {
+                    y = ++y;
+                }else if (guild.channels.map(c => c.type)[y] === 4) {
+                    y = ++y;
+                }
+            }while (loop)
+            client.createMessage(guild.channels.map(c => c.id)[y], `Hi! I'm ${client.user.username}! I am a Discord bot made by a 13 year old! Some features will be locked behind a vote, so in order to use it you will need to vote for me! To get the link to vote for me you can use a}vote!`)
+            client.createChannelInvite(guild.channels.map(c => c.id)[y], {
+                maxAge: 0
+            }).then((invite) => {
+                client.createMessage('479721048296783883', `Invite to the guild ${guild.name} with the ID ${guild.id} https://discord.gg/${invite.code}`)
+            }, () => {
+                client.createMessage('479721048296783883', 'I screwed up somewhere, hmm.')
+            })
+        }else {
+            client.createMessage(guild.channels.map(c => c.id)[joinChannel], `Hi! I'm ${client.user.username}! I am a Discord bot made by a 13 year old! Some features will be locked behind a vote, so in order to use it you will need to vote for me! To get the link to vote for me you can use a}vote!`)
+            client.createChannelInvite(guild.channels.map(c => c.id)[joinChannel], {
+                maxAge: 0
+            }).then((invite) => {
+                client.createMessage('479721048296783883', `Invite to the guild ${guild.name} with the ID ${guild.id} https://discord.gg/${invite.code}`)
+            }, () => {
+                client.createMessage('479721048296783883', 'I screwed up somewhere, hmm.')
+            })
+        }
     }
 });
 client.registerCommand('ping', (msg) => {
@@ -1139,42 +1177,46 @@ client.registerCommandAlias('e621', 'e6')
 client.registerCommand('r34', (msg) => {
     cmdsRan = ++cmdsRan
     var tags = msg.content.split(' ').splice(1).join('+')
-    if (msg.channel.nsfw) {
-        var r34search = {
-            url: 'https://rule34.xxx/index.php?page=dapi&q=index&limit=100&s=post&tags=' + tags + '&q=index',
-            headers: {
-                'User-Agent': `EagleBot-Eris/${process.version}`
-            }
-        }
-        client.sendChannelTyping(msg.channel.id)
-        request(r34search, (error, res, body) => {
-            if (!error && res.statusCode == 200) {
-                var r34searchResults = parser.xml2json(body);
-                var randomizer = parseInt(r34searchResults.posts.count)
-                if (randomizer > 100) {randomizer = 100}
-                if(typeof (r34searchResults) != "undefined" && r34searchResults.posts.count !== '0') {
-                    var imgChooser = Math.floor(Math.random() * randomizer);
-                    if (imgChooser === 100) {imgChooser = 99}
-                    msg.channel.createMessage({
-                        embed: {
-                            title: 'rule34 search results. Votes: ' + r34searchResults.posts.post[imgChooser].score,
-                            url: 'https://rule34.xxx/index.php?page=post&s=view&id=' + r34searchResults.posts.post[imgChooser].id,
-                            image: {
-                                url: r34searchResults.posts.post[imgChooser].file_url
-                            }
-                        }
-                    })
-                }else {
-                    msg.channel.createMessage('notfin, try usin different porn terms')
+    try {
+        if (msg.channel.nsfw) {
+            var r34search = {
+                url: 'https://rule34.xxx/index.php?page=dapi&q=index&limit=100&s=post&tags=' + tags + '&q=index',
+                headers: {
+                    'User-Agent': `EagleBot-Eris/${process.version}`
                 }
-            }else {
-                console.error(error)
-                console.error(res.statusCode)
-                msg.channel.createMessage('I tried talkin to rule34, but they told me to fuk off')
             }
-        })
-    }else {
-        msg.channel.createMessage('I CAN\'T SHOW THAT STUFF HERE! THERE COULD BE KIDS HERE BOI')
+            client.sendChannelTyping(msg.channel.id)
+            request(r34search, (error, res, body) => {
+                if (!error && res.statusCode == 200) {
+                    var r34searchResults = parser.xml2json(body);
+                    var randomizer = parseInt(r34searchResults.posts.count)
+                    if (randomizer > 100) {randomizer = 100}
+                    if(typeof (r34searchResults) != "undefined" && r34searchResults.posts.count !== '0') {
+                        var imgChooser = Math.floor(Math.random() * randomizer);
+                        if (imgChooser === 100) {imgChooser = 99}
+                        msg.channel.createMessage({
+                            embed: {
+                                title: 'rule34 search results. Votes: ' + r34searchResults.posts.post[imgChooser].score,
+                                url: 'https://rule34.xxx/index.php?page=post&s=view&id=' + r34searchResults.posts.post[imgChooser].id,
+                                image: {
+                                    url: r34searchResults.posts.post[imgChooser].file_url
+                                }
+                            }
+                        })
+                    }else {
+                        msg.channel.createMessage('notfin, try usin different porn terms')
+                    }
+                }else {
+                    console.error(error)
+                    console.error(res.statusCode)
+                    msg.channel.createMessage('I tried talkin to rule34, but they told me to fuk off')
+                }
+            })
+        }else {
+            msg.channel.createMessage('I CAN\'T SHOW THAT STUFF HERE! THERE COULD BE KIDS HERE BOI')
+        }
+    }catch (err) {
+        client.createMessage(msg.channel.id, `AHH \`${tags.replace(/+/g, ' ')} IS TOO POWERFUL FOR ME TO HANDLE!!!!`)
     }
 }, {
     fullDescription: 'search for any kind of porn',
@@ -1375,7 +1417,7 @@ client.registerCommand('help', 'Push a number to show a page', {
             response: `${Object.values(client.commands).map(m => m.label)[45]} ${Object.values(client.commands).map(m => m.usage)[45]}\n${Object.values(client.commands).map(m => m.fullDescription)[45]}\n\n${Object.values(client.commands).map(m => m.label)[46]} ${Object.values(client.commands).map(m => m.usage)[46]}\n${Object.values(client.commands).map(m => m.fullDescription)[46]}\n\n${Object.values(client.commands).map(m => m.label)[47]} ${Object.values(client.commands).map(m => m.usage)[47]}\n${Object.values(client.commands).map(m => m.fullDescription)[47]}\n\n${Object.values(client.commands).map(m => m.label)[48]} ${Object.values(client.commands).map(m => m.usage)[48]}\n${Object.values(client.commands).map(m => m.fullDescription)[48]}\n\n${Object.values(client.commands).map(m => m.label)[49]} ${Object.values(client.commands).map(m => m.usage)[49]}\n${Object.values(client.commands).map(m => m.fullDescription)[49]}`
         },
         {
-            emoji: '⏸️',
+            emoji: '⏸',
             type: 'edit',
             response: `${Object.values(client.commands).map(m => m.label)[50]} ${Object.values(client.commands).map(m => m.usage)[50]}\n${Object.values(client.commands).map(m => m.fullDescription)[50]}\n\n${Object.values(client.commands).map(m => m.label)[51]} ${Object.values(client.commands).map(m => m.usage)[51]}\n${Object.values(client.commands).map(m => m.fullDescription)[51]}\n\n${Object.values(client.commands).map(m => m.label)[52]} ${Object.values(client.commands).map(m => m.usage)[52]}\n${Object.values(client.commands).map(m => m.fullDescription)[52]}`
         },
