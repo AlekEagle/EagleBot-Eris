@@ -838,6 +838,8 @@ client.registerCommand('dbl', (msg) => {
                     }
                 }
             });
+        }, () => {
+            client.createMessage(msg.channel.id, 'I don\'t think I see them on there, hmm.')
         })
         
     }else {
@@ -1363,6 +1365,32 @@ client.registerCommand('duck', (msg) => {
 }, {
     fullDescription: 'random picture of a duck, courtesy of e621'
 });
+client.registerCommand('poll', (msg) => {
+    if (msg.member.permission.has('mentionEveryone')) {
+        var options = msg.content.split(' ').splice(1).join(' ').split('|')
+        var channel = ''
+        if (options[3] !== undefined) {
+            channel = options[3].replace(/<#/g, '').replace(/>/g, '').replace(/ /g, '')
+        }else {
+            channel = msg.channel.id
+        }
+        console.log(channel)
+        client.createMessage(channel, {
+            content: `@everyone new poll \`${options[0]}\`\n:thumbsup: for: ${options[1]}\n:thumbsdown: for: ${options[2]}`,
+            disableEveryone: false
+        }).then((message) => {
+            client.addMessageReaction(message.channel.id, message.id, '👍')
+            client.addMessageReaction(message.channel.id, message.id, '👎')
+        }, () => {
+            client.createMessage(msg.channel.id, 'I can\'t say anything there so oof')
+        });
+    }else {
+        client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MENTION_EVERYONE`.')
+    }
+}, {
+    fullDescription: 'creates a poll',
+    usage: '<question> | <option 1> | <option 2> | [channel]'
+})
 client.registerCommand('help', 'Push a number to show a page', {
     description: 'this help text',
     reactionButtons:[
@@ -1419,7 +1447,7 @@ client.registerCommand('help', 'Push a number to show a page', {
         {
             emoji: '⏸',
             type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[50]} ${Object.values(client.commands).map(m => m.usage)[50]}\n${Object.values(client.commands).map(m => m.fullDescription)[50]}\n\n${Object.values(client.commands).map(m => m.label)[51]} ${Object.values(client.commands).map(m => m.usage)[51]}\n${Object.values(client.commands).map(m => m.fullDescription)[51]}\n\n${Object.values(client.commands).map(m => m.label)[52]} ${Object.values(client.commands).map(m => m.usage)[52]}\n${Object.values(client.commands).map(m => m.fullDescription)[52]}`
+            response: `${Object.values(client.commands).map(m => m.label)[50]} ${Object.values(client.commands).map(m => m.usage)[50]}\n${Object.values(client.commands).map(m => m.fullDescription)[50]}\n\n${Object.values(client.commands).map(m => m.label)[51]} ${Object.values(client.commands).map(m => m.usage)[51]}\n${Object.values(client.commands).map(m => m.fullDescription)[51]}\n\n${Object.values(client.commands).map(m => m.label)[52]} ${Object.values(client.commands).map(m => m.usage)[52]}\n${Object.values(client.commands).map(m => m.fullDescription)[52]}\n\n${Object.values(client.commands).map(m => m.label)[53]} ${Object.values(client.commands).map(m => m.usage)[53]}\n${Object.values(client.commands).map(m => m.fullDescription)[53]}`
         },
     ],
     reactionButtonTimeout: 60000
