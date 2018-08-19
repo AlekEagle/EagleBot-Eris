@@ -1328,6 +1328,7 @@ client.registerCommand('howcool', (msg) => {
     usage: '<literally anything>'
 });
 client.registerCommand('dicklength', (msg) => {
+    cmdsRan = ++cmdsRan
     var dicklength1 = Math.floor(Math.random() * 101);
     var dicklength2 = Math.floor(Math.random() * 100);
     client.createMessage(msg.channel.id, `Your dick length is ${dicklength1}.${dicklength2} inches long.`)
@@ -1335,6 +1336,7 @@ client.registerCommand('dicklength', (msg) => {
     fullDescription: 'Shows your accurate dick length',
 });
 client.registerCommand('duck', (msg) => {
+    cmdsRan = ++cmdsRan
     var duckSearch = {
             url: 'https://e621.net/post/index.json?tags=order:random+rating:s+duck',
             headers: {
@@ -1366,6 +1368,7 @@ client.registerCommand('duck', (msg) => {
     fullDescription: 'random picture of a duck, courtesy of e621'
 });
 client.registerCommand('poll', (msg) => {
+    cmdsRan = ++cmdsRan
     if (msg.member.permission.has('mentionEveryone')) {
         var options = msg.content.split(' ').splice(1).join(' ').split('|')
         var channel = ''
