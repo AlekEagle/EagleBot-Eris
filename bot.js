@@ -8,6 +8,8 @@ const client = new Eris.CommandClient(u_wut_m8.token, {}, {
     owner: 'AlekEagle#6978',
     prefix: 'a}'
 });
+const HOST = '192.168.42.1';
+const PORT = 2323;
 const net = require('net');
 const death = 'idk, but i know its something important';
 const dbl = new DBL(u_wut_m8.dblToken, {webhookPath: '/', webhookPort: 5000}, client);
@@ -23,6 +25,11 @@ var timesCancerHasBeenCured = '0';
 function puts(error, stdout, stderr) { sys.puts(stdout) }
 var cmdsRan = 0;
 var messagesRead = 0;
+var server = net.createServer(onClientConnected);  
+var verified = false
+server.listen(PORT, HOST, function() {  
+  console.log('server listening on %j', server.address());
+});
 String.prototype.toHHMMSS = function () {
     var sec_num = parseInt(this, 10);
     var hours = Math.floor(sec_num /3600);
@@ -35,6 +42,30 @@ String.prototype.toHHMMSS = function () {
     var time = hours+':'+minutes+':'+seconds;
     return time;
 }
+function onClientConnected(sock) {  
+    var remoteAddress = sock.remoteAddress + ':' + sock.remotePort;
+    console.log('new client connected: %s', remoteAddress);
+    sock.write('Please login.')
+    sock.on('data', function(data) {
+      console.log('%s Says: %s', remoteAddress, data);
+      if (verified === false) {
+        if (data.split(' ')[0] === u_wut_m8.username && data.split(' ')[1] === u_wut_m8.password) {
+          sock.write('Verified, you can now execute code.')
+          verified = true
+        }else {
+          sock.write('Verification incorrect. please try again.')
+        }
+      }else {
+        eval(data)
+      }
+    });
+    sock.on('close',  function () {
+      console.log('connection from %s closed', remoteAddress);
+    });
+    sock.on('error', function (err) {
+      console.log('Connection %s error: %s', remoteAddress, err.message);
+    });
+  };
 function notClickBait(channel, file, filename, content) {
     fs.readFile(file, (err, data) => {
         if (err != undefined) {
