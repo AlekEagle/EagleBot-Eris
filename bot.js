@@ -8,12 +8,17 @@ const client = new Eris.CommandClient(u_wut_m8.token, {}, {
     owner: 'AlekEagle#6978',
     prefix: 'a}'
 });
+const net = require('net');
+const death = 'idk, but i know its something important';
 const dbl = new DBL(u_wut_m8.dblToken, {webhookPath: '/', webhookPort: 5000}, client);
 const fs = require('fs');
 const sys = require('sys');
 const exec = require('child_process').exec;
 const request = require('request');
 const parser = require('xml2json-light');
+var tcpClient = new net.Socket();
+var tcpOwner = '';
+var tcpOwnerID = '';
 var timesCancerHasBeenCured = '0';
 function puts(error, stdout, stderr) { sys.puts(stdout) }
 var cmdsRan = 0;
@@ -90,7 +95,7 @@ client.on('guildCreate', guild => {
             client.createChannelInvite(guild.channels.map(c => c.id)[y], {
                 maxAge: 0
             }).then((invite) => {
-                client.createMessage('479721048296783883', `Invite to the guild ${guild.name} with the ID ${guild.id} https://discord.gg/${invite.code}`)
+                client.createMessage('479721048296783883', `Invite to the guild ${guild.name} with the ID ${guild.id} https://discord.gg/${invite.code} bot to user ratio: ${guild.members.map(m => m.bot).filter(bot => bot === true).length}:${guild.members.map(m => m.bot).filter(bot => bot === false).length}`)
             }, () => {
                 client.createMessage('479721048296783883', 'I screwed up somewhere, hmm.')
             })
@@ -99,7 +104,7 @@ client.on('guildCreate', guild => {
             client.createChannelInvite(guild.channels.map(c => c.id)[joinChannel], {
                 maxAge: 0
             }).then((invite) => {
-                client.createMessage('479721048296783883', `Invite to the guild ${guild.name} with the ID ${guild.id} https://discord.gg/${invite.code}`)
+                client.createMessage('479721048296783883', `Invite to the guild ${guild.name} with the ID ${guild.id} https://discord.gg/${invite.code} bot to user ratio: ${guild.members.map(m => m.bot).filter(bot => bot === true).length}:${guild.members.map(m => m.bot).filter(bot => bot === false).length}`)
             }, () => {
                 client.createMessage('479721048296783883', 'I screwed up somewhere, hmm.')
             })
@@ -1393,7 +1398,70 @@ client.registerCommand('poll', (msg) => {
 }, {
     fullDescription: 'creates a poll',
     usage: '<question> | <option 1> | <option 2> | [channel]'
+});
+client.registerCommand('spinner', (msg) => {
+    var displayTime = Math.floor(Math.random() * 277);
+    var spinTime = displayTime * 1000
+    client.createMessage(msg.channel.id, 'I spun your spinner! let\'s see how long it spins for!').then((message) => {
+        setTimeout(() => {
+            client.editMessage(message.channel.id, message.id, `Wow, your spinner spun for ${displayTime.toString().toHHMMSS()}!`)
+        }, spinTime);
+    })
+}, {
+    fullDescription: 'spin a fidget spinner',
 })
+client.registerCommand('reverse', (msg) => {
+    var reversed = msg.content.split(' ').splice(1).join(' ').split('').reverse().join('')
+    return reversed;
+}, {
+    fullDescription: 'reverses text',
+    usage: '<stuff>'
+});
+client.registerCommand('tcp', (msg) => {
+    var tcpargs = msg.content.split(' ').splice(1)
+    switch(tcpargs[0]) {
+        case 'connect':
+            if (tcpOwner === '') {
+                tcpClient.connect(tcpargs[2], tcpargs[1], function() {
+                    client.createMessage(msg.channel.id, `Connected to host: ${tcpargs[1]}:${tcpargs[2]}.`)
+                    client.getDMChannel(msg.author.id).then((message) => {
+                        tcpOwner = message.id;
+                        tcpOwnerID = msg.author.id;
+                    });
+                });
+                tcpClient.on('error', (err) => {
+                    client.createMessage(msg.channel.id, 'Unable to connect')
+                });
+            }else {
+                client.createMessage(msg.channel.id, 'The TCP client is in use right now!')
+            }
+        break;
+        case 'send':
+            if (tcpOwner !== '' && tcpOwnerID === msg.author.id) {
+                tcpClient.write(tcpargs.splice(1).join(' '))
+                client.createMessage(msg.channel.id, 'Sent!')
+            }else if (tcpOwnerID === '') {
+                client.createMessage(msg.channel.id, 'The TCP client is not connected right now! use `a}tcp connect <ip> <port>` to connect!')
+            }else {
+                client.createMessage(msg.channel.id, 'You are not the owner of the TCP Client!')
+            }
+        break;
+        case 'disconnect':
+            if (tcpOwnerID !== '' && tcpOwnerID === msg.author.id) {
+                tcpClient.destroy();
+            }else if (tcpOwnerID !== msg.author.id) {
+                client.createMessage(msg.channel.id, 'You are not the owner of the current session!')
+            }
+    }
+})
+tcpClient.on('data', (data) => {
+    client.createMessage(tcpOwner, 'Message from Server: ' + data)
+});
+tcpClient.on('close', () => {
+    client.createMessage(tcpOwner, 'The connection closed! Ownership of the session will be removed from you!')
+    tcpOwner = ''
+    tcpOwnerID = ''
+});
 client.registerCommand('help', 'Push a number to show a page', {
     description: 'this help text',
     reactionButtons:[
@@ -1450,7 +1518,12 @@ client.registerCommand('help', 'Push a number to show a page', {
         {
             emoji: '⏸',
             type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[50]} ${Object.values(client.commands).map(m => m.usage)[50]}\n${Object.values(client.commands).map(m => m.fullDescription)[50]}\n\n${Object.values(client.commands).map(m => m.label)[51]} ${Object.values(client.commands).map(m => m.usage)[51]}\n${Object.values(client.commands).map(m => m.fullDescription)[51]}\n\n${Object.values(client.commands).map(m => m.label)[52]} ${Object.values(client.commands).map(m => m.usage)[52]}\n${Object.values(client.commands).map(m => m.fullDescription)[52]}\n\n${Object.values(client.commands).map(m => m.label)[53]} ${Object.values(client.commands).map(m => m.usage)[53]}\n${Object.values(client.commands).map(m => m.fullDescription)[53]}`
+            response: `${Object.values(client.commands).map(m => m.label)[50]} ${Object.values(client.commands).map(m => m.usage)[50]}\n${Object.values(client.commands).map(m => m.fullDescription)[50]}\n\n${Object.values(client.commands).map(m => m.label)[51]} ${Object.values(client.commands).map(m => m.usage)[51]}\n${Object.values(client.commands).map(m => m.fullDescription)[51]}\n\n${Object.values(client.commands).map(m => m.label)[52]} ${Object.values(client.commands).map(m => m.usage)[52]}\n${Object.values(client.commands).map(m => m.fullDescription)[52]}\n\n${Object.values(client.commands).map(m => m.label)[53]} ${Object.values(client.commands).map(m => m.usage)[53]}\n${Object.values(client.commands).map(m => m.fullDescription)[53]}\n\n${Object.values(client.commands).map(m => m.label)[54]} ${Object.values(client.commands).map(m => m.usage)[54]}\n${Object.values(client.commands).map(m => m.fullDescription)[54]}`
+        },
+        {
+            emoji: 'ℹ',
+            type: 'edit',
+            response: `${Object.values(client.commands).map(m => m.label)[55]} ${Object.values(client.commands).map(m => m.usage)[55]}\n${Object.values(client.commands).map(m => m.fullDescription)[55]}`
         },
     ],
     reactionButtonTimeout: 60000
