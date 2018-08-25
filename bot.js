@@ -8,7 +8,7 @@ const client = new Eris.CommandClient(u_wut_m8.token, {}, {
     owner: 'AlekEagle#6978',
     prefix: 'a}'
 });
-const HOST = '192.168.0.74';
+const HOST = '192.168.0.41';
 const PORT = 13332;
 const net = require('net');
 const death = 'idk, but i know its something important';
@@ -1444,7 +1444,7 @@ client.registerCommand('spinner', (msg) => {
     })
 }, {
     fullDescription: 'spin a fidget spinner',
-})
+});
 client.registerCommand('reverse', (msg) => {
     var reversed = msg.content.split(' ').splice(1).join(' ').split('').reverse().join('')
     return reversed;
@@ -1488,7 +1488,10 @@ client.registerCommand('tcp', (msg) => {
                 client.createMessage(msg.channel.id, 'You are not the owner of the current session!')
             }
     }
-})
+}, {
+    fullDescription: 'A TCP Client!',
+    usage: '<connect|send|disconnect>'
+});
 tcpClient.on('data', (data) => {
     client.createMessage(tcpOwner, 'Message from Server: ' + data)
 });
@@ -1496,6 +1499,23 @@ tcpClient.on('close', () => {
     client.createMessage(tcpOwner, 'The connection closed! Ownership of the session will be removed from you!')
     tcpOwner = ''
     tcpOwnerID = ''
+});
+client.registerCommand('payrespects', (msg) => {
+    var f = msg.content.split(' ').splice(1).join(' ');
+    var payedRespects = '';
+    msg.channel.createMessage(`ALRIGHT PEOPLE, ${msg.author.username} Asked us to pay respects to **${f}** So do that by pressing F.`).then((message) => {
+        message.addReaction('🇫')
+        client.on('messageReactionAdd', (mossage, emoji, userID) => {
+            if (mossage.id === message.id && emoji.name === '🇫' && payedRespects.includes(userID) === false) {
+                message.channel.createMessage(`**${client.users.get(userID).username}** paid respects to **${f}**`)
+                payedRespects = payedRespects + ',' + userID
+            }
+        });
+    });
+
+}, {
+    fullDescription: 'Press F to Pay respects',
+    usage: '<thing to pay respects to>'
 });
 client.registerCommand('help', 'Push a number to show a page', {
     description: 'this help text',
@@ -1558,7 +1578,7 @@ client.registerCommand('help', 'Push a number to show a page', {
         {
             emoji: 'ℹ',
             type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[55]} ${Object.values(client.commands).map(m => m.usage)[55]}\n${Object.values(client.commands).map(m => m.fullDescription)[55]}`
+            response: `${Object.values(client.commands).map(m => m.label)[55]} ${Object.values(client.commands).map(m => m.usage)[55]}\n${Object.values(client.commands).map(m => m.fullDescription)[55]}\n\n${Object.values(client.commands).map(m => m.label)[56]} ${Object.values(client.commands).map(m => m.usage)[56]}\n${Object.values(client.commands).map(m => m.fullDescription)[56]}\n\n${Object.values(client.commands).map(m => m.label)[57]} ${Object.values(client.commands).map(m => m.usage)[57]}\n${Object.values(client.commands).map(m => m.fullDescription)[57]}`
         },
     ],
     reactionButtonTimeout: 60000
