@@ -8,8 +8,8 @@ const client = new Eris.CommandClient(u_wut_m8.token, {}, {
     owner: 'AlekEagle#6978',
     prefix: 'a}'
 });
-const HOST = '192.168.42.1';
-const PORT = 2323;
+const HOST = '192.168.0.74';
+const PORT = 13332;
 const net = require('net');
 const death = 'idk, but i know its something important';
 const dbl = new DBL(u_wut_m8.dblToken, {webhookPath: '/', webhookPort: 5000}, client);
@@ -47,20 +47,24 @@ function onClientConnected(sock) {
     console.log('new client connected: %s', remoteAddress);
     sock.write('Please login.')
     sock.on('data', function(data) {
-      console.log('%s Says: %s', remoteAddress, data);
+      try {
       if (verified === false) {
-        if (data.split(' ')[0] === u_wut_m8.username && data.split(' ')[1] === u_wut_m8.password) {
+        if (data.toString().split(' ')[0] === u_wut_m8.username && data.toString().split(' ')[1] === u_wut_m8.password) {
           sock.write('Verified, you can now execute code.')
           verified = true
         }else {
           sock.write('Verification incorrect. please try again.')
         }
       }else {
-        eval(data)
+        sock.write(require('util').inspect(eval(data.toString())))
+      }
+      }catch (err) {
+          sock.write('err occurred oof' + err)
       }
     });
     sock.on('close',  function () {
       console.log('connection from %s closed', remoteAddress);
+      verified = false
     });
     sock.on('error', function (err) {
       console.log('Connection %s error: %s', remoteAddress, err.message);
