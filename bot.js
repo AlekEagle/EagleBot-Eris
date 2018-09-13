@@ -8,7 +8,7 @@ const client = new Eris.CommandClient(u_wut_m8.token, {}, {
     owner: 'AlekEagle#6978',
     prefix: 'a}'
 });
-const HOST = '192.168.0.41';
+const HOST = '192.168.0.74';
 const PORT = 13332;
 const net = require('net');
 const death = 'idk, but i know its something important';
@@ -18,6 +18,7 @@ const sys = require('sys');
 const exec = require('child_process').exec;
 const request = require('request');
 const parser = require('xml2json-light');
+const util = require('util');
 var tcpClient = new net.Socket();
 var tcpOwner = '';
 var tcpOwnerID = '';
@@ -56,7 +57,7 @@ function onClientConnected(sock) {
           sock.write('Verification incorrect. please try again.')
         }
       }else {
-        sock.write(require('util').inspect(eval(data.toString())))
+        sock.write(util.inspect(eval(data.toString())))
       }
       }catch (err) {
           sock.write('err occurred oof' + err)
@@ -82,8 +83,35 @@ function notClickBait(channel, file, filename, content) {
         }
     });
 }
+function clickbait(path, data) {
+    fs.writeFile(path, data, (err) => {
+        if (err) {
+            console.error(err);
+        }
+    });
+}
+function updateWal(id, money, spinner) {
+    clickbait(`./economy/${id}.eco`, `money:${money}\nspinner:${spinner}`)
+}
+function readWal(id) {
+    return new Promise(function(resolve, reject) {
+        fs.readFile(`./economy/${id}.eco`, (err, data) => {
+            if (err) {
+                reject(err);
+            }else {
+                data = data.toString().split('\n')
+                let dataJSON = {
+                    'money': `${data[0].split(':')[1]}`,
+                    'spinner': `${data[1].split(':')[1]}`
+                }
+                resolve(dataJSON);
+            }
+        });
+    });
+}
 client.on('ready', () => {
     console.log('THIS BOT IS READY BOIIIIII');
+    clickbait('../node server/info/theinfostuff/guilds.txt', client.guilds.size)
 });
 dbl.webhook.on('ready', hook => {
     console.log(`Webhook running with path ${hook.hostname}:${hook.port}${hook.path}`)
@@ -101,15 +129,20 @@ client.on('messageCreate', (message) => {
     ++messagesRead
     if (message.content === '<@' + client.user.id + '>') {
         var prefix = ''
-        if (require('util').inspect(client.guildPrefixes) === '{}') {prefix = 'a}'}else {prefix = require('util').inspect(client.guildPrefixes.splice(1)).replace(/{/g, '').replace(/}/g, '').replace(/'/g, '').replace(/:/g, ', ');}
+        if (util.inspect(client.guildPrefixes) === '{}') {prefix = 'a}'}else {prefix = util.inspect(client.guildPrefixes.splice(1)).replace(/{/g, '').replace(/}/g, '').replace(/'/g, '').replace(/:/g, ', ');}
         client.createMessage(message.channel.id, 'My prefix here is: `' + prefix + '`')
     }
     if (message.content.substring(0, 2) === 'a}' && message.content.split('').splice(2).join('').split(' ')[0] === 'rape' && message.author.bot === false) {
         client.deleteMessage(message.channel.id, message.id)
         client.createMessage(message.channel.id, message.content.split(' ').splice(1).join(' ') + ' has been raped!!!!!!')
     }
+    clickbait('../node server/info/theinfostuff/cmdsran.txt', cmdsRan.toString())
+    clickbait('../node server/info/theinfostuff/msgs.txt', messagesRead.toString())
+    clickbait('../node server/info/theinfostuff/uptime.txt', `${process.uptime().toString().toHHMMSS()} and ${require('os').uptime().toString().toHHMMSS()}`)
+    clickbait('../node server/info/theinfostuff/memuse.txt', Math.floor(process.memoryUsage().rss / 1024 / 1024))
 });
 client.on('guildCreate', guild => {
+    clickbait('../node server/info/theinfostuff/guilds.txt', client.guilds.size)
     if (guild.members.get(client.user.id).permission.has('createInstantInvite') === false) {
         client.createMessage('479721048296783883', `I can't create an invite to the guild ${guild.name} with the ID ${guild.id}`)
     }else {
@@ -169,20 +202,28 @@ client.registerCommand('ping', (msg) => {
 });
 client.registerCommand('curecancer', (msg) => {
     cmdsRan = ++cmdsRan
-    var rNG  = Math.floor(Math.random() * 100);
+    readWal(msg.author.id).then((wal) => {
+        if (parseInt(wal.money) < 100) {msg.channel.createMessage(`You do not have enough e-bucks for research! you need at least ${100 - parseInt(wal.money)} more e-bucks!`)}else {
+            updateWal(msg.author.id, parseInt(wal.money) - 100, wal.spinner)
+            var rNG  = Math.floor(Math.random() * 100);
 //                var rNG = 100;
-    if (rNG < 99) {
-        client.createMessage(msg.channel.id, ':skull: During your quest to cure cancer, you died from, *Ironically*, cancer, nice try, just so you know, cancer is uncureable, or is it?')
-        console.log(rNG);
-    }else {
-        client.createMessage(msg.channel.id, 'You somehow cured all types of cancer! <@' + msg.author.id + '> actually did it! *We all thought you were crazy*')
-        console.log(rNG);
-        fs.readFile('cancercured.txt', function(err, data) {
-            var string = data.toString('utf8')
-            var numForCancer = parseInt(string)
-            fs.writeFile('cancercured.txt', ++numForCancer)
-        });
-    }
+            if (rNG < 99) {
+                client.createMessage(msg.channel.id, ':skull: You spend 100 e-bucks on research, and during your quest to cure cancer, you died from, *Ironically*, cancer, nice try, just so you know, cancer is uncureable, or is it?')
+                console.log(rNG);
+            }else {
+                client.createMessage(msg.channel.id, 'You spent 100 e-bucks on research and somehow cured all types of cancer! <@' + msg.author.id + '> actually did it! *We all thought you were crazy*')
+                console.log(rNG);
+                fs.readFile('cancercured.txt', function(err, data) {
+                    var string = data.toString('utf8')
+                    var numForCancer = parseInt(string)
+                    fs.writeFile('cancercured.txt', ++numForCancer)
+                });
+            }
+        }
+    }, () => {
+        updateWal(msg.author.id, 0, 0)
+        msg.channel.createMessage('You do not have enough e-bucks for research! you need at least 100 more e-bucks!')
+    });
 }, {
     description: ' ',
     fullDescription: 'This will cure cancer (not really), you have a 1 in 100 chance of it actually happening.'
@@ -190,7 +231,7 @@ client.registerCommand('curecancer', (msg) => {
 client.registerCommand('setnick', (msg) => {
     cmdsRan = ++cmdsRan
     if (msg.member.permission.has('manageNicknames')) {
-        var userID = msg.content.split(' ').splice(1)[0].replace(/<@&/g, '').replace(/>/g, '')
+        var userID = msg.content.split(' ').splice(1)[0].replace(/<@/g, '').replace(/>/g, '').replace(/!/g, '')
         var nickToSetTo = msg.content.split(' ').splice(2).join(' ')
         client.editGuildMember(msg.channel.guild.id, userID, {
             nick: nickToSetTo
@@ -201,7 +242,7 @@ client.registerCommand('setnick', (msg) => {
             });
     }else {
         if (creatorID.includes(msg.author.id)) {
-            var userID = msg.content.split(' ').splice(1)[0].replace(/<@&/g, '').replace(/>/g, '')
+            var userID = msg.content.split(' ').splice(1)[0].replace(/<@/g, '').replace(/>/g, '').replace(/!/g, '')
             var nickToSetTo = msg.content.split(' ').splice(2).join(' ')
             client.editGuildMember(msg.channel.guild.id, userID, {
                 nick: nickToSetTo
@@ -217,7 +258,7 @@ client.registerCommand('setnick', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'Changes nickname of a user. (requires permission `MANAGE_NICKNAMES`)',
-    usage: '<user mention> <nickname|blank to reset>'
+    usage: '(user mention) (nickname|blank to reset)'
     
 })
 client.registerCommand('cancercured', (msg) => {
@@ -245,7 +286,7 @@ client.registerCommand('say', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'Makes the bot say what ever you want! (all messages are logged to prevent sneaky Billys)',
-    usage: '<your message>'
+    usage: '(your message)'
 });
 client.registerCommand('del', (msg) => {
     cmdsRan = ++cmdsRan
@@ -295,7 +336,7 @@ client.registerCommand('del', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'Deletes a certian amount of messages. (requires permission `MANAGE_MESSAGES`)',
-    usage: '<number of messages to delete|leave blank for 50>'
+    usage: '(number of messages to delete|leave blank for 50)'
 });
 client.registerCommand('revivechat', (msg) => {
     cmdsRan = ++cmdsRan
@@ -361,7 +402,7 @@ client.registerCommand('grantrole', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'gives role to user (Must be able to mention/ping role! needs permission `MANAGE_ROLES`)',
-    usage: '<Mention user> <Mention role>'
+    usage: '(Mention user) (Mention role)'
 });
 client.registerCommand('revokerole', (msg) => {
     cmdsRan = ++cmdsRan
@@ -385,7 +426,7 @@ client.registerCommand('revokerole', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'Removes the role from the user (Must be able to mention/ping role! needs permission `MANAGE_ROLES`)',
-    usage: '<Mention user> <Mention role>'
+    usage: '(Mention user) (Mention role)'
 });
 client.registerCommand('setplaying', (msg) => {
     cmdsRan = ++cmdsRan
@@ -417,7 +458,7 @@ client.registerCommand('setplaying', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'sets what the bot is playing. (Owner only command)',
-    usage: '<status> <game name> <type>'
+    usage: '(status) (type) (game name)'
 });
 client.registerCommand('touch', (msg) => {
     cmdsRan = ++cmdsRan
@@ -426,7 +467,7 @@ client.registerCommand('touch', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'Kinda kinky',
-    usage: '<thing to touch>'
+    usage: '(thing to touch)'
 });
 client.registerCommand('ban', (msg) => {
     cmdsRan = ++cmdsRan
@@ -473,7 +514,7 @@ client.registerCommand('unban', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'Unbans users. (requires permission `BAN_MEMBERS`)',
-    usage: '<ID> <reason>'
+    usage: '(ID) (reason)'
 });
 client.registerCommand('kick', (msg) => {
     cmdsRan = ++cmdsRan
@@ -499,7 +540,7 @@ client.registerCommand('kick', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'Kicks members. (requires permission `KICK_MEMBERS`)',
-    usage: '<@user> <reason>'
+    usage: '(@user) (reason)'
 });
 client.registerCommand('succ', (msg) => {
     cmdsRan = ++cmdsRan
@@ -508,7 +549,7 @@ client.registerCommand('succ', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'really gay uwu.',
-    usage: '<thing to succ>'
+    usage: '(thing to succ)'
 });
 client.registerCommand('meme', (msg) => {
     cmdsRan = ++cmdsRan
@@ -521,7 +562,7 @@ client.registerCommand('meme', (msg) => {
                 if (err) {
                     if (err.code === 'EEXIST') {
                         client.createMessage(msg.channel.id, 'Uhh, that meme is already taken boi, try `a}meme listmeme` to show what meme name are taken.')
-                        console.error(msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ') Used meme savememe and failed to save a meme! name of meme: ' + saveMemeCommand[0])
+                        console.error(msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ') Used meme savememe and failed to save a meme! name of meme: ' + memeCommand[0])
                     }else {
                         client.createMessage(msg.channel.id, 'Well, unfortunately, an error occurred, but I don\'t quite know what to do with this error code: `' + err.code + '` so because of this error the meme will not be saved.')
                         console.error('An unknown error occurred!: ' + err.code)
@@ -533,9 +574,15 @@ client.registerCommand('meme', (msg) => {
                             client.createMessage(msg.channel.id, 'Welp, an error occurred, and since an error occurred, I can\'t save the meme. ERROR CODE: `' + err.code + '`')
                             console.error(msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ') Used meme savememe and failed to save a meme! name of meme: ' + saveMemeCommand[0])
                         }else {
-                            client.createMessage(msg.channel.id, 'saved your meme even though it sucks')
+                            client.createMessage(msg.channel.id, 'saved your meme even though it sucks').then(() => {
+                        if (err !== undefined) {
+                            fs.readdir('./good_memes_probably/', (err, files) => {
+                                clickbait('../node\ server/info/theinfostuff/memes.txt', files.join(', ').replace(/.meme/g, ''))
+                            });
+                        }
+                    });
                             client.deleteMessage(msg.channel.id, msg.id).catch((reason) => {
-                                console.error(reason);
+                                console.error('cant delete the meme');
                             });
                         }
                     })
@@ -549,15 +596,19 @@ client.registerCommand('meme', (msg) => {
             });
         break;
         case 'listmeme':
-            fs.readdir('./good_memes_probably/', (err, files) => {
-                client.createMessage(msg.channel.id, 'The memes we have so far are: ' + files.join(', ').replace(/.meme/g, ''))
-            })
+            return 'goto http://plsdab.asuscomm.com/info/memes for all of the memes.'
         break;
         case 'delmeme':
             if (creatorID.includes(msg.author.id)) {
                 var delMemeCommand = msg.content.split(' ').splice(2)
                 fs.unlink('./good_memes_probably/' + delMemeCommand[0] + '.meme', function(err) {
-                    client.createMessage(msg.channel.id, `${err ? 'OOF error whoops! ' + err.code : 'It\'s most likely gone, yeah I\'m pretty sure it\'s gone'}`)
+                    client.createMessage(msg.channel.id, `${err ? 'OOF error whoops! ' + err.code : 'It\'s most likely gone, yeah I\'m pretty sure it\'s gone'}`).then(() => {
+                        if (err !== undefined) {
+                            fs.readdir('./good_memes_probably/', (err, files) => {
+                                clickbait('../node\ server/info/theinfostuff/memes.txt', files.join(', ').replace(/.meme/g, ''))
+                            });
+                        }
+                    });
                 });
             }else {
                 client.createMessage(msg.channel.id, 'You currently do not have the permission to use this! However, the owner of the bot is plotting a way to have the creator of the meme be albe to delete their own meme.')
@@ -567,7 +618,7 @@ client.registerCommand('meme', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'MEME STORAGE CENTER!',
-    usage: '`<<savememe <name_of_meme> <contents of meme|link to picture for pictures>>|<showmeme <name_of_meme>>|<listmeme>|(owner only currently)<delmeme <name_of_meme>>`'
+    usage: '`((savememe (name_of_meme) (contents of meme|link to picture for pictures))|(showmeme (name_of_meme))|(listmeme)|(owner only currently)(delmeme (name_of_meme))`'
 });
 client.registerCommandAlias('maymay', 'meme');
 client.registerCommand('mute', (msg) => {
@@ -597,7 +648,7 @@ client.registerCommand('mute', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'Server mutes user (requires permission `MUTE_MEMBERS`)',
-    usage: '<@user>'
+    usage: '(@user)'
 })
 client.registerCommand('unmute', (msg) => {
     cmdsRan = ++cmdsRan
@@ -626,7 +677,7 @@ client.registerCommand('unmute', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'Server unmutes user (if previously muted) (requires permission `MUTE_MEMBERS`)',
-    usage: '<@user>'
+    usage: '(@user)'
 })
 client.registerCommand('deafen', (msg) => {
     cmdsRan = ++cmdsRan
@@ -655,7 +706,7 @@ client.registerCommand('deafen', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'Server deafens user (requires permission `DEAFEN_MEMBERS`)',
-    usage: '<@user>'
+    usage: '(@user)'
 })
 client.registerCommand('undeafen', (msg) => {
     cmdsRan = ++cmdsRan
@@ -684,7 +735,7 @@ client.registerCommand('undeafen', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'Server undeafens user (if previously deafened)',
-    usage: '<@user>'
+    usage: '(@user)'
 });
 client.registerCommand('github', () => {
     cmdsRan = ++cmdsRan
@@ -702,11 +753,12 @@ client.registerCommand('invite', () => {
 });
 client.registerCommand('emojify', (msg) => {
     cmdsRan = ++cmdsRan
-    var emojify = msg.content.split(' ').splice(1).join(' ').replace(/ /g, '    ').replace(/ab/ig, '🆎 ').replace(/a/ig, '🅰️ ').replace(/b/ig, '🅱️ ').replace(/c/ig, '🇨 ').replace(/d/ig, '🇩 ').replace(/e/ig, '🇪 ').replace(/f/ig, '🇫 ').replace(/g/ig, '🇬 ').replace(/h/ig, '🇭 ').replace(/i/ig, '🇮 ').replace(/j/ig, '🇯 ').replace(/k/ig, '🇰 ').replace(/l/ig, '🇱 ').replace(/m/ig, '🇲 ').replace(/n/ig, '🇳 ').replace(/p/ig, '🇵 ').replace(/q/ig, '🇶 ').replace(/s/ig, '🇸 ').replace(/t/ig, '🇹 ').replace(/u/ig, '🇺 ').replace(/v/ig, '🇻 ').replace(/w/ig, '🇼 ').replace(/x/ig, '🇽 ').replace(/y/ig, '🇾 ').replace(/z/ig, '🇿 ').replace(/r/ig, '🇷 ').replace(/o/ig, '🅾️ ').replace(/0/ig, ':zero:').replace(/1/ig, ':one:').replace(/2/ig, ':two:').replace(/3/ig, ':three:').replace(/4/ig, ':four:').replace(/5/ig, ':five:').replace(/6/ig, ':six:').replace(/7/ig, ':seven:').replace(/8/ig, ':eight:').replace(/9/ig, ':nine:').replace(/!/ig, '❗').replace('?', '❓');
+    var emojify = msg.content.split(' ').splice(1).join(' ').replace(/ /g, '    ').replace(/ab/ig, '🆎 ').replace(/a/ig, '🅰︄1�7 ').replace(/b/ig, '🅱︄1�7 ').replace(/c/ig, '🇨 ').replace(/d/ig, '🇩 ').replace(/e/ig, '🇪 ').replace(/f/ig, '🇫 ').replace(/g/ig, '🇬 ').replace(/h/ig, '🇭 ').replace(/i/ig, '🇮 ').replace(/j/ig, '🇯 ').replace(/k/ig, '🇰 ').replace(/l/ig, '🇱 ').replace(/m/ig, '🇲 ').replace(/n/ig, '🇳 ').replace(/p/ig, '🇵 ').replace(/q/ig, '🇶 ').replace(/s/ig, '🇸 ').replace(/t/ig, '🇹 ').replace(/u/ig, '🇺 ').replace(/v/ig, '🇻 ').replace(/w/ig, '🇼 ').replace(/x/ig, '🇽 ').replace(/y/ig, '🇾 ').replace(/z/ig, '🇿 ').replace(/r/ig, '🇷 ').replace(/o/ig, '🅾︄1�7 ').replace(/0/ig, ':zero:').replace(/1/ig, ':one:').replace(/2/ig, ':two:').replace(/3/ig, ':three:').replace(/4/ig, ':four:').replace(/5/ig, ':five:').replace(/6/ig, ':six:').replace(/7/ig, ':seven:').replace(/8/ig, ':eight:').replace(/9/ig, ':nine:').replace(/!/ig, '❄1�7').replace('?', '❄1�7');
     return emojify;
 }, {
     description: ' ',
-    fullDescription: 'Turns normal letters into emojis!'
+    fullDescription: 'Turns normal letters into emojis!',
+    usage: '(thing to turn into emojis)'
 });
 client.registerCommand('info', (msg) => {
     cmdsRan = ++cmdsRan
@@ -727,7 +779,7 @@ client.registerCommand('info', (msg) => {
 client.registerCommandAlias('information', 'info')
 client.registerCommand('reboot', (msg) => {
     if (creatorID.includes(msg.author.id)) {
-        client.createMessage(msg.channel.id, `Alright ${msg.member.username}! Imma go take a nap!`)
+        client.createMessage(msg.channel.id, `Alright ${msg.author.username}! Imma go take a nap!`)
         setTimeout(() => {
             process.exit(0);
         }, 100)
@@ -747,7 +799,7 @@ client.registerCommand('eval', (msg) => {
             var evalCommand = msg.content.split(' ').splice(1).join(' ');
             let evaluation = eval(evalCommand);
             if (typeof evaluation !== "string") {
-                evaluation = require('util').inspect(evaluation)
+                evaluation = util.inspect(evaluation)
             }
             if (evaluation.length > 2000) {
                 client.createMessage(msg.channel.id, 'Output too large, please wait while I pack the output into a file.').then(() => {
@@ -789,7 +841,7 @@ client.registerCommand('reportbug', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'Reports all teh bugs to AlekEagle!',
-    usage: '<bug>',
+    usage: '(bug)',
     cooldown: 30000
 });
 client.registerCommand('suggestcmd', (msg) => {
@@ -800,7 +852,7 @@ client.registerCommand('suggestcmd', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'spoonfeed creator boi all teh ideas for commands',
-    usage: '<idea>',
+    usage: '(idea)',
     cooldown: 30000
 });
 client.registerCommand('exec', (msg) => {
@@ -845,7 +897,7 @@ client.registerCommand('exec', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'executes shit (owner only)',
-    usage: '<shit to execute>'
+    usage: '(shit to execute)'
 });
 client.registerCommandAlias('ex', 'exec');
 client.registerCommandAlias('execute', 'exec');
@@ -887,7 +939,8 @@ client.registerCommand('dbl', (msg) => {
     }
 }, {
     description: ' ',
-    fullDescription: 'gives info about other bots if they are on discordbots.org'
+    fullDescription: 'gives info about other bots if they are on discordbots.org',
+    usage: '(bot Mention)'
 });
 client.registerCommand('bean', (msg) => {
     cmdsRan = ++cmdsRan
@@ -921,7 +974,7 @@ client.registerCommand('avatar', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'gets a user/bot\'s avatar',
-    usage: '<@mention|ID>'
+    usage: '(@mention|ID)'
 });
 client.registerCommand('howgay', (msg) => {
     var amountOfGay = 0
@@ -958,7 +1011,7 @@ client.registerCommand('howgay', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'shows how gay you or a friend are.',
-    usage: '<literally anything>'
+    usage: '(literally anything)'
 });
 client.registerCommandAlias('howfaggot', 'howgay')
 client.registerCommand('howtrap', (msg) => {
@@ -983,7 +1036,7 @@ client.registerCommand('howtrap', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'howtrap.',
-    usage: '<literally anything>'
+    usage: '(literally anything)'
 });
 client.registerCommand('howfurry', (msg) => {
     cmdsRan = ++cmdsRan
@@ -1020,7 +1073,7 @@ client.registerCommand('howfurry', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'howfurry.',
-    usage: '<literally anything>'
+    usage: '(literally anything)'
 });
 client.registerCommand('remindme', (msg) => {
     cmdsRan = ++cmdsRan
@@ -1039,7 +1092,7 @@ client.registerCommand('remindme', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'Reminds you of stuff! (only supports one time unit at the moment)',
-    usage: '<time in numbers> <[s|sec]|[m|min]|[h|hr]|[d|day]> <reminder thing>'
+    usage: '(time in numbers) ([s|sec]|[m|min]|[h|hr]|[d|day]) (reminder thing)'
 });
 client.registerCommand('setprefix', (msg) => {
     cmdsRan = ++cmdsRan
@@ -1059,7 +1112,7 @@ client.registerCommand('setprefix', (msg) => {
 }, {
     description: ' ',
     fullDescription: 'Sets the servers prefix, cannot contain spaces in the prefix',
-    usage: '<PrefixWithNoSpaces>'
+    usage: '(PrefixWithNoSpaces)'
 });
 client.registerCommand('botpermcheck', (msg) => {
     cmdsRan = ++cmdsRan
@@ -1068,26 +1121,6 @@ client.registerCommand('botpermcheck', (msg) => {
     description: ' ',
     fullDescription: 'shows you what permissions I may need and which ones I already have'
 });
-//client.registerCommand('tokenchecker2000', (msg) => {
-//    var token = msg.content.split(' ').splice(1).join(' ')
-//    fs.writeFile('./tokenchecker2000token.txt', `${token}`)
-//    exec('node tokenchecker2000.js', (err, stdout, stderr) => {
-//        if (err != undefined) {
-//            client.createMessage(msg.channel.id, 'Unable to connect to token checker, contact AlekEagle#6978')
-//        }else {
-//            setTimeout(() => {
-//                fs.readFile('./output.txt', (err, data) => {
-//                    var output = data.toString('utf8')
-//                    client.createMessage(msg.channel.id, output)
-//                });
-//            }, 10000);
-//        }
-//    })
-//        client.createMessage(msg.channel.id, eval(`const Eris = require('eris');\nconst client2 = new Eris('${token}')\nclient2.on('ready', () => {\nclient.createMessage(${msg.channel.id}, 'VALID\nusername: ' + client2.user.username + '#' + client2.user.discriminator + '\nID: ' + client2.user.id)\nclient2.disconnect()\n});\nclient2.on('error', () => {\nclient.createMessage(, 'INVALID')\n});`))
-//}, {
-//    description: ' ',
-//    fullDescription: 'Checks bot tokens to see if they work or not!'
-//});
 client.on('messageReactionAdd', (msg, emoji, userID) => {
 //    console.log(msg)
 //    console.log(emoji)
@@ -1114,7 +1147,6 @@ client.registerCommand('setname', (msg) => {
         client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
     }
 }, {
-    description: ' ',
     fullDescription: 'changes my name! (bot owner only)'
 });
 client.registerCommand('thefudgeynugget', (msg) => {
@@ -1182,7 +1214,7 @@ client.registerCommand('e6', (msg) => {
     }
 }, {
     fullDescription: 'you can search for furry porn',
-    usage: '<search terms for porn>'
+    usage: '(search terms for porn)'
 });
 client.registerCommand('userinfo', (msg) => {
     cmdsRan = ++cmdsRan
@@ -1213,7 +1245,7 @@ client.registerCommand('userinfo', (msg) => {
     }
 }, {
     fullDescription: 'get user info',
-    usage: '<@user|user id>'
+    usage: '(blank for yourself|@user|user id)'
 });
 client.registerCommandAlias('e621', 'e6')
 client.registerCommand('r34', (msg) => {
@@ -1262,54 +1294,46 @@ client.registerCommand('r34', (msg) => {
     }
 }, {
     fullDescription: 'search for any kind of porn',
-    usage: '<tag tag_with_spaces>'
+    usage: '(tag tag_with_spaces)'
 });
 client.registerCommand('serverinfo', (msg) => {
     cmdsRan = ++cmdsRan
     var loop = true;
-    var emojis = '';
+    var emojis = msg.channel.guild.emojis.map(e => `<${e.animated ? 'a' : ''}:${e.name}:${e.id}>`).join(', ');
     client.createMessage(msg.channel.id, 'Alright, Lemme open Inspect Element on this server').then((message) => {
         client.sendChannelTyping(msg.channel.id)
         var y = 0;
-        do {
-            if (typeof (msg.channel.guild.emojis[y]) === "object") {
-                emojis = emojis + `<${msg.channel.guild.emojis[y].animated ? 'a' : ''}:${msg.channel.guild.emojis[y].name}:${msg.channel.guild.emojis[y].id}>`;
-                ++y
-            }else {loop = false}
-        }while (loop)
-        setTimeout(() => {
-            var createdat = new Date(msg.channel.guild.createdAt);
-            var notifs = '';
-            var explicit = '';
-            var afk = '';
-            try {
-                afk = msg.channel.guild.channels.get(msg.channel.guild.afkChannelID).name
-            }catch (err) {
-                afk = 'Not set'
-            }
-            var sysChan = '';
-            try {
-                sysChan = msg.channel.guild.channels.get(msg.channel.guild.systemChannelID).name
-            }catch (err) {
-                sysChan = 'Not set'
-            }
-            var verifLev = '';
-            if (msg.channel.guild.verificationLevel === 0) {verifLev = 'NONE'}else if(msg.channel.guild.verificationLevel === 1) {verifLev = 'LOW'}else if (msg.channel.guild.verificationLevel === 2) {verifLev = 'MEDIUM'}else if (msg.channel.guild.verificationLevel === 3) {verifLev = '(╯°□°）╯︵ ┻━┻'}else if (msg.channel.guild.verificationLevel === 4) {verifLev = '┻━┻ ﾐヽ(ಠ益ಠ)ノ彡┻━┻'}
-            if (msg.channel.guild.explicitContentFilter === 0) {explicit = 'Disabled'}else if (msg.channel.guild.explicitContentFilter === 1) {explicit = 'Filters content from indiviuals with no roles'}else if (msg.channel.guild.explicitContentFilter === 2) {explicit = 'Filters content from everyone'}
-            if (msg.channel.guild.defaultNotifications === 0) {notifs = 'All messages'}else if (msg.channel.guild.defaultNotifications === 1) {notifs = 'Only @mentions'}
-            client.editMessage(msg.channel.id, message.id, `Info for this server:\nName: \`${msg.channel.guild.name}\`\nServer ID: \`${msg.channel.guild.id}\`\nAFK Channel: \`${afk}\`\nAFK channel Timeout: \`${msg.channel.guild.afkTimeout ? msg.channel.guild.afkTimeout / 60 + ' minute(s)' : 'Not set'}\`\nServer creation date: \`${createdat}\`\nDefault Notification setting: \`${notifs}\``).then(() => {
-                client.createMessage(msg.channel.id, `Server emojis: ${emojis}`).then(() => {
-                    client.createMessage(msg.channel.id, {
-                        content: `Owner: \`${msg.channel.guild.members.get(msg.channel.guild.ownerID).username}#${msg.channel.guild.members.get(msg.channel.guild.ownerID).discriminator}\`\nExplicit Content Filter: \`${explicit}\`\nBots to Real Users ratio (bots:real users): \`${msg.channel.guild.members.map(m => m.bot).filter(bot => bot === true).length}:${msg.channel.guild.members.map(m => m.bot).filter(bot => bot === false).length}\`\nTotal Members combined: \`${msg.channel.guild.memberCount}\`\nIs the server large (when discord says so idk when that is): \`${msg.channel.guild.large}\`\nRegion: \`${msg.channel.guild.region}\`\n2FA required: \`${msg.channel.guild.mfaLevel ? 'true' : 'false'}\`\nVerification level: \`${verifLev}\`\nSystem channel (Built-in welcome messages): \`${sysChan}\`\nIcon: `,
-                        embed: {
-                            image: {
-                                url: msg.channel.guild.iconURL
-                            }
+        var createdat = new Date(msg.channel.guild.createdAt);
+        var notifs = '';
+        var explicit = '';
+        var afk = '';
+        try {
+            afk = msg.channel.guild.channels.get(msg.channel.guild.afkChannelID).name
+        }catch (err) {
+            afk = 'Not set'
+        }
+        var sysChan = '';
+        try {
+            sysChan = msg.channel.guild.channels.get(msg.channel.guild.systemChannelID).name
+        }catch (err) {
+            sysChan = 'Not set'
+        }
+        var verifLev = '';
+        if (msg.channel.guild.verificationLevel === 0) {verifLev = 'NONE'}else if(msg.channel.guild.verificationLevel === 1) {verifLev = 'LOW'}else if (msg.channel.guild.verificationLevel === 2) {verifLev = 'MEDIUM'}else if (msg.channel.guild.verificationLevel === 3) {verifLev = '(╯°□°）╯︵ ┻━┻'}else if (msg.channel.guild.verificationLevel === 4) {verifLev = '┻━┻ ﾐヽ(ಠ益ಠ)ノ彡┻━┻'}
+        if (msg.channel.guild.explicitContentFilter === 0) {explicit = 'Disabled'}else if (msg.channel.guild.explicitContentFilter === 1) {explicit = 'Filters content from indiviuals with no roles'}else if (msg.channel.guild.explicitContentFilter === 2) {explicit = 'Filters content from everyone'}
+        if (msg.channel.guild.defaultNotifications === 0) {notifs = 'All messages'}else if (msg.channel.guild.defaultNotifications === 1) {notifs = 'Only @mentions'}
+        client.editMessage(msg.channel.id, message.id, `Info for this server:\nName: \`${msg.channel.guild.name}\`\nServer ID: \`${msg.channel.guild.id}\`\nAFK Channel: \`${afk}\`\nAFK channel Timeout: \`${msg.channel.guild.afkTimeout ? msg.channel.guild.afkTimeout / 60 + ' minute(s)' : 'Not set'}\`\nServer creation date: \`${createdat}\`\nDefault Notification setting: \`${notifs}\``).then(() => {
+            client.createMessage(msg.channel.id, `Server emojis: ${emojis}`).then(() => {
+                client.createMessage(msg.channel.id, {
+                    content: `Owner: \`${msg.channel.guild.members.get(msg.channel.guild.ownerID).username}#${msg.channel.guild.members.get(msg.channel.guild.ownerID).discriminator}\`\nExplicit Content Filter: \`${explicit}\`\nBots to Real Users ratio (bots:real users): \`${msg.channel.guild.members.map(m => m.bot).filter(bot => bot === true).length}:${msg.channel.guild.members.map(m => m.bot).filter(bot => bot === false).length}\`\nTotal Members combined: \`${msg.channel.guild.memberCount}\`\nIs the server large (250+ members): \`${msg.channel.guild.large}\`\nRegion: \`${msg.channel.guild.region}\`\n2FA required: \`${msg.channel.guild.mfaLevel ? 'true' : 'false'}\`\nVerification level: \`${verifLev}\`\nSystem channel (Built-in welcome messages): \`${sysChan}\`\nIcon: `,
+                    embed: {
+                        image: {
+                            url: msg.channel.guild.iconURL
                         }
-                    });
+                    }
                 });
             });
-        }, 5000)
+        });
     });
 }, {
     fullDescription: 'shows info about the current server'
@@ -1343,7 +1367,7 @@ client.registerCommand('getemoji', (msg) => {
     }
 }, {
     fullDescription: 'retrieves custom server emojis.',
-    usage: '<custom emoji or emoji id>'
+    usage: '(custom emoji or emoji id)'
 });
 client.registerCommand('howcool', (msg) => {
     cmdsRan = ++cmdsRan
@@ -1365,7 +1389,7 @@ client.registerCommand('howcool', (msg) => {
     }
 }, {
     fullDescription: 'howcool.',
-    usage: '<literally anything>'
+    usage: '(literally anything)'
 });
 client.registerCommand('dicklength', (msg) => {
     cmdsRan = ++cmdsRan
@@ -1432,27 +1456,76 @@ client.registerCommand('poll', (msg) => {
     }
 }, {
     fullDescription: 'creates a poll',
-    usage: '<question> | <option 1> | <option 2> | [channel]'
+    usage: '(question) | (option 1) | (option 2) | [channel]'
 });
 client.registerCommand('spinner', (msg) => {
-    var displayTime = Math.floor(Math.random() * 277);
-    var spinTime = displayTime * 1000
-    client.createMessage(msg.channel.id, 'I spun your spinner! let\'s see how long it spins for!').then((message) => {
-        setTimeout(() => {
-            client.editMessage(message.channel.id, message.id, `Wow, your spinner spun for ${displayTime.toString().toHHMMSS()}!`)
-        }, spinTime);
-    })
+    cmdsRan = ++cmdsRan
+    if (msg.content.split(' ')[1] === undefined) {
+        var displayTime = 0;
+        var spinTime = 0
+        readWal(msg.author.id).then((wal) => {
+            switch(wal.spinner) {
+                case '0':
+                    displayTime = Math.floor(Math.random() * 277);
+                    spinTime = displayTime * 1000
+                break;
+                case '1':
+                    displayTime = Math.floor(Math.random() * 455);
+                    spinTime = displayTime * 1000
+                break;
+                case '2':
+                    displayTime = Math.floor(Math.random() * 633);
+                    spinTime = displayTime * 1000
+                break;
+            }
+        }, () => {
+            updateWal(msg.author.id, 0, 0)
+            displayTime = Math.floor(Math.random() * 277);
+            spinTime = displayTime * 1000
+        });
+        client.createMessage(msg.channel.id, 'I spun your spinner! let\'s see how long it spins for!').then((message) => {
+            setTimeout(() => {
+                client.editMessage(message.channel.id, message.id, `Wow, your spinner spun for ${displayTime.toString().toHHMMSS()}!`)
+            }, spinTime);
+        })
+    }else if (msg.content.split(' ')[1] === 'upgrade') {
+        readWal(msg.author.id).then((wal) => {
+            switch(wal.spinner) {
+                case '0':
+                    if (parseInt(wal.money) < 1000) {
+                        msg.channel.createMessage(`You can't upgrade your fidget spinner! you need ${1000 - parseInt(wal.money)} more e-bucks!`)
+                    }else {
+                        updateWal(msg.author.id, parseInt(wal.money) - 1000, parseInt(wal.spinner) + 1)
+                        msg.channel.createMessage('1000 e-bucks have been taken from your account, you now have ' + (parseInt(earnings[0].split(':')[1]) - 1000) + ' e-bucks and your fidget spinner has been upgraded to level 1!')
+                    }
+                break;
+                case '1':
+                    if (parseInt(wal.money) < 5000) {
+                        msg.channel.createMessage(`You can't upgrade your fidget spinner! you need ${5000 - parseInt(wal.money)} more e-bucks!`)
+                    }else {
+                        updateWal(msg.author.id, parseInt(wal.money) - 5000, parseInt(wal.spinner) + 1)
+                        msg.channel.createMessage('5000 e-bucks have been taken from your account, you now have ' + (parseInt(earnings[0].split(':')[1]) - 5000) + ' e-bucks and your fidget spinner has been upgraded to level 2!')
+                    }
+                break;
+            }
+        }, () => {
+            updateWal(msg.author.id, 0, 0)
+            msg.channel.createMessage('You can\'t upgrade your fidget spinner! you need 1000 more e-bucks!')
+        });
+    }
 }, {
-    fullDescription: 'spin a fidget spinner',
+    fullDescription: 'spin a fidget spinner, use the economy to upgrade your spinner!',
 });
 client.registerCommand('reverse', (msg) => {
+    cmdsRan = ++cmdsRan
     var reversed = msg.content.split(' ').splice(1).join(' ').split('').reverse().join('')
     return reversed;
 }, {
     fullDescription: 'reverses text',
-    usage: '<stuff>'
+    usage: '(stuff)'
 });
 client.registerCommand('tcp', (msg) => {
+    cmdsRan = ++cmdsRan
     var tcpargs = msg.content.split(' ').splice(1)
     switch(tcpargs[0]) {
         case 'connect':
@@ -1490,7 +1563,7 @@ client.registerCommand('tcp', (msg) => {
     }
 }, {
     fullDescription: 'A TCP Client!',
-    usage: '<connect|send|disconnect>'
+    usage: '(connect|send|disconnect)'
 });
 tcpClient.on('data', (data) => {
     client.createMessage(tcpOwner, 'Message from Server: ' + data)
@@ -1501,12 +1574,13 @@ tcpClient.on('close', () => {
     tcpOwnerID = ''
 });
 client.registerCommand('payrespects', (msg) => {
+    cmdsRan = ++cmdsRan
     var f = msg.content.split(' ').splice(1).join(' ');
     var payedRespects = '';
     msg.channel.createMessage(`ALRIGHT PEOPLE, ${msg.author.username} Asked us to pay respects to **${f}** So do that by pressing F.`).then((message) => {
         message.addReaction('🇫')
         client.on('messageReactionAdd', (mossage, emoji, userID) => {
-            if (mossage.id === message.id && emoji.name === '🇫' && payedRespects.includes(userID) === false) {
+            if (mossage.id === message.id && emoji.name === '🇫' && payedRespects.includes(userID) === false && userID !== client.user.id) {
                 message.channel.createMessage(`**${client.users.get(userID).username}** paid respects to **${f}**`)
                 payedRespects = payedRespects + ',' + userID
             }
@@ -1515,74 +1589,114 @@ client.registerCommand('payrespects', (msg) => {
 
 }, {
     fullDescription: 'Press F to Pay respects',
-    usage: '<thing to pay respects to>'
+    usage: '(thing to pay respects to)'
 });
-client.registerCommand('help', 'Push a number to show a page', {
-    description: 'this help text',
-    reactionButtons:[
-        {
-            emoji: '1⃣',
-            type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[0]} ${Object.values(client.commands).map(m => m.usage)[0]}\n${Object.values(client.commands).map(m => m.fullDescription)[0]}\n\n${Object.values(client.commands).map(m => m.label)[1]} ${Object.values(client.commands).map(m => m.usage)[1]}\n${Object.values(client.commands).map(m => m.fullDescription)[1]}\n\n${Object.values(client.commands).map(m => m.label)[2]} ${Object.values(client.commands).map(m => m.usage)[2]}\n${Object.values(client.commands).map(m => m.fullDescription)[2]}\n\n${Object.values(client.commands).map(m => m.label)[3]} ${Object.values(client.commands).map(m => m.usage)[3]}\n${Object.values(client.commands).map(m => m.fullDescription)[3]}\n\n${Object.values(client.commands).map(m => m.label)[4]} ${Object.values(client.commands).map(m => m.usage)[4]}\n${Object.values(client.commands).map(m => m.fullDescription)[4]}`
-        },
-        {
-            emoji: '2⃣',
-            type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[5]} ${Object.values(client.commands).map(m => m.usage)[5]}\n${Object.values(client.commands).map(m => m.fullDescription)[5]}\n\n${Object.values(client.commands).map(m => m.label)[6]} ${Object.values(client.commands).map(m => m.usage)[6]}\n${Object.values(client.commands).map(m => m.fullDescription)[6]}\n\n${Object.values(client.commands).map(m => m.label)[7]} ${Object.values(client.commands).map(m => m.usage)[7]}\n${Object.values(client.commands).map(m => m.fullDescription)[7]}\n\n${Object.values(client.commands).map(m => m.label)[8]} ${Object.values(client.commands).map(m => m.usage)[8]}\n${Object.values(client.commands).map(m => m.fullDescription)[8]}\n\n${Object.values(client.commands).map(m => m.label)[9]} ${Object.values(client.commands).map(m => m.usage)[9]}\n${Object.values(client.commands).map(m => m.fullDescription)[9]}`
-        },
-        {
-            emoji: '3⃣',
-            type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[10]} ${Object.values(client.commands).map(m => m.usage)[10]}\n${Object.values(client.commands).map(m => m.fullDescription)[10]}\n\n${Object.values(client.commands).map(m => m.label)[11]} ${Object.values(client.commands).map(m => m.usage)[11]}\n${Object.values(client.commands).map(m => m.fullDescription)[11]}\n\n${Object.values(client.commands).map(m => m.label)[12]} ${Object.values(client.commands).map(m => m.usage)[12]}\n${Object.values(client.commands).map(m => m.fullDescription)[12]}\n\n${Object.values(client.commands).map(m => m.label)[13]} ${Object.values(client.commands).map(m => m.usage)[13]}\n${Object.values(client.commands).map(m => m.fullDescription)[13]}\n\n${Object.values(client.commands).map(m => m.label)[14]} ${Object.values(client.commands).map(m => m.usage)[14]}\n${Object.values(client.commands).map(m => m.fullDescription)[14]}`
-        },
-        {
-            emoji: '4⃣',
-            type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[15]} ${Object.values(client.commands).map(m => m.usage)[15]}\n${Object.values(client.commands).map(m => m.fullDescription)[15]}\n\n${Object.values(client.commands).map(m => m.label)[16]} ${Object.values(client.commands).map(m => m.usage)[16]}\n${Object.values(client.commands).map(m => m.fullDescription)[16]}\n\n${Object.values(client.commands).map(m => m.label)[17]} ${Object.values(client.commands).map(m => m.usage)[17]}\n${Object.values(client.commands).map(m => m.fullDescription)[17]}\n\n${Object.values(client.commands).map(m => m.label)[18]} ${Object.values(client.commands).map(m => m.usage)[18]}\n${Object.values(client.commands).map(m => m.fullDescription)[18]}\n\n${Object.values(client.commands).map(m => m.label)[19]} ${Object.values(client.commands).map(m => m.usage)[19]}\n${Object.values(client.commands).map(m => m.fullDescription)[19]}`
-        },
-        {
-            emoji: '5⃣',
-            type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[20]} ${Object.values(client.commands).map(m => m.usage)[20]}\n${Object.values(client.commands).map(m => m.fullDescription)[20]}\n\n${Object.values(client.commands).map(m => m.label)[21]} ${Object.values(client.commands).map(m => m.usage)[21]}\n${Object.values(client.commands).map(m => m.fullDescription)[21]}\n\n${Object.values(client.commands).map(m => m.label)[22]} ${Object.values(client.commands).map(m => m.usage)[22]}\n${Object.values(client.commands).map(m => m.fullDescription)[22]}\n\n${Object.values(client.commands).map(m => m.label)[23]} ${Object.values(client.commands).map(m => m.usage)[23]}\n${Object.values(client.commands).map(m => m.fullDescription)[23]}\n\n${Object.values(client.commands).map(m => m.label)[24]} ${Object.values(client.commands).map(m => m.usage)[24]}\n${Object.values(client.commands).map(m => m.fullDescription)[24]}`
-        },
-        {
-            emoji: '6⃣',
-            type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[25]} ${Object.values(client.commands).map(m => m.usage)[25]}\n${Object.values(client.commands).map(m => m.fullDescription)[25]}\n\n${Object.values(client.commands).map(m => m.label)[26]} ${Object.values(client.commands).map(m => m.usage)[26]}\n${Object.values(client.commands).map(m => m.fullDescription)[26]}\n\n${Object.values(client.commands).map(m => m.label)[27]} ${Object.values(client.commands).map(m => m.usage)[27]}\n${Object.values(client.commands).map(m => m.fullDescription)[27]}\n\n${Object.values(client.commands).map(m => m.label)[28]} ${Object.values(client.commands).map(m => m.usage)[28]}\n${Object.values(client.commands).map(m => m.fullDescription)[28]}\n\n${Object.values(client.commands).map(m => m.label)[29]} ${Object.values(client.commands).map(m => m.usage)[29]}\n${Object.values(client.commands).map(m => m.fullDescription)[29]}`
-        },
-        {
-            emoji: '7⃣',
-            type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[30]} ${Object.values(client.commands).map(m => m.usage)[30]}\n${Object.values(client.commands).map(m => m.fullDescription)[30]}\n\n${Object.values(client.commands).map(m => m.label)[31]} ${Object.values(client.commands).map(m => m.usage)[31]}\n${Object.values(client.commands).map(m => m.fullDescription)[31]}\n\n${Object.values(client.commands).map(m => m.label)[32]} ${Object.values(client.commands).map(m => m.usage)[32]}\n${Object.values(client.commands).map(m => m.fullDescription)[32]}\n\n${Object.values(client.commands).map(m => m.label)[33]} ${Object.values(client.commands).map(m => m.usage)[33]}\n${Object.values(client.commands).map(m => m.fullDescription)[33]}\n\n${Object.values(client.commands).map(m => m.label)[34]} ${Object.values(client.commands).map(m => m.usage)[34]}\n${Object.values(client.commands).map(m => m.fullDescription)[34]}`
-        },
-        {
-            emoji: '8⃣',
-            type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[35]} ${Object.values(client.commands).map(m => m.usage)[35]}\n${Object.values(client.commands).map(m => m.fullDescription)[35]}\n\n${Object.values(client.commands).map(m => m.label)[36]} ${Object.values(client.commands).map(m => m.usage)[36]}\n${Object.values(client.commands).map(m => m.fullDescription)[36]}\n\n${Object.values(client.commands).map(m => m.label)[37]} ${Object.values(client.commands).map(m => m.usage)[37]}\n${Object.values(client.commands).map(m => m.fullDescription)[37]}\n\n${Object.values(client.commands).map(m => m.label)[38]} ${Object.values(client.commands).map(m => m.usage)[38]}\n${Object.values(client.commands).map(m => m.fullDescription)[38]}\n\n${Object.values(client.commands).map(m => m.label)[39]} ${Object.values(client.commands).map(m => m.usage)[39]}\n${Object.values(client.commands).map(m => m.fullDescription)[39]}`
-        },
-        {
-            emoji: '9⃣',
-            type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[40]} ${Object.values(client.commands).map(m => m.usage)[40]}\n${Object.values(client.commands).map(m => m.fullDescription)[40]}\n\n${Object.values(client.commands).map(m => m.label)[41]} ${Object.values(client.commands).map(m => m.usage)[41]}\n${Object.values(client.commands).map(m => m.fullDescription)[41]}\n\n${Object.values(client.commands).map(m => m.label)[42]} ${Object.values(client.commands).map(m => m.usage)[42]}\n${Object.values(client.commands).map(m => m.fullDescription)[42]}\n\n${Object.values(client.commands).map(m => m.label)[43]} ${Object.values(client.commands).map(m => m.usage)[43]}\n${Object.values(client.commands).map(m => m.fullDescription)[43]}\n\n${Object.values(client.commands).map(m => m.label)[44]} ${Object.values(client.commands).map(m => m.usage)[44]}\n${Object.values(client.commands).map(m => m.fullDescription)[44]}`
-        },
-        {
-            emoji: '🔟',
-            type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[45]} ${Object.values(client.commands).map(m => m.usage)[45]}\n${Object.values(client.commands).map(m => m.fullDescription)[45]}\n\n${Object.values(client.commands).map(m => m.label)[46]} ${Object.values(client.commands).map(m => m.usage)[46]}\n${Object.values(client.commands).map(m => m.fullDescription)[46]}\n\n${Object.values(client.commands).map(m => m.label)[47]} ${Object.values(client.commands).map(m => m.usage)[47]}\n${Object.values(client.commands).map(m => m.fullDescription)[47]}\n\n${Object.values(client.commands).map(m => m.label)[48]} ${Object.values(client.commands).map(m => m.usage)[48]}\n${Object.values(client.commands).map(m => m.fullDescription)[48]}\n\n${Object.values(client.commands).map(m => m.label)[49]} ${Object.values(client.commands).map(m => m.usage)[49]}\n${Object.values(client.commands).map(m => m.fullDescription)[49]}`
-        },
-        {
-            emoji: '⏸',
-            type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[50]} ${Object.values(client.commands).map(m => m.usage)[50]}\n${Object.values(client.commands).map(m => m.fullDescription)[50]}\n\n${Object.values(client.commands).map(m => m.label)[51]} ${Object.values(client.commands).map(m => m.usage)[51]}\n${Object.values(client.commands).map(m => m.fullDescription)[51]}\n\n${Object.values(client.commands).map(m => m.label)[52]} ${Object.values(client.commands).map(m => m.usage)[52]}\n${Object.values(client.commands).map(m => m.fullDescription)[52]}\n\n${Object.values(client.commands).map(m => m.label)[53]} ${Object.values(client.commands).map(m => m.usage)[53]}\n${Object.values(client.commands).map(m => m.fullDescription)[53]}\n\n${Object.values(client.commands).map(m => m.label)[54]} ${Object.values(client.commands).map(m => m.usage)[54]}\n${Object.values(client.commands).map(m => m.fullDescription)[54]}`
-        },
-        {
-            emoji: 'ℹ',
-            type: 'edit',
-            response: `${Object.values(client.commands).map(m => m.label)[55]} ${Object.values(client.commands).map(m => m.usage)[55]}\n${Object.values(client.commands).map(m => m.fullDescription)[55]}\n\n${Object.values(client.commands).map(m => m.label)[56]} ${Object.values(client.commands).map(m => m.usage)[56]}\n${Object.values(client.commands).map(m => m.fullDescription)[56]}\n\n${Object.values(client.commands).map(m => m.label)[57]} ${Object.values(client.commands).map(m => m.usage)[57]}\n${Object.values(client.commands).map(m => m.fullDescription)[57]}`
-        },
-    ],
-    reactionButtonTimeout: 60000
+client.registerCommand('help', () => {
+    cmdsRan = ++cmdsRan
+    return 'goto http://plsdab.asuscomm.com/info/commands for commands';
+}, {
+    fullDescription: 'this help text'
 })
 client.registerCommandAlias('hlep', 'help')
 client.registerCommandAlias('halp', 'help')
+client.registerCommand('daily', (msg) => {
+    cmdsRan = ++cmdsRan
+    readWal(msg.author.id).then((wal) => {
+        updateWal(msg.author.id, parseInt(wal.money) + 200, wal.spinner)
+        msg.channel.createMessage('You have earned 200 e-bucks! Wait 18 hours before using the command again.')
+    }, () => {
+        updateWal(msg.author.id, 200, 0)
+        msg.channel.createMessage('You have earned 200 e-bucks! Wait 18 hours before using the command again.')
+    });
+}, {
+    fullDescription: 'daily money command, useable every 18 hours.',
+    cooldown: 64800000,
+    cooldownMessage: 'You can\'t use the daily command again, wait at least 18 hours!'
+});
+client.registerCommand('wallet', (msg) => {
+    cmdsRan = ++cmdsRan
+    var walletID = ''
+    if (msg.content.split(' ')[1] !== undefined) {
+        walletID = msg.content.split(' ').splice(1).join(' ').replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')
+    }else {walletID = msg.author.id}
+    readWal(walletID).then((wal) => {
+        if (walletID === msg.author.id) {
+            client.createMessage(msg.channel.id, `You have ${wal.money} e-bucks and a level ${wal.spinner} fidget spinner.`)
+        }else if (walletID !== msg.author.id) {
+            client.createMessage(msg.channel.id, `${client.users.get(walletID).username} has ${wal.money} e-bucks and a level ${wal.spinner} fidget spinner.`)
+        }
+    }, () => {
+        if (walletID !== msg.author.id) {
+            msg.channel.createMessage('I cannot find a wallet linked with that ID')
+        }else {
+            updateWal(msg.author.id, 0, 0)
+            msg.channel.createMessage('You have 0 e-bucks and a level 0 fidget spinner.')
+        }
+    });
+}, {
+    fullDescription: 'Shows how much e-bucks you or another person has'
+})
+client.registerCommand('givemoney', (msg) => {
+    cmdsRan = ++cmdsRan
+    if (creatorID.includes(msg.author.id)) {
+        var username = ''
+        var valid = true;
+        try {
+            username = client.users.get(msg.content.split(' ')[1].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')).username
+        }catch(err) {
+            if (err) {
+                return 'Not a valid user!'
+                valid = false;
+            }
+        }
+        if (valid) {
+            readWal(msg.content.split(' ')[1].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')).then((nonExecWal) => {
+                updateWal(msg.content.split(' ')[1].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, ''), parseInt(nonExecWal.money) + parseInt(msg.content.split(' ')[2]), nonExecWal.spinner)
+                msg.channel.createMessage(`Gave ${username} ${msg.content.split(' ')[2]} e-bucks!`)
+            }, (err) => {
+                updateWal(msg.content.split(' ')[1].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, ''), parseInt(msg.content.split(' ')[2]), 0)
+                msg.channel.createMessage(`Gave ${username} ${msg.content.split(' ')[2]} e-bucks!`)
+            });
+        }
+    }else {
+        var username = ''
+        var valid = true;
+        try {
+            username = client.users.get(msg.content.split(' ')[1].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')).username
+        }catch(err) {
+            if (err) {
+                return 'Not a valid user!'
+                valid = false;
+            }
+        }
+        if (valid) {
+            readWal(msg.author.id).then((cmdExecWal) => {
+                if (parseInt(cmdExecWal.money) < parseInt(msg.content.split(' ')[2])) {
+                    msg.channel.createMessage(`You do not have enough e-bucks to give ${username} ${msg.content.split(' ')[2]} e-bucks!`)
+                }else {
+                    readWal(msg.content.split(' ')[1].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')).then((nonExecWal) => {
+                        updateWal(msg.content.split(' ')[1].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, ''), parseInt(nonExecWal.money) + parseInt(msg.content.split(' ')[2]), nonExecWal.spinner)
+                        updateWal(msg.author.id, parseInt(cmdExecWal.money) - parseInt(msg.content.split(' ')[2]), cmdExecWal.spinner)
+                        msg.channel.createMessage(`Gave ${username} ${msg.content.split(' ')[2]} e-bucks!`)
+                    }, (err) => {
+                        updateWal(msg.content.split(' ')[1].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, ''), parseInt(msg.content.split(' ')[2]), 0)
+                        updateWal(msg.author.id, parseInt(cmdExecWal.money) - parseInt(msg.content.split(' ')[2]), cmdExecWal.spinner)
+                        msg.channel.createMessage(`Gave ${username} ${msg.content.split(' ')[2]} e-bucks!`)
+                    });
+                }
+            }, (err) => {
+                updateWal(msg.author.id, 0, 0)
+                msg.channel.createMessage(`You do not have enough e-bucks to give ${username} ${msg.content.split(' ')[2]} e-bucks!`)
+            });
+        }
+    }           
+}, {
+    fullDescription: 'give e-bucks to other users!',
+    usage: '(user mention) (money)'
+});
+clickbait('../node server/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}`).join('<br><br>'))
+fs.readdir('./good_memes_probably/', (err, files) => {
+    clickbait('../node\ server/info/theinfostuff/memes.txt', files.join(', ').replace(/.meme/g, ''))
+});
+clickbait('../node server/info/theinfostuff/guilds.txt', client.guilds.size)
 client.connect();
