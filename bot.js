@@ -129,9 +129,12 @@ dbl.on('posted', () => {
 client.on('messageCreate', (message) => {
     ++messagesRead
     if (message.content === '<@' + client.user.id + '>') {
-        var prefix = ''
-        if (util.inspect(client.guildPrefixes) === '{}') {prefix = 'a}'}else {prefix = util.inspect(client.guildPrefixes.splice(1)).replace(/{/g, '').replace(/}/g, '').replace(/'/g, '').replace(/:/g, ', ');}
-        client.createMessage(message.channel.id, 'My prefix here is: `' + prefix + '`')
+        let prefixes = client.guildPrefixes;
+        if (prefixes[message.channel.guild.id] === undefined) {
+            message.channel.createMessage('My prefix for this server is `a}`!')
+        }else {
+            message.channel.createMessage(`My prefix for this server is \`${prefixes[message.channel.guild.id]}\`!`)
+        }
     }
     if (message.content.substring(0, 2) === 'a}' && message.content.split('').splice(2).join('').split(' ')[0] === 'rape' && message.author.bot === false) {
         client.deleteMessage(message.channel.id, message.id)
@@ -559,7 +562,7 @@ client.registerCommand('meme', (msg) => {
                 if (err) {
                     if (err.code === 'EEXIST') {
                         client.createMessage(msg.channel.id, 'Uhh, that meme is already taken boi, try `a}meme listmeme` to show what meme name are taken.')
-                        console.error(msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ') Used meme savememe and failed to save a meme! name of meme: ' + memeCommand[0])
+                        console.error(msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ') Used meme savememe and failed to save a meme! name of meme: ' + saveMemeCommand[0])
                     }else {
                         client.createMessage(msg.channel.id, 'Well, unfortunately, an error occurred, but I don\'t quite know what to do with this error code: `' + err.code + '` so because of this error the meme will not be saved.')
                         console.error('An unknown error occurred!: ' + err.code)
@@ -1422,7 +1425,7 @@ client.registerCommand('poll', (msg) => {
         }
         console.log(channel)
         client.createMessage(channel, {
-            content: `@everyone new poll \`${options[0]}\`\n:thumbsup: for: ${options[1]}\n:thumbsdown: for: ${options[2]}`,
+            content: `new poll \`${options[0]}\`\n:thumbsup: for: ${options[1]}\n:thumbsdown: for: ${options[2]}`,
             disableEveryone: false
         }).then((message) => {
             client.addMessageReaction(message.channel.id, message.id, '👍')
