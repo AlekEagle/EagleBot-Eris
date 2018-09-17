@@ -19,6 +19,7 @@ const exec = require('child_process').exec;
 const request = require('request');
 const parser = require('xml2json-light');
 const util = require('util');
+const os = require('os');
 var tcpClient = new net.Socket();
 var tcpOwner = '';
 var tcpOwnerID = '';
@@ -138,45 +139,41 @@ client.on('messageCreate', (message) => {
     }
     clickbait('../node server/info/theinfostuff/cmdsran.txt', cmdsRan.toString())
     clickbait('../node server/info/theinfostuff/msgs.txt', messagesRead.toString())
-    clickbait('../node server/info/theinfostuff/uptime.txt', `${process.uptime().toString().toHHMMSS()} and ${require('os').uptime().toString().toHHMMSS()}`)
-    clickbait('../node server/info/theinfostuff/memuse.txt', Math.floor(process.memoryUsage().rss / 1024 / 1024))
+    clickbait('../node server/info/theinfostuff/uptime.txt', `${process.uptime().toString().toHHMMSS()} and ${os.uptime().toString().toHHMMSS()}`)
+    clickbait('../node server/info/theinfostuff/memuse.txt', `${Math.floor(process.memoryUsage().rss / 1024 / 1024)} MBs (${Math.floor(os.freemem() / 1024 / 1024)} MBs | ${Math.floor((os.totalmem() - os.freemem()) / 1024 / 1024)} MBs | ${Math.floor(os.totalmem() / 1024 / 1024)} MBs)`)
 });
 client.on('guildCreate', guild => {
     clickbait('../node server/info/theinfostuff/guilds.txt', client.guilds.size)
-    if (guild.members.get(client.user.id).permission.has('createInstantInvite') === false) {
-        client.createMessage('479721048296783883', `I can't create an invite to the guild ${guild.name} with the ID ${guild.id}`)
+    var joinChannel = guild.channels.map(c => c.name).indexOf('general')
+    if (joinChannel === -1) {
+        var y = 0;
+        loop = true;
+        do {
+            if (guild.channels.map(c => c.type)[y] === 0) {
+                loop = false;
+            }else if (guild.channels.map(c => c.type)[y] === 2) {
+                y = ++y;
+            }else if (guild.channels.map(c => c.type)[y] === 4) {
+                y = ++y;
+            }
+        }while (loop)
+        client.createMessage(guild.channels.map(c => c.id)[y], `Hi! I'm ${client.user.username}! I am a Discord bot made by a 13 year old! Some features will be locked behind a vote, so in order to use it you will need to vote for me! To get the link to vote for me you can use a}vote!`)
+        client.createChannelInvite(guild.channels.map(c => c.id)[y], {
+            maxAge: 0
+        }).then((invite) => {
+            client.createMessage('479721048296783883', `Invite to the guild ${guild.name} with the ID ${guild.id} https://discord.gg/${invite.code} bot to user ratio: ${guild.members.map(m => m.bot).filter(bot => bot === true).length}:${guild.members.map(m => m.bot).filter(bot => bot === false).length}`)
+        }, () => {
+            client.createMessage('479721048296783883', `Cannot create an ivite to the guild ${guild.name} with the ID ${guild.id} bot to user ratio: ${guild.members.map(m => m.bot).filter(bot => bot === true).length}:${guild.members.map(m => m.bot).filter(bot => bot === false).length}`)
+        })
     }else {
-        var joinChannel = guild.channels.map(c => c.name).indexOf('general')
-        if (joinChannel === -1) {
-            var y = 0;
-            loop = true;
-            do {
-                if (guild.channels.map(c => c.type)[y] === 0) {
-                    loop = false;
-                }else if (guild.channels.map(c => c.type)[y] === 2) {
-                    y = ++y;
-                }else if (guild.channels.map(c => c.type)[y] === 4) {
-                    y = ++y;
-                }
-            }while (loop)
-            client.createMessage(guild.channels.map(c => c.id)[y], `Hi! I'm ${client.user.username}! I am a Discord bot made by a 13 year old! Some features will be locked behind a vote, so in order to use it you will need to vote for me! To get the link to vote for me you can use a}vote!`)
-            client.createChannelInvite(guild.channels.map(c => c.id)[y], {
-                maxAge: 0
-            }).then((invite) => {
-                client.createMessage('479721048296783883', `Invite to the guild ${guild.name} with the ID ${guild.id} https://discord.gg/${invite.code} bot to user ratio: ${guild.members.map(m => m.bot).filter(bot => bot === true).length}:${guild.members.map(m => m.bot).filter(bot => bot === false).length}`)
-            }, () => {
-                client.createMessage('479721048296783883', 'I screwed up somewhere, hmm.')
-            })
-        }else {
-            client.createMessage(guild.channels.map(c => c.id)[joinChannel], `Hi! I'm ${client.user.username}! I am a Discord bot made by a 13 year old! Some features will be locked behind a vote, so in order to use it you will need to vote for me! To get the link to vote for me you can use a}vote!`)
-            client.createChannelInvite(guild.channels.map(c => c.id)[joinChannel], {
-                maxAge: 0
-            }).then((invite) => {
-                client.createMessage('479721048296783883', `Invite to the guild ${guild.name} with the ID ${guild.id} https://discord.gg/${invite.code} bot to user ratio: ${guild.members.map(m => m.bot).filter(bot => bot === true).length}:${guild.members.map(m => m.bot).filter(bot => bot === false).length}`)
-            }, () => {
-                client.createMessage('479721048296783883', 'I screwed up somewhere, hmm.')
-            })
-        }
+        client.createMessage(guild.channels.map(c => c.id)[joinChannel], `Hi! I'm ${client.user.username}! I am a Discord bot made by a 13 year old! Some features will be locked behind a vote, so in order to use it you will need to vote for me! To get the link to vote for me you can use a}vote!`)
+        client.createChannelInvite(guild.channels.map(c => c.id)[joinChannel], {
+            maxAge: 0
+        }).then((invite) => {
+            client.createMessage('479721048296783883', `Invite to the guild ${guild.name} with the ID ${guild.id} https://discord.gg/${invite.code} bot to user ratio: ${guild.members.map(m => m.bot).filter(bot => bot === true).length}:${guild.members.map(m => m.bot).filter(bot => bot === false).length}`)
+        }, () => {
+            client.createMessage('479721048296783883', `Cannot create an ivite to the guild ${guild.name} with the ID ${guild.id} bot to user ratio: ${guild.members.map(m => m.bot).filter(bot => bot === true).length}:${guild.members.map(m => m.bot).filter(bot => bot === false).length}`)
+        })
     }
 });
 client.registerCommand('ping', (msg) => {
@@ -764,7 +761,7 @@ client.registerCommand('info', (msg) => {
     cmdsRan = ++cmdsRan
     var time = process.uptime();
     var uptime = (time + "").toHHMMSS();
-    var osTime = require('os').uptime();
+    var osTime = os.uptime();
     var osUptime = (osTime + "").toHHMMSS();
     client.createMessage(msg.channel.id, {
         embed: {
@@ -802,19 +799,10 @@ client.registerCommand('eval', (msg) => {
                 evaluation = util.inspect(evaluation)
             }
             if (evaluation.length > 2000) {
-                client.createMessage(msg.channel.id, 'Output too large, please wait while I pack the output into a file.').then(() => {
-                    fs.writeFile('eval_output.txt', evaluation, (err) => {
+                client.createMessage(msg.channel.id, 'Output too large, it should be on your website at http://plsdab.asuscomm.com/eval_out').then(() => {
+                    fs.writeFile('../node server/eval_out/eval_output.txt', evaluation, (err) => {
                         if (err != undefined) {
                             client.createMessage(msg.channel.id, 'An error occurred while this action was being preformed error code: `' + err.code + '`')
-                        }else {
-                            fs.readFile('./eval_output.txt', (err, data) => {
-                                client.createMessage(msg.channel.id, 'Output from eval: ', {
-                                    file: data,
-                                    name: 'eval_output.txt'
-                                }).then(() => {
-                                    fs.unlink('./eval_output.txt')
-                                });
-                            });
                         }
                     });
                 });
@@ -865,19 +853,10 @@ client.registerCommand('exec', (msg) => {
                     client.editMessage(message.channel.id, message.id, 'OOF I BROKE: ```' + err + '```')
                 }else {
                     if (stdout.length > 2000) {
-                        client.editMessage(message.channel.id, message.id, 'Output too large, please wait while I pack the output into a file.').then(() => {
-                        fs.writeFile('exec_output.txt', stdout, (err) => {
+                        client.editMessage(message.channel.id, message.id, 'Output too large, goto http://plsdab.asuscomm.com/exec_out.').then(() => {
+                        fs.writeFile('../node server/exec_out/exec_output.txt', stdout, (err) => {
                             if (err != undefined) {
                                 client.createMessage(message.channel.id, 'An error occurred while this action was being preformed error code: `' + err.code + '`')
-                            }else {
-                                fs.readFile('./exec_output.txt', (err, data) => {
-                                    client.createMessage(message.channel.id, 'Output from exec: ', {
-                                        file: data,
-                                        name: 'exec_output.txt'
-                                    }).then(() => {
-                                        fs.unlink('./exec_output.txt')
-                                    });
-                                });
                             }
                         });
                     });
