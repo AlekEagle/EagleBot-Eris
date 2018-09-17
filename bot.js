@@ -1478,7 +1478,7 @@ client.registerCommand('spinner', (msg) => {
                         msg.channel.createMessage(`You can't upgrade your fidget spinner! you need ${1000 - parseInt(wal.money)} more e-bucks!`)
                     }else {
                         updateWal(msg.author.id, parseInt(wal.money) - 1000, parseInt(wal.spinner) + 1)
-                        msg.channel.createMessage('1000 e-bucks have been taken from your account, you now have ' + (parseInt(earnings[0].split(':')[1]) - 1000) + ' e-bucks and your fidget spinner has been upgraded to level 1!')
+                        msg.channel.createMessage('1000 e-bucks have been taken from your account, you now have ' + (parseInt(wal.money) - 1000) + ' e-bucks and your fidget spinner has been upgraded to level 1!')
                     }
                 break;
                 case '1':
@@ -1486,7 +1486,7 @@ client.registerCommand('spinner', (msg) => {
                         msg.channel.createMessage(`You can't upgrade your fidget spinner! you need ${5000 - parseInt(wal.money)} more e-bucks!`)
                     }else {
                         updateWal(msg.author.id, parseInt(wal.money) - 5000, parseInt(wal.spinner) + 1)
-                        msg.channel.createMessage('5000 e-bucks have been taken from your account, you now have ' + (parseInt(earnings[0].split(':')[1]) - 5000) + ' e-bucks and your fidget spinner has been upgraded to level 2!')
+                        msg.channel.createMessage('5000 e-bucks have been taken from your account, you now have ' + (parseInt(wal.money) - 5000) + ' e-bucks and your fidget spinner has been upgraded to level 2!')
                     }
                 break;
             }
