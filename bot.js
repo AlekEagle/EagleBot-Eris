@@ -1415,7 +1415,25 @@ client.registerCommand('duck', (msg) => {
 });
 client.registerCommand('poll', (msg) => {
     cmdsRan = ++cmdsRan
-    if (msg.member.permission.has('mentionEveryone')) {
+    if (msg.member.permission.has('manageMessage')) {
+        var options = msg.content.split(' ').splice(1).join(' ').split('|')
+        var channel = ''
+        if (options[3] !== undefined) {
+            channel = options[3].replace(/<#/g, '').replace(/>/g, '').replace(/ /g, '')
+        }else {
+            channel = msg.channel.id
+        }
+        console.log(channel)
+        client.createMessage(channel, {
+            content: `new poll \`${options[0]}\`\n:thumbsup: for: ${options[1]}\n:thumbsdown: for: ${options[2]}`,
+            disableEveryone: false
+        }).then((message) => {
+            client.addMessageReaction(message.channel.id, message.id, '👍')
+            client.addMessageReaction(message.channel.id, message.id, '👎')
+        }, () => {
+            client.createMessage(msg.channel.id, 'I can\'t say anything there so oof')
+        });
+    }else if (creatorID.includes(msg.author.id)) {
         var options = msg.content.split(' ').splice(1).join(' ').split('|')
         var channel = ''
         if (options[3] !== undefined) {
