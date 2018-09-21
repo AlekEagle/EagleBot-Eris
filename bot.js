@@ -1415,7 +1415,7 @@ client.registerCommand('duck', (msg) => {
 });
 client.registerCommand('poll', (msg) => {
     cmdsRan = ++cmdsRan
-    if (msg.member.permission.has('manageMessage')) {
+    if (msg.member.permission.has('manageMessages')) {
         var options = msg.content.split(' ').splice(1).join(' ').split('|')
         var channel = ''
         if (options[3] !== undefined) {
@@ -1423,9 +1423,8 @@ client.registerCommand('poll', (msg) => {
         }else {
             channel = msg.channel.id
         }
-        console.log(channel)
         client.createMessage(channel, {
-            content: `new poll \`${options[0]}\`\n:thumbsup: for: ${options[1]}\n:thumbsdown: for: ${options[2]}`,
+            content: `${msg.author.username}#${msg.author.discriminator} has made a new poll \`${options[0]}\`\n:thumbsup: for: ${options[1]}\n:thumbsdown: for: ${options[2]}`,
             disableEveryone: false
         }).then((message) => {
             client.addMessageReaction(message.channel.id, message.id, '👍')
@@ -1441,9 +1440,8 @@ client.registerCommand('poll', (msg) => {
         }else {
             channel = msg.channel.id
         }
-        console.log(channel)
         client.createMessage(channel, {
-            content: `new poll \`${options[0]}\`\n:thumbsup: for: ${options[1]}\n:thumbsdown: for: ${options[2]}`,
+            content: `${msg.author.username}#${msg.author.discriminator} has made a new poll \`${options[0]}\`\n:thumbsup: for: ${options[1]}\n:thumbsdown: for: ${options[2]}`,
             disableEveryone: false
         }).then((message) => {
             client.addMessageReaction(message.channel.id, message.id, '👍')
@@ -1452,7 +1450,7 @@ client.registerCommand('poll', (msg) => {
             client.createMessage(msg.channel.id, 'I can\'t say anything there so oof')
         });
     }else {
-        client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MENTION_EVERYONE`.')
+        client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MANAGE_MESSAGES`.')
     }
 }, {
     fullDescription: 'creates a poll',
@@ -1599,6 +1597,7 @@ client.registerCommand('help', () => {
 })
 client.registerCommandAlias('hlep', 'help')
 client.registerCommandAlias('halp', 'help')
+client.registerCommandAlias('heIp', 'help')
 client.registerCommand('daily', (msg) => {
     cmdsRan = ++cmdsRan
     readWal(msg.author.id).then((wal) => {
