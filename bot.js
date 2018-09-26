@@ -769,7 +769,7 @@ client.registerCommand('info', (msg) => {
     client.createMessage(msg.channel.id, {
         embed: {
             title: 'Basic Info',
-            description: 'Ummm... I\'m a Discord Bot.\n\n I was made by **__AlekEagle#6978__**\n\n*What else is there about me?* I use the Eris library\n\nThis right there ==> **__' + uptime + '__** is how long I\'ve been running.\n\nThe computer running me has been on for this ==> **__' + osUptime + '__**\n\nI\'m ran on a Raspberry Pi 3 B\n\nI\'m on DBL, here is the link: https://discordbots.org/bot/416274552126177282 \n\nI\'m in... uhh... let me check. Ok here it is: **__' + client.guilds.size + '__** servers.\n\nThe support server is https://discord.gg/72Px4Ag in the category "bot related stuff"\n\nUse `a}invite` to take a clone of me with you to your server\n\nI\'m using: **__' + Math.floor(process.memoryUsage().rss / 1024 / 1024) + 'MB__** of RAM\n\n**__' + cmdsRan + '__** commands have been run since the last time I\'ve been rebooted.\n\n**__' + messagesRead + '__** messages have been read since the last time I\'ve been rebooted.\n\nThat\'s all I know about myself.'
+            description: 'Ummm... I\'m a Discord Bot.\n\n I was made by **__AlekEagle#6978__**\n\n*What else is there about me?* I use the Eris library\n\nThis right there ==> **__' + uptime + '__** is how long I\'ve been running.\n\nThe computer running me has been on for this ==> **__' + osUptime + '__**\n\nI\'m ran on a Raspberry Pi 3 B\n\nI\'m on DBL, here is the link: https://discordbots.org/bot/416274552126177282 \n\nI\'m in... uhh... let me check. Ok here it is: **__' + client.guilds.size + '__** servers.\n\nThe support server is https://discord.gg/72Px4Ag in the category "bot related stuff"\n\nUse `a}invite` to take a clone of me with you to your server\n\nI\'m using: **__' + Math.floor(process.memoryUsage().rss / 1024 / 1024) + 'MB__** of RAM\n\n**__' + cmdsRan + '__** commands have been run since the last time I\'ve been rebooted.\n\n**__' + messagesRead + '__** messages have been read since the last time I\'ve been rebooted.\n\nThat\'s all I know about myself.\n\nIf you want to see it be more organized on a website goto http://plsdab.asuscomm.com/info for that.'
         }
     });
 }, {
@@ -799,7 +799,9 @@ client.registerCommand('eval', (msg) => {
             var evalCommand = msg.content.split(' ').splice(1).join(' ');
             let evaluation = eval(evalCommand);
             if (typeof evaluation !== "string") {
-                evaluation = util.inspect(evaluation)
+                evaluation = util.inspect(evaluation).replace(client.token, '(insert token here)')
+            }else {
+                evaluation = evaluation.replace(client.token, '(insert token here)')
             }
             if (evaluation.length > 2000) {
                 client.createMessage(msg.channel.id, 'Output too large, it should be on your website at http://plsdab.asuscomm.com/eval_out').then(() => {
@@ -1248,14 +1250,16 @@ client.registerCommand('r34', (msg) => {
                     var randomizer = parseInt(r34searchResults.posts.count)
                     if (randomizer > 100) {randomizer = 100}
                     if(typeof (r34searchResults) != "undefined" && r34searchResults.posts.count !== '0') {
+                        var r34 = '';
                         var imgChooser = Math.floor(Math.random() * randomizer);
                         if (imgChooser === 100) {imgChooser = 99}
+                        if (randomizer === 1) {r34 = r34searchResults.posts.post}else {r34 = r34searchResults.posts.post[imgChooser]}
                         msg.channel.createMessage({
                             embed: {
-                                title: 'rule34 search results. Votes: ' + r34searchResults.posts.post[imgChooser].score,
-                                url: 'https://rule34.xxx/index.php?page=post&s=view&id=' + r34searchResults.posts.post[imgChooser].id,
+                                title: `rule34 search results. Votes: ${r34.score}`,
+                                url: 'https://rule34.xxx/index.php?page=post&s=view&id=' + r34.id,
                                 image: {
-                                    url: r34searchResults.posts.post[imgChooser].file_url
+                                    url: r34.file_url
                                 }
                             }
                         })
