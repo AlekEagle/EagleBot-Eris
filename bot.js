@@ -128,7 +128,7 @@ dbl.on('posted', () => {
 });
 client.on('messageCreate', (message) => {
     ++messagesRead
-    if (message.content === '<@' + client.user.id + '>') {
+    if (message.content.includes('<@') && message.content.includes(client.user.id) && message.content.includes('>')) {
         let prefixes = client.guildPrefixes;
         if (prefixes[message.channel.guild.id] === undefined) {
             message.channel.createMessage('My prefix for this server is `a}`!')
