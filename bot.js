@@ -1749,7 +1749,11 @@ client.registerCommand('sudo', (msg) => {
         }
         msg.author = client.users.get(userID)
         msg.content = `a}${args.splice(1)}`
-        client.resolveCommand(command).executeCommand(msg)
+        client.resolveCommand(command).executeCommand(msg).then(f => {
+            if (f !== undefined) {
+                msg.channel.createMessage(f)
+            }
+        });
     }else {
         return 'You need the permission `BOT_OWNER` to use this command!';
     }
