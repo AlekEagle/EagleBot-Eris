@@ -1512,6 +1512,9 @@ client.registerCommand('spinner', (msg) => {
                         msg.channel.createMessage('5000 e-bucks have been taken from your account, you now have ' + (parseInt(wal.money) - 5000) + ' e-bucks and your fidget spinner has been upgraded to level 2!')
                     }
                 break;
+                case '2':
+                    msg.channel.createMessage('Your spinner is at max!')
+                break;
             }
         }, () => {
             updateWal(msg.author.id, 0, 0)
@@ -1679,7 +1682,7 @@ client.registerCommand('givemoney', (msg) => {
             readWal(msg.author.id).then((cmdExecWal) => {
                 if (parseInt(cmdExecWal.money) < parseInt(msg.content.split(' ')[2])) {
                     msg.channel.createMessage(`You do not have enough e-bucks to give ${username} ${msg.content.split(' ')[2]} e-bucks!`)
-                }else {
+                }else if (msg.content.split(' ')[2].includes('-') === false) {
                     readWal(msg.content.split(' ')[1].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')).then((nonExecWal) => {
                         updateWal(msg.content.split(' ')[1].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, ''), parseInt(nonExecWal.money) + parseInt(msg.content.split(' ')[2]), nonExecWal.spinner)
                         updateWal(msg.author.id, parseInt(cmdExecWal.money) - parseInt(msg.content.split(' ')[2]), cmdExecWal.spinner)
@@ -1689,6 +1692,8 @@ client.registerCommand('givemoney', (msg) => {
                         updateWal(msg.author.id, parseInt(cmdExecWal.money) - parseInt(msg.content.split(' ')[2]), cmdExecWal.spinner)
                         msg.channel.createMessage(`Gave ${username} ${msg.content.split(' ')[2]} e-bucks!`)
                     });
+                } else {
+                    msg.channel.createMessage(`Can you don't use \`-\` in your givemoney command, that steals the other users e-bucks!`)
                 }
             }, (err) => {
                 updateWal(msg.author.id, 0, 0)
