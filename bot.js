@@ -1706,7 +1706,7 @@ client.registerCommand('givemoney', (msg) => {
     usage: '(user mention) (money)'
 });
 client.registerCommand('giveaway', (msg) => {
-    if (msg.member.permission.has('manageMessages')) {
+    if (msg.member.permission.has('manageMessages') || creatorID.includes(msg.author.id)) {
         var args = msg.content.split(' ').splice(1).join(' ').split('|')
         var channelID = ''
         if (args[2] !== undefined) {
@@ -1731,31 +1731,6 @@ client.registerCommand('giveaway', (msg) => {
         }else {
             msg.channel.createMessage('I can\'t handle that long to wait for a giveaway, sorry!')
         }
-    }else if (creatorID.includes(msg.author.id)) {
-        var args = msg.content.split(' ').splice(1).join(' ').split('|')
-        var channelID = ''
-        if (args[2] !== undefined) {
-            channelID = args[2].replace(/<#/g, '').replace(/>/g, '').replace(/ /g, '')
-        }else {
-            channelID = msg.channel.id
-        }
-        if (parseInt(args[1]) < 432000) {
-            client.createMessage(channelID, `${msg.author.username} has created a giveaway!\nThe reward for winning is ${args[0]}!\nThe giveaway will last ${args[1]} seconds!\nReact with 🎉 to enter!`).then((msg) => {
-                msg.addReaction('🎉')
-                setTimeout(() => {
-                    msg.getReaction('🎉').then(re => {
-                        re = re.filter(re => re.id !== client.user.id)
-                        if (re[0] !== undefined) {
-                            msg.channel.createMessage(`<@${re[Math.floor(Math.random() * re.length)].id}> has won ${args[0]}!`)
-                        }else {
-                            msg.channel.createMessage(`Hmmm..... it looks like no one won ${args[0]}. This is so sad Alexa play Despacito by Luis Fonsi.`)
-                        }
-                    })
-                }, parseInt(args[1]) * 1000)
-            })
-        }else {
-            msg.channel.createMessage('I can\'t handle that long to wait for a giveaway, sorry!')
-        }
     }else {
         client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MANAGE_MESSAGES`.')
     }
@@ -1763,6 +1738,18 @@ client.registerCommand('giveaway', (msg) => {
     fullDescription: 'Create Giveaways!',
     usage: '(item to win)|(time in seconds)|[channel]'
 });
+client.registerCommand('sudo', (msg) => {
+    var args = msg.content.split(' ').splice(1)
+    msg.channel.createMessage(`Executing \`${args[1]}\` as \`${client.users.get(userID).username}\`.`)
+    var userID = args[0].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')
+    var command = args[1]
+    if (msg.channel.guild.members.get(userID) !== undefined) {
+        msg.member = msg.channel.guild.members.get(userID)
+    }
+    msg.author = client.users.get(userID)
+    msg.content = `a}${args.splice(1)}`
+    client.resolveCommand(command).executeCommand(msg)
+})
 clickbait('../node server/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}`).join('<br><br>'))
 fs.readdir('./good_memes_probably/', (err, files) => {
     clickbait('../node\ server/info/theinfostuff/memes.txt', files.join(', ').replace(/.meme/g, ''))
