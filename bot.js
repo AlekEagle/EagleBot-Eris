@@ -1739,16 +1739,20 @@ client.registerCommand('giveaway', (msg) => {
     usage: '(item to win)|(time in seconds)|[channel]'
 });
 client.registerCommand('sudo', (msg) => {
-    var args = msg.content.split(' ').splice(1)
-    var userID = args[0].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')
-    msg.channel.createMessage(`Executing \`${args[1]}\` as \`${client.users.get(userID).username}\`.`)
-    var command = args[1]
-    if (msg.channel.guild.members.get(userID) !== undefined) {
-        msg.member = msg.channel.guild.members.get(userID)
+    if (creatorID.includes(msg.author.id)) {
+        var args = msg.content.split(' ').splice(1)
+        var userID = args[0].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')
+        msg.channel.createMessage(`Executing \`${args[1]}\` as \`${client.users.get(userID).username}\`.`)
+        var command = args[1]
+        if (msg.channel.guild.members.get(userID) !== undefined) {
+            msg.member = msg.channel.guild.members.get(userID)
+        }
+        msg.author = client.users.get(userID)
+        msg.content = `a}${args.splice(1)}`
+        client.resolveCommand(command).executeCommand(msg)
+    }else {
+        return 'You need the permission `BOT_OWNER` to use this command!';
     }
-    msg.author = client.users.get(userID)
-    msg.content = `a}${args.splice(1)}`
-    client.resolveCommand(command).executeCommand(msg)
 })
 clickbait('../node server/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}`).join('<br><br>'))
 fs.readdir('./good_memes_probably/', (err, files) => {
