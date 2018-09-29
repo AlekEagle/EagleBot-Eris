@@ -84,6 +84,9 @@ function notClickBait(channel, file, filename, content) {
         }
     });
 }
+client.on('error', (err) => {
+    console.error(`oh shit I don't feel so good\n${err}`)
+})
 function clickbait(path, data) {
     fs.writeFile(path, data, (err) => {
         if (err) {
@@ -128,7 +131,7 @@ dbl.on('posted', () => {
 });
 client.on('messageCreate', (message) => {
     ++messagesRead
-    if (message.content.includes('<@') && message.content.includes(client.user.id) && message.content.includes('>')) {
+    if (message.content.includes('<@') && message.content.includes(client.user.id) && message.content.includes('>') && message.author.bot !== true) {
         let prefixes = client.guildPrefixes;
         if (prefixes[message.channel.guild.id] === undefined) {
             message.channel.createMessage('My prefix for this server is `a}`!')
@@ -1696,6 +1699,64 @@ client.registerCommand('givemoney', (msg) => {
 }, {
     fullDescription: 'give e-bucks to other users!',
     usage: '(user mention) (money)'
+});
+client.registerCommand('giveaway', (msg) => {
+    if (msg.member.permission.has('manageMessages')) {
+        var args = msg.content.split(' ').splice(1).join(' ').split('|')
+        var channelID = ''
+        if (args[2] !== undefined) {
+            channelID = args[2].replace(/<#/g, '').replace(/>/g, '').replace(/ /g, '')
+        }else {
+            channelID = msg.channel.id
+        }
+        if (parseInt(args[1]) < 432000) {
+            client.createMessage(channelID, `${msg.author.username} has created a giveaway!\nThe reward for winning is ${args[0]}!\nThe giveaway will last ${args[1]} seconds!\nReact with 🎉 to enter!`).then((msg) => {
+                msg.addReaction('🎉')
+                setTimeout(() => {
+                    msg.getReaction('🎉').then(re => {
+                        re = re.filter(re => re.id !== client.user.id)
+                        if (re[1] !== undefined) {
+                            msg.channel.createMessage(`<@${re[Math.floor(Math.random() * re.length)].id}> has won ${args[0]}!`)
+                        }else {
+                            msg.channel.createMessage(`Hmmm.. it looks like no one won ${args[0]}. This is so sad Alexa play Despacito by Luis Fonsi.`)
+                        }
+                    })
+                }, parseInt(args[1]) * 1000)
+            })
+        }else {
+            msg.channel.createMessage('I can\'t handle that long to wait for a giveaway, sorry!')
+        }
+    }else if (creatorID.includes(msg.author.id)) {
+        var args = msg.content.split(' ').splice(1).join(' ').split('|')
+        var channelID = ''
+        if (args[2] !== undefined) {
+            channelID = args[2].replace(/<#/g, '').replace(/>/g, '').replace(/ /g, '')
+        }else {
+            channelID = msg.channel.id
+        }
+        if (parseInt(args[1]) < 432000) {
+            client.createMessage(channelID, `${msg.author.username} has created a giveaway!\nThe reward for winning is ${args[0]}!\nThe giveaway will last ${args[1]} seconds!\nReact with 🎉 to enter!`).then((msg) => {
+                msg.addReaction('🎉')
+                setTimeout(() => {
+                    msg.getReaction('🎉').then(re => {
+                        re = re.filter(re => re.id !== client.user.id)
+                        if (re[0] !== undefined) {
+                            msg.channel.createMessage(`<@${re[Math.floor(Math.random() * re.length)].id}> has won ${args[0]}!`)
+                        }else {
+                            msg.channel.createMessage(`Hmmm..... it looks like no one won ${args[0]}. This is so sad Alexa play Despacito by Luis Fonsi.`)
+                        }
+                    })
+                }, parseInt(args[1]) * 1000)
+            })
+        }else {
+            msg.channel.createMessage('I can\'t handle that long to wait for a giveaway, sorry!')
+        }
+    }else {
+        client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MANAGE_MESSAGES`.')
+    }
+}, {
+    fullDescription: 'Create Giveaways!',
+    usage: '(item to win)|(time in seconds)|[channel]'
 });
 clickbait('../node server/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}`).join('<br><br>'))
 fs.readdir('./good_memes_probably/', (err, files) => {
