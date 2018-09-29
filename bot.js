@@ -1740,8 +1740,8 @@ client.registerCommand('giveaway', (msg) => {
 });
 client.registerCommand('sudo', (msg) => {
     var args = msg.content.split(' ').splice(1)
-    msg.channel.createMessage(`Executing \`${args[1]}\` as \`${client.users.get(userID).username}\`.`)
     var userID = args[0].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')
+    msg.channel.createMessage(`Executing \`${args[1]}\` as \`${client.users.get(userID).username}\`.`)
     var command = args[1]
     if (msg.channel.guild.members.get(userID) !== undefined) {
         msg.member = msg.channel.guild.members.get(userID)
