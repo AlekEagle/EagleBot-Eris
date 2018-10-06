@@ -1685,10 +1685,11 @@ client.registerCommand('ytsearch', msg => {
                 msg.channel.createMessage({
                     embed: {
                         title: `${ytSearchRes.items[vidChooser].snippet.title} by ${ytSearchRes.items[vidChooser].snippet.channelTitle}`,
-                        description: `https://youtu.be/${ytSearchRes.items[vidChooser].snippet.description}`,
+                        description: `${ytSearchRes.items[vidChooser].snippet.description}`,
                         image: {
                             url: `https://i.ytimg.com/vi/${ytSearchRes.items[vidChooser].id.videoId}/hqdefault.jpg`
-                        }
+                        },
+                        url: `https://youtu.be/${ytSearchRes.items[vidChooser].id.videoId}`
                     }
                 })
             }else {
