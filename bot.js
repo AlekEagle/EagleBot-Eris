@@ -1675,9 +1675,10 @@ client.registerCommand('ytsearch', msg => {
     }
     request(ytSearch, (error, res, body) => {
          if (!error && res.statusCode === 200) {
+            var ytSearchRes = JSON.parse(body);
+            console.log(ytSearchRes)
             var randomizer = parseInt(ytSearchRes.items.length)
             if (randomizer > 50) {randomizer = 50}
-            var ytSearchRes = JSON.parse(body);
             if (ytSearchRes.items.length !== 0) {
                 var vidChooser = Math.floor(Math.random() * randomizer);
                 if (vidChooser === 50) {vidChooser = 49}
