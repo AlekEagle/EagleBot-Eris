@@ -1666,6 +1666,36 @@ client.registerCommand('sudo', (msg) => {
         return 'You need the permission `BOT_OWNER` to use this command!';
     }
 })
+client.registerCommand('ytsearch', msg => {
+    var ytSearch = {
+    'url': `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${msg.content.split(' ').splice(1).join(' ')}&safeSearch=strict&type=video&key=${u_wut_m8.ytauth}&maxResults=50`,
+    'headers': {
+        'User-Agent': `EagleNugget/${process.version} (AlekEagle YT on Google)`
+        }
+    }
+    request(ytSearch, (error, res, body) => {
+         if (!error && res.statusCode === 200) {
+            var randomizer = parseInt(ytSearchRes.items.length)
+            if (randomizer > 50) {randomizer = 50}
+            var ytSearchRes = JSON.parse(body);
+            if (ytSearchRes.items.length !== 0) {
+                var vidChooser = Math.floor(Math.random() * randomizer);
+                if (vidChooser === 50) {vidChooser = 49}
+                msg.channel.createMessage({
+                    embed: {
+                        title: `${ytSearchRes.items[vidChooser].snippet.title} by ${ytSearchRes.items[vidChooser].snippet.channelTitle}`,
+                        description: `https://youtu.be/${ytSearchRes.items[vidChooser].snippet.description}`,
+                        image: {
+                            url: `https://i.ytimg.com/vi/${ytSearchRes.items[vidChooser].id.videoId}/hqdefault.jpg`
+                        }
+                    }
+                })
+            }else {
+                return 'I smell no videos by that name.'
+            }
+        }
+    })
+})
 clickbait('../node server/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}`).join('<br><br>'))
 fs.readdir('./good_memes_probably/', (err, files) => {
     clickbait('../node\ server/info/theinfostuff/memes.txt', files.join(', ').replace(/.meme/g, ''))
