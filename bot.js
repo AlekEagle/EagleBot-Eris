@@ -69,8 +69,14 @@ http.createServer((req, res) => {
             });
             req.on('end', () => {
                 onDBLVote(JSON.parse(body))
+                if (JSON.parse(body).type === 'test') {
+                    console.log(JSON.parse(body))
+                }
                 res.end('{"success":"true"}')
             });
+        }else {
+            res.statusCode = 403;
+            res.end('{"error":"403 UNAUTHORIZED"}')
         }
     }
 }).listen(19132);
@@ -156,6 +162,27 @@ client.on('ready', () => {
 dbl.on('posted', () => {
     console.log('yeet!!!! Server count posted')
 });
+client.on('guildMemberAdd', (g, m) => {
+    fs.readFile(`./join_warns/${g.id}.txt`, (err, data) => {
+        if (!err && data) {
+            data = data.toString()
+            if (data.includes(m.id)) {
+                var mods = g.members.filter(mem => mem.permission.has('kickMembers') !== false)
+                fs.writeFile(`./join_warns/${g.id}.txt`, data.replace(`,${m.id}`, ''), (err) => {
+                    if (err) {
+                        console.error('error at guildMemberAdd')
+                    }
+                });
+                mods.forEach(mod => {
+                    client.getDMChannel(mod.id).then((dm) => {
+                        joinDate = new Date(m.joinedAt);
+                        dm.createMessage(`**__THIS IS AN ALERT FROM THE AUTOMATED SDW (SERVER DANGER WARNING) ALERTING YOU THAT AT \`${joinDate}\` THE USER \`${m.username}#${m.discriminator}\` JOINED THE SERVER: \`${g.name}\`. THE REASON YOU RECIEVED THIS MESSAGE IS BECAUSE YOU ARE A USER WITH THE PERMISSION \`KICK_MEMBERS\` AND A PERSON WITH \`KICK_MEMBERS\` CREATED THIS WARNING. END OF MESSAGE.__**`);
+                    });
+                });
+            }
+        }
+    });
+});
 client.on('messageCreate', (message) => {
     ++messagesRead
     if (message.content.includes('<@') && message.content.includes(client.user.id) && message.content.includes('>') && message.author.bot !== true) {
@@ -178,6 +205,9 @@ client.on('messageCreate', (message) => {
 client.on('guildCreate', guild => {
     clickbait('../node server/info/theinfostuff/guilds.txt', client.guilds.size)
     var joinChannel = guild.channels.map(c => c.name).indexOf('general')
+    var bots = guild.members.filter(m => m.bot).length;
+    var notBots = guild.memberCount-bots;
+    var percent = Math.floor((bots / guild.memberCount) * 100);
     if (joinChannel === -1) {
         var y = 0;
         loop = true;
@@ -190,22 +220,22 @@ client.on('guildCreate', guild => {
                 y = ++y;
             }
         }while (loop)
-        client.createMessage(guild.channels.map(c => c.id)[y], `Hi! I'm ${client.user.username}! I am a Discord bot made by a 13 year old! Some features will be locked behind a vote, so in order to use it you will need to vote for me! To get the link to vote for me you can use a}vote!`)
+        client.createMessage(guild.channels.map(c => c.id)[y], `Hi! I'm ${client.user.username}! I am a Discord bot made by a 13 year old!`)
         client.createChannelInvite(guild.channels.map(c => c.id)[y], {
             maxAge: 0
         }).then((invite) => {
-            client.createMessage('479721048296783883', `Invite to the guild ${guild.name} with the ID ${guild.id} https://discord.gg/${invite.code} bot to user ratio: ${guild.members.map(m => m.bot).filter(bot => bot === true).length}:${guild.members.map(m => m.bot).filter(bot => bot === false).length}`)
+            client.createMessage('479721048296783883', `Invite to the guild ${guild.name} with the ID ${guild.id} https://discord.gg/${invite.code} user to bot ratio: ${notBots}:${bots}, percent of bots is ${percent}%.`)
         }, () => {
-            client.createMessage('479721048296783883', `Cannot create an ivite to the guild ${guild.name} with the ID ${guild.id} bot to user ratio: ${guild.members.map(m => m.bot).filter(bot => bot === true).length}:${guild.members.map(m => m.bot).filter(bot => bot === false).length}`)
+            client.createMessage('479721048296783883', `Cannot create an ivite to the guild ${guild.name} with the ID ${guild.id} user to bot ratio: ${notBots}:${bots}, percent of bots is ${percent}%.`)
         })
     }else {
-        client.createMessage(guild.channels.map(c => c.id)[joinChannel], `Hi! I'm ${client.user.username}! I am a Discord bot made by a 13 year old! Some features will be locked behind a vote, so in order to use it you will need to vote for me! To get the link to vote for me you can use a}vote!`)
+        client.createMessage(guild.channels.map(c => c.id)[joinChannel], `Hi! I'm ${client.user.username}! I am a Discord bot made by a 13 year old!`)
         client.createChannelInvite(guild.channels.map(c => c.id)[joinChannel], {
             maxAge: 0
         }).then((invite) => {
-            client.createMessage('479721048296783883', `Invite to the guild ${guild.name} with the ID ${guild.id} https://discord.gg/${invite.code} bot to user ratio: ${guild.members.map(m => m.bot).filter(bot => bot === true).length}:${guild.members.map(m => m.bot).filter(bot => bot === false).length}`)
+            client.createMessage('479721048296783883', `Invite to the guild ${guild.name} with the ID ${guild.id} https://discord.gg/${invite.code} user to bot ratio: ${notBots}:${bots}, percent of bots is ${percent}%.`)
         }, () => {
-            client.createMessage('479721048296783883', `Cannot create an ivite to the guild ${guild.name} with the ID ${guild.id} bot to user ratio: ${guild.members.map(m => m.bot).filter(bot => bot === true).length}:${guild.members.map(m => m.bot).filter(bot => bot === false).length}`)
+            client.createMessage('479721048296783883', `Cannot create an ivite to the guild ${guild.name} with the ID ${guild.id}.  user to bot ratio: ${notBots}:${bots}, percent of bots is ${percent}%.`)
         })
     }
 });
@@ -238,7 +268,7 @@ client.registerCommand('curecancer', (msg) => {
             var rNG  = Math.floor(Math.random() * 100);
 //                var rNG = 100;
             if (rNG < 99) {
-                client.createMessage(msg.channel.id, ':skull: You spend 100 e-bucks on research, and during your quest to cure cancer, you died from, *Ironically*, cancer, nice try, just so you know, cancer is uncureable, or is it?')
+                client.createMessage(msg.channel.id, ':skull: You spend 100 e-bucks on research. But, you still died. The ironic part is you died from cancer. I\'m not sure you\'re able to cure cancer, but keep on trying!')
                 console.log(rNG);
             }else {
                 client.createMessage(msg.channel.id, 'You spent 100 e-bucks on research and somehow cured all types of cancer! <@' + msg.author.id + '> actually did it! *We all thought you were crazy*')
@@ -670,7 +700,7 @@ client.registerCommand('invite', () => {
 });
 client.registerCommand('emojify', (msg) => {
     cmdsRan = ++cmdsRan
-    var emojify = msg.content.split(' ').splice(1).join(' ').replace(/ /g, '    ').replace(/ab/ig, '🆎 ').replace(/a/ig, '🅰︄1�7 ').replace(/b/ig, '🅱︄1�7 ').replace(/c/ig, '🇨 ').replace(/d/ig, '🇩 ').replace(/e/ig, '🇪 ').replace(/f/ig, '🇫 ').replace(/g/ig, '🇬 ').replace(/h/ig, '🇭 ').replace(/i/ig, '🇮 ').replace(/j/ig, '🇯 ').replace(/k/ig, '🇰 ').replace(/l/ig, '🇱 ').replace(/m/ig, '🇲 ').replace(/n/ig, '🇳 ').replace(/p/ig, '🇵 ').replace(/q/ig, '🇶 ').replace(/s/ig, '🇸 ').replace(/t/ig, '🇹 ').replace(/u/ig, '🇺 ').replace(/v/ig, '🇻 ').replace(/w/ig, '🇼 ').replace(/x/ig, '🇽 ').replace(/y/ig, '🇾 ').replace(/z/ig, '🇿 ').replace(/r/ig, '🇷 ').replace(/o/ig, '🅾︄1�7 ').replace(/0/ig, ':zero:').replace(/1/ig, ':one:').replace(/2/ig, ':two:').replace(/3/ig, ':three:').replace(/4/ig, ':four:').replace(/5/ig, ':five:').replace(/6/ig, ':six:').replace(/7/ig, ':seven:').replace(/8/ig, ':eight:').replace(/9/ig, ':nine:').replace(/!/ig, '❄1�7').replace('?', '❄1�7');
+    var emojify = msg.content.split(' ').splice(1).join(' ').replace(/ /g, '    ').replace(/ab/ig, '🆎 ').replace(/a/ig, '🅰︄ ').replace(/b/ig, '🅱︄ ').replace(/c/ig, '🇨 ').replace(/d/ig, '🇩 ').replace(/e/ig, '🇪 ').replace(/f/ig, '🇫 ').replace(/g/ig, '🇬 ').replace(/h/ig, '🇭 ').replace(/i/ig, '🇮 ').replace(/j/ig, '🇯 ').replace(/k/ig, '🇰 ').replace(/l/ig, '🇱 ').replace(/m/ig, '🇲 ').replace(/n/ig, '🇳 ').replace(/p/ig, '🇵 ').replace(/q/ig, '🇶 ').replace(/s/ig, '🇸 ').replace(/t/ig, '🇹 ').replace(/u/ig, '🇺 ').replace(/v/ig, '🇻 ').replace(/w/ig, '🇼 ').replace(/x/ig, '🇽 ').replace(/y/ig, '🇾 ').replace(/z/ig, '🇿 ').replace(/r/ig, '🇷 ').replace(/o/ig, '🅾︄ ').replace(/0/ig, ':zero: ').replace(/1/ig, ':one: ').replace(/2/ig, ':two: ').replace(/3/ig, ':three: ').replace(/4/ig, ':four: ').replace(/5/ig, ':five: ').replace(/6/ig, ':six: ').replace(/7/ig, ':seven: ').replace(/8/ig, ':eight: ').replace(/9/ig, ':nine: ').replace(/!/ig, '❕ ').replace(/\?/ig, '❔ ');
     return emojify;
 }, {
     description: ' ',
@@ -1614,6 +1644,7 @@ client.registerCommand('givemoney', (msg) => {
     usage: '(user mention) (money)'
 });
 client.registerCommand('giveaway', (msg) => {
+    cmdsRan = ++cmdsRan
     if (msg.member.permission.has('manageMessages') || creatorID.includes(msg.author.id)) {
         var args = msg.content.split(' ').splice(1).join(' ').split('|')
         var channelID = ''
@@ -1647,6 +1678,7 @@ client.registerCommand('giveaway', (msg) => {
     usage: '(item to win)|(time in seconds)|[channel]'
 });
 client.registerCommand('sudo', (msg) => {
+    cmdsRan = ++cmdsRan
     if (creatorID.includes(msg.author.id)) {
         var args = msg.content.split(' ').splice(1)
         var userID = args[0].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')
@@ -1665,8 +1697,12 @@ client.registerCommand('sudo', (msg) => {
     }else {
         return 'You need the permission `BOT_OWNER` to use this command!';
     }
-})
+}, {
+    fullDescription: 'executes commands as other users (owner only)',
+    usage: '(userID) (command) [command args]'
+});
 client.registerCommand('ytsearch', msg => {
+    cmdsRan = ++cmdsRan
     var ytSearch = {
     'url': `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${msg.content.split(' ').splice(1).join(' ')}&safeSearch=strict&type=video&key=${u_wut_m8.ytauth}&maxResults=50`,
     'headers': {
@@ -1696,7 +1732,48 @@ client.registerCommand('ytsearch', msg => {
             }
         }
     })
-})
+}, {
+    fullDescription: 'Search Youtube videoss!',
+    usage: '(search term)'
+});
+client.registerCommand('joinwarn', msg => {
+    cmdsRan = ++cmdsRan
+    if (msg.member.permission.has('kickMembers') || creatorID.includes(msg.author.id)) {
+        var userID = msg.content.split(' ').splice(1).join(' ').replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')
+        fs.appendFile(`./join_warns/${msg.channel.guild.id}.txt`, `,${userID}`, (err) => {
+            if (err) {
+                msg.channel.createMessage('an error occured while saving the user');
+            }else {
+                msg.channel.createMessage('Saved!');
+            }
+        });
+    }else {
+        client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `MANAGE_MESSAGES`.')
+    }
+}, {
+    fullDescription: 'Adds users to the join warns list. THIS WILL WARN ALL USERS IN THE SERVER WITH KICK_MEMBERS PERMISSION',
+    usage: '(userID)'
+});
+client.registerCommand('notresponding', msg => {
+    cmdsRan = ++cmdsRan
+    var thing = ''
+    if (msg.content.split(' ').splice(1)[0] !== undefined) {
+        thing = msg.content.split(' ').splice(1).join(' ')
+        try {
+            if (client.users.get(thing.replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')).username !== undefined) {
+                thing = client.users.get(thing.replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')).username;
+            }
+        }catch (err) {
+            thing = msg.content.split(' ').splice(1).join(' ')
+        }
+    }else {
+        thing = msg.author.username
+    }
+    return `**${thing}.exe is not responding**\n*If you close the program, you may lose information.*\n➡Close the program\n➡Wait for the program to respond`;
+}, {
+    fullDescription: '___ is not responding, go nuts!',
+    usage: '(thing)'
+});
 clickbait('../node server/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}`).join('<br><br>'))
 fs.readdir('./good_memes_probably/', (err, files) => {
     clickbait('../node\ server/info/theinfostuff/memes.txt', files.join(', ').replace(/.meme/g, ''))
