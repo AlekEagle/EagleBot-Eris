@@ -79,7 +79,7 @@ module.exports = {
     },
 
     getInfo: async (bot, logger, msg, voiceChannel, searchQuery) => {
-        let tracks = await module.exports(logger, lavalinkConfig.nodes[0], searchQuery);
+        let tracks = await module.exports.resolveTracks(logger, lavalinkConfig.nodes[0], searchQuery);
         if (tracks.length === 0) {
             msg.channel.createMessage('According to my research, that song does not exist.');
             return;
