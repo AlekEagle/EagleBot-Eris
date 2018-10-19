@@ -20,8 +20,11 @@ const request = require('request');
 const parser = require('xml2json-light');
 const util = require('util');
 const os = require('os');
+const { PlayerManager } = require('eris-lavalink');
+const superagent = require('superagent');
 const http = require('http');
-const { parse } = require('querystring');
+const musicUtils = require('./musicUtils.js');
+const api = require('./api.js')
 const IFTTTResponseBot = {
   url: 'https://maker.ifttt.com/trigger/bot_restarted/with/key/bHwWykSwBAGNLWrbUbbObu',
   headers: {
@@ -108,6 +111,23 @@ function onClientConnected(sock) {
       console.log('Connection %s error: %s', remoteAddress, err.message);
     });
   };
+let nodes = [
+	{ host: 'localhost', port: 8080, region: 'eu', password: 'youshallnotpass' }
+];
+
+let regions = {
+	eu: ['eu', 'amsterdam', 'frankfurt', 'russia', 'hongkong', 'singapore', 'sydney'],
+	us: ['us', 'brazil'],
+};
+
+if (!(client.voiceConnections instanceof PlayerManager)) {
+	client.voiceConnections = new PlayerManager(client, nodes, {
+		numShards: 0, // number of shards
+		userId: '416274552126177282', // the user id of the bot
+		regions: regions,
+		defaultRegion: 'us',
+	});
+}
 function notClickBait(channel, file, filename, content) {
     fs.readFile(file, (err, data) => {
         if (err != undefined) {
@@ -158,6 +178,7 @@ client.on('ready', () => {
     request(IFTTTResponseBot, () => {
         console.log('Told IFTTT that I restarted');
     });
+    api(client, console)
 });
 dbl.on('posted', () => {
     console.log('yeet!!!! Server count posted')
@@ -1776,6 +1797,43 @@ client.registerCommand('notresponding', msg => {
 }, {
     fullDescription: '___ is not responding, go nuts!',
     usage: '(thing)'
+});
+client.registerCommand('play', msg => {
+    var args = msg.content.split(' ').splice(1)
+    let voiceChannel =msg.member.guild.channels.get(msg.member.voiceState.channelID);
+    if (!msg.member.voiceState.channelID) {
+        msg.channel.createMessage('You heff to join a voice channel lol.');
+        return;
+    }else if (!voiceChannel.permissionsOf(client.user.id).has('voiceConnect')) {
+        msg.channel.createMessage('I heff to be able to join the voice channel with you lol.');
+        return;
+    }else if (!voiceChannel.permissionsOf(client.user.id).has('voiceSpeak')) {
+        msg.channel.createMessage('I heff to be able to __play__ the music yknow? Not just be some random bot sitting a voice channel with you, being absloutely silent, since I can\'t speak in there.');
+        return;
+    }else if (!msg.content.split(' ').splice(1).join(' ')) {
+        msg.channel.createMessage('Umm, what do you want me to play? Thats the only function of this command after all.');
+        return;
+    }else if (!musicUtils.servers[msg.member.guild.id]) {
+        musicUtils.servers[msg.member.guild.id] = {
+            queue : []
+        };
+    }
+
+    let searchQuery = 'ytsearch:';
+
+    if (args[0] === 'search') {
+        for (let i = 1; i < args.length; i++) {
+            searchQuery += args[i] + ' ';
+        }
+    }else {
+        searchQuery = args[0];
+    }
+
+    musicUtils.getInfo(client, console, msg, voiceChannel, searchQuery);
+}, {
+    fullDescription: 'Play music!',
+    usage: '(search {search terms}|URL)',
+    guildOnly: true
 });
 clickbait('../node server/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}`).join('<br><br>'))
 fs.readdir('./good_memes_probably/', (err, files) => {
