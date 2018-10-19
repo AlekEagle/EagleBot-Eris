@@ -23,7 +23,7 @@ const os = require('os');
 const http = require('http');
 const { parse } = require('querystring');
 const IFTTTResponseBot = {
-  url: 'https://maker.ifttt.com/trigger/bot_restarted/with/key/bVcK_YFBlORK1BXpkCVatd',
+  url: 'https://maker.ifttt.com/trigger/bot_restarted/with/key/bHwWykSwBAGNLWrbUbbObu',
   headers: {
     'User-Agent': 'EagleNugget restart bot service'
   }
@@ -545,7 +545,7 @@ client.registerCommand('meme', (msg) => {
         case 'savememe':
             var saveMemeCommand = msg.content.split(' ').splice(2);
             var meme2Save = msg.content.split(' ').splice(3).join(' ')
-            fs.open('./good_memes_probably/' + saveMemeCommand[0] + '.meme', 'wx', (err, fd) => {
+            fs.open('./good_memes_probably/' + saveMemeCommand[0].toLowerCase() + '.meme', 'wx', (err, fd) => {
                 if (err) {
                     if (err.code === 'EEXIST') {
                         client.createMessage(msg.channel.id, 'Uhh, that meme is already taken boi, try `a}meme listmeme` to show what meme name are taken.')
@@ -578,7 +578,7 @@ client.registerCommand('meme', (msg) => {
         break;
         case 'showmeme':
             var showMemeCommand = msg.content.split(' ').splice(2)
-            fs.readFile('./good_memes_probably/' + showMemeCommand[0] + '.meme', (err, data) => {
+            fs.readFile('./good_memes_probably/' + showMemeCommand[0].toLowerCase() + '.meme', (err, data) => {
                 client.createMessage(msg.channel.id, `${err ? 'OOF error whoops! `' + err.code + '`' : 'dis da maymay you requested: ' + data.toString('utf8')}`)
             });
         break;
