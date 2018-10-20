@@ -5,7 +5,7 @@ const axios = require('axios');
 const moment = require('moment');
 const lavalinkConfig = {
     'nodes': [
-        {'host': 'lavalink', 'port': 8090, 'region': 'us', 'password': 'canudontstealthiskthx'}
+        {'host': 'lavalink', 'port': 8080, 'region': 'us', 'password': 'canudontstealthiskthx'}
     ],
     'regions': {
         "eu": ["eu", "amsterdam", "frankfurt", "russia", "hongkong", "singapore", "sydney"],

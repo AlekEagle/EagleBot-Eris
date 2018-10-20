@@ -6,9 +6,9 @@ const client = new Eris.CommandClient(u_wut_m8.token, {}, {
     defaultHelpCommand: false,
     description: 'EagleBot in Eris Form',
     owner: 'AlekEagle#6978',
-    prefix: 'a}'
+    prefix: 'beta}'
 });
-const HOST = '192.168.0.74';
+const HOST = '192.168.0.41';
 const PORT = 13332;
 const net = require('net');
 const death = 'idk, but i know its something important';
@@ -21,7 +21,6 @@ const parser = require('xml2json-light');
 const util = require('util');
 const os = require('os');
 const { PlayerManager } = require('eris-lavalink');
-const superagent = require('superagent');
 const http = require('http');
 const musicUtils = require('./musicUtils.js');
 const api = require('./api.js')
@@ -31,6 +30,15 @@ const IFTTTResponseBot = {
     'User-Agent': 'EagleNugget restart bot service'
   }
 }
+let nodes = [
+	{ host: 'localhost', port: 8080, region: 'eu', password: 'youshallnotpass' }
+];
+
+let regions = {
+	eu: ['eu', 'amsterdam', 'frankfurt', 'russia', 'hongkong', 'singapore', 'sydney'],
+	us: ['us', 'brazil'],
+};
+
 var tcpClient = new net.Socket();
 var tcpOwner = '';
 var tcpOwnerID = '';
@@ -111,23 +119,6 @@ function onClientConnected(sock) {
       console.log('Connection %s error: %s', remoteAddress, err.message);
     });
   };
-let nodes = [
-	{ host: 'localhost', port: 8080, region: 'eu', password: 'youshallnotpass' }
-];
-
-let regions = {
-	eu: ['eu', 'amsterdam', 'frankfurt', 'russia', 'hongkong', 'singapore', 'sydney'],
-	us: ['us', 'brazil'],
-};
-
-if (!(client.voiceConnections instanceof PlayerManager)) {
-	client.voiceConnections = new PlayerManager(client, nodes, {
-		numShards: 0, // number of shards
-		userId: '416274552126177282', // the user id of the bot
-		regions: regions,
-		defaultRegion: 'us',
-	});
-}
 function notClickBait(channel, file, filename, content) {
     fs.readFile(file, (err, data) => {
         if (err != undefined) {
@@ -179,6 +170,14 @@ client.on('ready', () => {
         console.log('Told IFTTT that I restarted');
     });
     api(client, console)
+    if (!(client.voiceConnections instanceof PlayerManager)) {
+        client.voiceConnections = new PlayerManager(client, nodes[0], {
+            numShards: 0, // number of shards
+            userId: '416274552126177282', // the user id of the bot
+            regions: regions,
+            defaultRegion: 'us',
+        });
+    }
 });
 dbl.on('posted', () => {
     console.log('yeet!!!! Server count posted')
