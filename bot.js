@@ -6,7 +6,7 @@ const client = new Eris.CommandClient(u_wut_m8.token, {}, {
     defaultHelpCommand: false,
     description: 'EagleBot in Eris Form',
     owner: 'AlekEagle#6978',
-    prefix: 'a}'
+    prefix: 'beta}'
 });
 const HOST = '192.168.0.74';
 const PORT = 13332;
@@ -163,7 +163,7 @@ function readWal(id) {
 }
 client.on('ready', () => {
     console.log('THIS BOT IS READY BOIIIIII');
-    clickbait('../node server/info/theinfostuff/guilds.txt', client.guilds.size)
+    //clickbait('../node server/info/theinfostuff/guilds.txt', client.guilds.size)
     request(IFTTTResponseBot, () => {
         console.log('Told IFTTT that I restarted');
     });
@@ -214,13 +214,13 @@ client.on('messageCreate', (message) => {
         client.deleteMessage(message.channel.id, message.id)
         client.createMessage(message.channel.id, message.content.split(' ').splice(1).join(' ') + ' has been raped!!!!!!')
     }
-    clickbait('../node server/info/theinfostuff/cmdsran.txt', cmdsRan.toString())
-    clickbait('../node server/info/theinfostuff/msgs.txt', messagesRead.toString())
-    clickbait('../node server/info/theinfostuff/uptime.txt', `${process.uptime().toString().toHHMMSS()} and ${os.uptime().toString().toHHMMSS()}`)
-    clickbait('../node server/info/theinfostuff/memuse.txt', `${Math.floor(process.memoryUsage().rss / 1024 / 1024)} MBs (${Math.floor(os.freemem() / 1024 / 1024)} MBs | ${Math.floor((os.totalmem() - os.freemem()) / 1024 / 1024)} MBs | ${Math.floor(os.totalmem() / 1024 / 1024)} MBs)`)
+    //clickbait('../node server/info/theinfostuff/cmdsran.txt', cmdsRan.toString())
+    //clickbait('../node server/info/theinfostuff/msgs.txt', messagesRead.toString())
+    //clickbait('../node server/info/theinfostuff/uptime.txt', `${process.uptime().toString().toHHMMSS()} and ${os.uptime().toString().toHHMMSS()}`)
+    //clickbait('../node server/info/theinfostuff/memuse.txt', `${Math.floor(process.memoryUsage().rss / 1024 / 1024)} MBs (${Math.floor(os.freemem() / 1024 / 1024)} MBs | ${Math.floor((os.totalmem() - os.freemem()) / 1024 / 1024)} MBs | ${Math.floor(os.totalmem() / 1024 / 1024)} MBs)`)
 });
 client.on('guildCreate', guild => {
-    clickbait('../node server/info/theinfostuff/guilds.txt', client.guilds.size)
+    //clickbait('../node server/info/theinfostuff/guilds.txt', client.guilds.size)
     var joinChannel = guild.channels.map(c => c.name).indexOf('general')
     var bots = guild.members.filter(m => m.bot).length;
     var notBots = guild.memberCount-bots;
@@ -1794,43 +1794,43 @@ client.registerCommand('notresponding', msg => {
     fullDescription: '___ is not responding, go nuts!',
     usage: '(thing)'
 });
-client.registerCommand('play', msg => {
-    var args = msg.content.split(' ').splice(1)
-    let voiceChannel =msg.member.guild.channels.get(msg.member.voiceState.channelID);
-    if (!msg.member.voiceState.channelID) {
-        msg.channel.createMessage('You heff to join a voice channel lol.');
-        return;
-    }else if (!voiceChannel.permissionsOf(client.user.id).has('voiceConnect')) {
-        msg.channel.createMessage('I heff to be able to join the voice channel with you lol.');
-        return;
-    }else if (!voiceChannel.permissionsOf(client.user.id).has('voiceSpeak')) {
-        msg.channel.createMessage('I heff to be able to __play__ the music yknow? Not just be some random bot sitting a voice channel with you, being absloutely silent, since I can\'t speak in there.');
-        return;
-    }else if (!msg.content.split(' ').splice(1).join(' ')) {
-        msg.channel.createMessage('Umm, what do you want me to play? Thats the only function of this command after all.');
-        return;
-    }else if (!musicUtils.servers[msg.member.guild.id]) {
-        musicUtils.servers[msg.member.guild.id] = {
-            queue : []
-        };
-    }
-
-    let searchQuery = 'ytsearch:';
-
-    if (args[0] === 'search') {
-        for (let i = 1; i < args.length; i++) {
-            searchQuery += args[i] + ' ';
-        }
-    }else {
-        searchQuery = args[0];
-    }
-
-    musicUtils.getInfo(client, console, msg, voiceChannel, searchQuery);
-}, {
-    fullDescription: 'Play music!',
-    usage: '(search {search terms}|URL)',
-    guildOnly: true
-});
+//client.registerCommand('play', msg => {
+//    var args = msg.content.split(' ').splice(1)
+//    let voiceChannel =msg.member.guild.channels.get(msg.member.voiceState.channelID);
+//    if (!msg.member.voiceState.channelID) {
+//        msg.channel.createMessage('You heff to join a voice channel lol.');
+//        return;
+//    }else if (!voiceChannel.permissionsOf(client.user.id).has('voiceConnect')) {
+//        msg.channel.createMessage('I heff to be able to join the voice channel with you lol.');
+//        return;
+//    }else if (!voiceChannel.permissionsOf(client.user.id).has('voiceSpeak')) {
+//        msg.channel.createMessage('I heff to be able to __play__ the music yknow? Not just be some random bot sitting a voice channel with you, being absloutely silent, since I can\'t speak in there.');
+//        return;
+//    }else if (!msg.content.split(' ').splice(1).join(' ')) {
+//        msg.channel.createMessage('Umm, what do you want me to play? Thats the only function of this command after all.');
+//        return;
+//    }else if (!musicUtils.servers[msg.member.guild.id]) {
+//        musicUtils.servers[msg.member.guild.id] = {
+//            queue : []
+//        };
+//    }
+//
+//    let searchQuery = 'ytsearch:';
+//
+//    if (args[0] === 'search') {
+//        for (let i = 1; i < args.length; i++) {
+//            searchQuery += args[i] + ' ';
+//        }
+//    }else {
+//        searchQuery = args[0];
+//    }
+//
+//    musicUtils.getInfo(client, console, msg, voiceChannel, searchQuery);
+//}, {
+//    fullDescription: 'Play music!',
+//    usage: '(search {search terms}|URL)',
+//    guildOnly: true
+//});
 clickbait('../node server/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}`).join('<br><br>'))
 fs.readdir('./good_memes_probably/', (err, files) => {
     clickbait('../node\ server/info/theinfostuff/memes.txt', files.join(', ').replace(/.meme/g, ''))
