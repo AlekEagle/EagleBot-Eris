@@ -8,7 +8,7 @@ const client = new Eris.CommandClient(u_wut_m8.token, {}, {
     owner: 'AlekEagle#6978',
     prefix: 'a}'
 });
-const HOST = '192.168.0.41';
+const HOST = '192.168.0.74';
 const PORT = 13332;
 const net = require('net');
 const death = 'idk, but i know its something important';
