@@ -6,7 +6,7 @@ const client = new Eris.CommandClient(u_wut_m8.token, {}, {
     defaultHelpCommand: false,
     description: 'EagleBot in Eris Form',
     owner: 'AlekEagle#6978',
-    prefix: 'beta}'
+    prefix: 'a}'
 });
 const HOST = '192.168.0.41';
 const PORT = 13332;
@@ -102,7 +102,7 @@ function onClientConnected(sock) {
           sock.write('Verified, you can now execute code.')
           verified = true
         }else {
-          sock.write('Verification incorrect. please try again.')
+          sock.write('Verification incorrect. pl`ease try again.')
         }
       }else {
         sock.write(util.inspect(eval(data.toString())))
