@@ -6,7 +6,7 @@ const client = new Eris.CommandClient(u_wut_m8.token, {}, {
     defaultHelpCommand: false,
     description: 'EagleBot in Eris Form',
     owner: 'AlekEagle#6978',
-    prefix: 'beta}'
+    prefix: 'a}'
 });
 const HOST = '192.168.0.74';
 const PORT = 13332;
