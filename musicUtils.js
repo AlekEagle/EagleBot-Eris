@@ -5,7 +5,7 @@ const axios = require('axios');
 const moment = require('moment');
 const lavalinkConfig = {
     'nodes': [
-        {'host': 'lavalink', 'port': 8080, 'region': 'us', 'password': 'canudontstealthiskthx'}
+        {'host': 'localhost', 'port': 2333, 'region': 'us', 'password': 'youshallnotpass'}
     ],
     'regions': {
         "eu": ["eu", "amsterdam", "frankfurt", "russia", "hongkong", "singapore", "sydney"],
@@ -58,14 +58,15 @@ module.exports = {
 
         player.on('end', () => {
             msg.channel.createMessage(`Finished **[${module.exports.servers[msg.member.guild.id].queue[0].title} by ${module.exports.servers[msg.member.guild.id].queue[0].author} [${module.exports.servers[msg.member.guild.id].queue[0].length}]](${module.exports.servers[msg.member.guild.id].queue[0].url})** requested by **${module.exports.servers[msg.member.guild.id].queue[0].requester.username}#${module.exports.servers[msg.member.guild.id].queue[0].requester.discriminator}**`)
+            module.exports.servers[msg.member.guild.id].queue.shift(); // Remove from queue
+            if (module.exports.servers[msg.member.guild.id].queue[0]) {
+                playSong();
+            } else {
+                msg.channel.createMessage('Queue ended, leaving voice channel. :wave:')
+                voiceChannel.leave(); // Leave voice channel
+            }
         });
-        module.exports.servers[msg.member.guild.id].queue.shift(); // Remove from queue
-        if (module.exports.servers[msg.member.guild.id].queue[0]) {
-            playSong();
-        } else {
-            msg.channel.createMessage('Queue ended, leaving voice channel. :wave:')
-            voiceChannel.leave(); // Leave voice channel
-        }
+        
 
         player.on('error', err => {
             logger.error(err);
@@ -85,13 +86,13 @@ module.exports = {
             return;
         }
         let song = {
-            title: tracks[0].info.title,
-            author: tracks[0].info.author,
-            url: tracks[0].info.uri,
-            length: moment.utc(tracks[0].info.lengh * 1000).format('HH:mm:ss'),
+            title: tracks.tracks[0].info.title,
+            author: tracks.tracks[0].info.author,
+            url: tracks.tracks[0].info.uri,
+            length: moment.utc(tracks.tracks[0].info.lengh * 1000).format('HH:mm:ss'),
             requester: msg.author,
             channel: msg.channel,
-            track: tracks[0].track
+            track: tracks.tracks[0].track
         };
         module.exports.servers[msg.member.guild.id].queue.push(song);
 

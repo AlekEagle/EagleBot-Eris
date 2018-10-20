@@ -22,8 +22,7 @@ const util = require('util');
 const os = require('os');
 const { PlayerManager } = require('eris-lavalink');
 const http = require('http');
-const musicUtils = require('./musicUtils.js');
-const api = require('./api.js')
+const musicUtils = require('./musicUtils');
 const IFTTTResponseBot = {
   url: 'https://maker.ifttt.com/trigger/bot_restarted/with/key/bHwWykSwBAGNLWrbUbbObu',
   headers: {
@@ -31,14 +30,13 @@ const IFTTTResponseBot = {
   }
 }
 let nodes = [
-	{ host: 'localhost', port: 8080, region: 'eu', password: 'youshallnotpass' }
+	{ host: 'localhost', port: 2333, region: 'eu', password: 'youshallnotpass' }
 ];
 
 let regions = {
 	eu: ['eu', 'amsterdam', 'frankfurt', 'russia', 'hongkong', 'singapore', 'sydney'],
 	us: ['us', 'brazil'],
 };
-
 var tcpClient = new net.Socket();
 var tcpOwner = '';
 var tcpOwnerID = '';
@@ -169,9 +167,8 @@ client.on('ready', () => {
     request(IFTTTResponseBot, () => {
         console.log('Told IFTTT that I restarted');
     });
-    api(client, console)
     if (!(client.voiceConnections instanceof PlayerManager)) {
-        client.voiceConnections = new PlayerManager(client, nodes[0], {
+        client.voiceConnections = new PlayerManager(client, nodes, {
             numShards: 0, // number of shards
             userId: '416274552126177282', // the user id of the bot
             regions: regions,
