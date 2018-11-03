@@ -1901,13 +1901,13 @@ client.registerCommand('savescreenshot', msg => {
     if (creatorID.includes(msg.author.id)) {
         var name = genRanString(10);
         exec(`wget ${msg.attachments[0].url}`, () => {
-            fs.copyFile(`./${msg.attachments.url.split('/')[5]}`, `../node server/screenshots/${name}.${msg.attachments.url.split('/')[5].split('.')[1]}`, (err) => {
+            fs.copyFile(`./${msg.attachments[0].url.split('/')[5]}`, `../node server/screenshots/${name}.${msg.attachments[0].url.split('/')[5].split('.')[1]}`, (err) => {
                 if (err) {
                     msg.channel.createMessage('An unknown error occured, please check the console.');
                     console.error(err)
                 }else {
-                    msg.channel.createMessage(`Your screenshot should be at http://plsdab.asuscomm.comscreenshots/${name}.${msg.attachments.url.split('/')[5].split('.')[1]}`)
-                    fs.unlink(msg.attachments.url.split('/')[5]);
+                    msg.channel.createMessage(`Your screenshot should be at http://plsdab.asuscomm.comscreenshots/${name}.${msg.attachments[0].url.split('/')[5].split('.')[1]}`)
+                    fs.unlink(msg.attachments[0].url.split('/')[5]);
                 }
             })
         })
