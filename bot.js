@@ -6,9 +6,9 @@ const client = new Eris.CommandClient(u_wut_m8.token, {}, {
     defaultHelpCommand: false,
     description: 'EagleBot in Eris Form',
     owner: 'AlekEagle#6978',
-    prefix: 'beta}'
+    prefix: 'a}'
 });
-const HOST = '192.168.0.41';
+const HOST = '192.168.0.74';
 const PORT = 13332;
 const net = require('net');
 const death = 'idk, but i know its something important';
@@ -167,16 +167,6 @@ client.on('ready', () => {
     request(IFTTTResponseBot, () => {
         console.log('Told IFTTT that I restarted');
     });
-<<<<<<< HEAD
-    if (!(client.voiceConnections instanceof PlayerManager)) {
-        client.voiceConnections = new PlayerManager(client, nodes, {
-            numShards: 1, // number of shards
-            userId: '416274552126177282', // the user id of the bot
-            regions: regions,
-            defaultRegion: 'us',
-        });
-    }
-=======
 //    if (!(client.voiceConnections instanceof PlayerManager)) {
 //        client.voiceConnections = new PlayerManager(client, nodes, {
 //            numShards: 1, // number of shards
@@ -185,7 +175,6 @@ client.on('ready', () => {
 //            defaultRegion: 'us',
 //        });
 //    }
->>>>>>> a18fe0a5e71252fc220898c71724d27cc37db5f4
 });
 dbl.on('posted', () => {
     console.log('yeet!!!! Server count posted')
@@ -195,7 +184,7 @@ client.on('guildMemberAdd', (g, m) => {
         if (!err && data) {
             data = data.toString()
             if (data.includes(m.id)) {
-                var mods = g.members.filter(mem => mem.permission.has('kickMembers') !== false)
+                var mods = g.members.filter(mem => mem.permission.has('kickMembers') !== false && mem.bot !== true)
                 fs.writeFile(`./join_warns/${g.id}.txt`, data.replace(`,${m.id}`, ''), (err) => {
                     if (err) {
                         console.error('error at guildMemberAdd')
@@ -211,6 +200,14 @@ client.on('guildMemberAdd', (g, m) => {
         }
     });
 });
+function getPrefix(guildID) {
+    let prefixes = client.guildPrefixes;
+    if (prefixes[guildID] === undefined) {
+        return client.commandOptions.prefix;
+    }else {
+        return prefixes[guildID];
+    }
+}
 client.on('messageCreate', (message) => {
     ++messagesRead
     if (message.content.includes('<@') && message.content.includes(client.user.id) && message.content.includes('>') && message.author.bot !== true) {
@@ -221,7 +218,7 @@ client.on('messageCreate', (message) => {
             message.channel.createMessage(`My prefix for this server is \`${prefixes[message.channel.guild.id]}\`!`)
         }
     }
-    if (message.content.substring(0, 2) === 'a}' && message.content.split('').splice(2).join('').split(' ')[0] === 'rape' && message.author.bot === false) {
+    if (message.content.substring(0, getPrefix(message.channel.guild.id).length) === getPrefix(message.channel.guild.id) && message.content.split('').splice(getPrefix(message.channel.guild.id).length).join('').split(' ')[0] === 'rape' && message.author.bot === false) {
         client.deleteMessage(message.channel.id, message.id)
         client.createMessage(message.channel.id, message.content.split(' ').splice(1).join(' ') + ' has been raped!!!!!!')
     }
@@ -1812,44 +1809,6 @@ client.registerCommand('notresponding', msg => {
     fullDescription: '___ is not responding, go nuts!',
     usage: '(thing)'
 });
-<<<<<<< HEAD
-client.registerCommand('play', msg => {
-    var args = msg.content.split(' ').splice(1)
-    let voiceChannel =msg.member.guild.channels.get(msg.member.voiceState.channelID);
-    if (!msg.member.voiceState.channelID) {
-        msg.channel.createMessage('You heff to join a voice channel lol.');
-        return;
-    }else if (!voiceChannel.permissionsOf(client.user.id).has('voiceConnect')) {
-        msg.channel.createMessage('I heff to be able to join the voice channel with you lol.');
-        return;
-    }else if (!voiceChannel.permissionsOf(client.user.id).has('voiceSpeak')) {
-        msg.channel.createMessage('I heff to be able to __play__ the music yknow? Not just be some random bot sitting a voice channel with you, being absloutely silent, since I can\'t speak in there.');
-        return;
-    }else if (!msg.content.split(' ').splice(1).join(' ')) {
-        msg.channel.createMessage('Umm, what do you want me to play? Thats the only function of this command after all.');
-        return;
-    }else if (!musicUtils.servers[msg.member.guild.id]) {
-        musicUtils.servers[msg.member.guild.id] = {
-            queue : []
-        };
-    }
-
-    let searchQuery = 'ytsearch:';
-
-    if (args[0] === 'search') {
-        for (let i = 1; i < args.length; i++) {
-            searchQuery += args[i] + ' ';
-        }
-    }else {
-        searchQuery = args[0];
-    }
-
-    musicUtils.getInfo(client, console, msg, voiceChannel, searchQuery);
-}, {
-    fullDescription: 'Play music!',
-    usage: '(search {search terms}|URL)',
-    guildOnly: true
-=======
 //client.registerCommand('play', msg => {
 //    var args = msg.content.split(' ').splice(1)
 //    let voiceChannel =msg.member.guild.channels.get(msg.member.voiceState.channelID);
@@ -1931,7 +1890,6 @@ client.registerCommand('e9', (msg) => {
 }, {
     fullDescription: 'you can search for safe furry stuff on here (BE WARNED THAT IT MAY NOT BE 100% SAFE ON HOW YOU INTERPRET IT!)',
     usage: '(search terms for stuff)'
->>>>>>> a18fe0a5e71252fc220898c71724d27cc37db5f4
 });
 clickbait('../node server/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}`).join('<br><br>'))
 fs.readdir('./good_memes_probably/', (err, files) => {
