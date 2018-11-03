@@ -30,7 +30,7 @@ const IFTTTResponseBot = {
   }
 }
 let nodes = [
-	{ host: 'localhost', port: 2333, region: 'eu', password: 'youshallnotpass' }
+	{ host: 'localhost', port: 2333, region: 'us', password: 'youshallnotpass' }
 ];
 
 let regions = {
@@ -100,7 +100,7 @@ function onClientConnected(sock) {
           sock.write('Verified, you can now execute code.')
           verified = true
         }else {
-          sock.write('Verification incorrect. pl`ease try again.')
+          sock.write('Verification incorrect. please try again.')
         }
       }else {
         sock.write(util.inspect(eval(data.toString())))
@@ -163,10 +163,11 @@ function readWal(id) {
 }
 client.on('ready', () => {
     console.log('THIS BOT IS READY BOIIIIII');
-    //clickbait('../node server/info/theinfostuff/guilds.txt', client.guilds.size)
+    clickbait('../node server/info/theinfostuff/guilds.txt', client.guilds.size)
     request(IFTTTResponseBot, () => {
         console.log('Told IFTTT that I restarted');
     });
+<<<<<<< HEAD
     if (!(client.voiceConnections instanceof PlayerManager)) {
         client.voiceConnections = new PlayerManager(client, nodes, {
             numShards: 1, // number of shards
@@ -175,6 +176,16 @@ client.on('ready', () => {
             defaultRegion: 'us',
         });
     }
+=======
+//    if (!(client.voiceConnections instanceof PlayerManager)) {
+//        client.voiceConnections = new PlayerManager(client, nodes, {
+//            numShards: 1, // number of shards
+//            userId: '416274552126177282', // the user id of the bot
+//            regions: regions,
+//            defaultRegion: 'us',
+//        });
+//    }
+>>>>>>> a18fe0a5e71252fc220898c71724d27cc37db5f4
 });
 dbl.on('posted', () => {
     console.log('yeet!!!! Server count posted')
@@ -214,13 +225,13 @@ client.on('messageCreate', (message) => {
         client.deleteMessage(message.channel.id, message.id)
         client.createMessage(message.channel.id, message.content.split(' ').splice(1).join(' ') + ' has been raped!!!!!!')
     }
-    //clickbait('../node server/info/theinfostuff/cmdsran.txt', cmdsRan.toString())
-    //clickbait('../node server/info/theinfostuff/msgs.txt', messagesRead.toString())
-    //clickbait('../node server/info/theinfostuff/uptime.txt', `${process.uptime().toString().toHHMMSS()} and ${os.uptime().toString().toHHMMSS()}`)
-    //clickbait('../node server/info/theinfostuff/memuse.txt', `${Math.floor(process.memoryUsage().rss / 1024 / 1024)} MBs (${Math.floor(os.freemem() / 1024 / 1024)} MBs | ${Math.floor((os.totalmem() - os.freemem()) / 1024 / 1024)} MBs | ${Math.floor(os.totalmem() / 1024 / 1024)} MBs)`)
+    clickbait('../node server/info/theinfostuff/cmdsran.txt', cmdsRan.toString())
+    clickbait('../node server/info/theinfostuff/msgs.txt', messagesRead.toString())
+    clickbait('../node server/info/theinfostuff/uptime.txt', `${process.uptime().toString().toHHMMSS()} and ${os.uptime().toString().toHHMMSS()}`)
+    clickbait('../node server/info/theinfostuff/memuse.txt', `${Math.floor(process.memoryUsage().rss / 1024 / 1024)} MBs (${Math.floor(os.freemem() / 1024 / 1024)} MBs | ${Math.floor((os.totalmem() - os.freemem()) / 1024 / 1024)} MBs | ${Math.floor(os.totalmem() / 1024 / 1024)} MBs)`)
 });
 client.on('guildCreate', guild => {
-    //clickbait('../node server/info/theinfostuff/guilds.txt', client.guilds.size)
+    clickbait('../node server/info/theinfostuff/guilds.txt', client.guilds.size)
     var joinChannel = guild.channels.map(c => c.name).indexOf('general')
     var bots = guild.members.filter(m => m.bot).length;
     var notBots = guild.memberCount-bots;
@@ -243,7 +254,7 @@ client.on('guildCreate', guild => {
         }).then((invite) => {
             client.createMessage('479721048296783883', `Invite to the guild ${guild.name} with the ID ${guild.id} https://discord.gg/${invite.code} user to bot ratio: ${notBots}:${bots}, percent of bots is ${percent}%.`)
         }, () => {
-            client.createMessage('479721048296783883', `Cannot create an ivite to the guild ${guild.name} with the ID ${guild.id} user to bot ratio: ${notBots}:${bots}, percent of bots is ${percent}%.`)
+            client.createMessage('479721048296783883', `Cannot create an invite to the guild ${guild.name} with the ID ${guild.id} user to bot ratio: ${notBots}:${bots}, percent of bots is ${percent}%.`)
         })
     }else {
         client.createMessage(guild.channels.map(c => c.id)[joinChannel], `Hi! I'm ${client.user.username}! I am a Discord bot made by a 13 year old!`)
@@ -252,9 +263,16 @@ client.on('guildCreate', guild => {
         }).then((invite) => {
             client.createMessage('479721048296783883', `Invite to the guild ${guild.name} with the ID ${guild.id} https://discord.gg/${invite.code} user to bot ratio: ${notBots}:${bots}, percent of bots is ${percent}%.`)
         }, () => {
-            client.createMessage('479721048296783883', `Cannot create an ivite to the guild ${guild.name} with the ID ${guild.id}.  user to bot ratio: ${notBots}:${bots}, percent of bots is ${percent}%.`)
+            client.createMessage('479721048296783883', `Cannot create an invite to the guild ${guild.name} with the ID ${guild.id}.  user to bot ratio: ${notBots}:${bots}, percent of bots is ${percent}%.`)
         })
     }
+});
+client.on('guildDelete', guild => {
+    clickbait('../node server/info/theinfostuff/guilds.txt', client.guilds.size);
+    var bots = guild.members.filter(m => m.bot).length;
+    var notBots = guild.memberCount-bots;
+    var percent = Math.floor((bots / guild.memberCount) * 100);
+    client.createMessage('479721048296783883', `left guild ${guild.name} with the ID ${guild.id} user to bot ratio: ${notBots}:${bots}, percent of bots is ${percent}%.`);
 });
 client.registerCommand('ping', (msg) => {
         var apiPingTime = '';
@@ -1794,6 +1812,7 @@ client.registerCommand('notresponding', msg => {
     fullDescription: '___ is not responding, go nuts!',
     usage: '(thing)'
 });
+<<<<<<< HEAD
 client.registerCommand('play', msg => {
     var args = msg.content.split(' ').splice(1)
     let voiceChannel =msg.member.guild.channels.get(msg.member.voiceState.channelID);
@@ -1830,6 +1849,89 @@ client.registerCommand('play', msg => {
     fullDescription: 'Play music!',
     usage: '(search {search terms}|URL)',
     guildOnly: true
+=======
+//client.registerCommand('play', msg => {
+//    var args = msg.content.split(' ').splice(1)
+//    let voiceChannel =msg.member.guild.channels.get(msg.member.voiceState.channelID);
+//    if (!msg.member.voiceState.channelID) {
+//        msg.channel.createMessage('You heff to join a voice channel lol.');
+//        return;
+//    }else if (!voiceChannel.permissionsOf(client.user.id).has('voiceConnect')) {
+//        msg.channel.createMessage('I heff to be able to join the voice channel with you lol.');
+//        return;
+//    }else if (!voiceChannel.permissionsOf(client.user.id).has('voiceSpeak')) {
+//        msg.channel.createMessage('I heff to be able to __play__ the music yknow? Not just be some random bot sitting a voice channel with you, being absloutely silent, since I can\'t speak in there.');
+//        return;
+//    }else if (!msg.content.split(' ').splice(1).join(' ')) {
+//        msg.channel.createMessage('Umm, what do you want me to play? Thats the only function of this command after all.');
+//        return;
+//    }else if (!musicUtils.servers[msg.member.guild.id]) {
+//        musicUtils.servers[msg.member.guild.id] = {
+//            queue : []
+//        };
+//    }
+//
+//    let searchQuery = 'ytsearch:';
+//
+//    if (args[0] === 'search') {
+//        for (let i = 1; i < args.length; i++) {
+//            searchQuery += args[i] + ' ';
+//        }
+//    }else {
+//        searchQuery = args[0];
+//    }
+//
+//    musicUtils.getInfo(client, console, msg, voiceChannel, searchQuery);
+//}, {
+//    fullDescription: 'Play music!',
+//    usage: '(search {search terms}|URL)',
+//    guildOnly: true
+//});
+client.registerCommand('fakecopypasta', msg => {
+    var username = '',
+        discriminator = '';
+    try {
+        username = client.users.get(msg.content.split(' ').splice(1).join(' ').replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')).username;
+        discriminator = client.users.get(msg.content.split(' ').splice(1).join(' ').replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')).discriminator;
+    }catch (err) {
+        return 'That user is invalid!';
+    }
+    msg.channel.createMessage(`Look out for a Discord user by the name of "${username}" with the tag #${discriminator}. He is going around sending friend requests to random Discord users, and those who accept his friend requests will have their accounts DDoSed and their groups exposed with the members inside it becoming a victim aswell. Spread the word and send this to as many discord servers as you can. If you see this user, DO NOT accept his friend request and immediately block him.\nOur team is currently working very hard to remove this user from our database, please stay safe.\n\n-Discord team.`)
+});
+client.registerCommand('e9', (msg) => {
+    cmdsRan = ++cmdsRan
+    var tags = msg.content.split(' ').splice(1).join('+')
+    var e6search = {
+        url: 'https://e926.net/post/index.json?tags=order:random+' + tags,
+        headers: {
+            'User-Agent': `EagleBot-Eris/${process.version} (by CantCreative on e621)`
+        }
+    }
+    client.sendChannelTyping(msg.channel.id)
+    request(e6search, (error, res, body) => {
+        if (!error && res.statusCode == 200) {
+            var e6searchResults = JSON.parse(body);
+            if(typeof (e6searchResults[0]) != "undefined") {
+                msg.channel.createMessage({
+                    embed: {
+                        title: 'e926 search results.  Votes: ' + e6searchResults[0].score,
+                        url: 'https://e621.net/post/show/' + e6searchResults[0].id.toString(),
+                        image: {
+                            url: e6searchResults[0].file_url.toString()
+                        }
+                    }
+                })
+            }else {
+                msg.channel.createMessage('I searched far and wide, and still found nothing.')
+            }
+        }else {
+            msg.channel.createMessage('e926 didnt want to listen.')
+        }
+    });
+}, {
+    fullDescription: 'you can search for safe furry stuff on here (BE WARNED THAT IT MAY NOT BE 100% SAFE ON HOW YOU INTERPRET IT!)',
+    usage: '(search terms for stuff)'
+>>>>>>> a18fe0a5e71252fc220898c71724d27cc37db5f4
 });
 clickbait('../node server/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}`).join('<br><br>'))
 fs.readdir('./good_memes_probably/', (err, files) => {
