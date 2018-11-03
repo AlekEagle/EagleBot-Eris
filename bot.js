@@ -29,6 +29,15 @@ const IFTTTResponseBot = {
     'User-Agent': 'EagleNugget restart bot service'
   }
 }
+function genRanString(length) {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  
+    for (var i = 0; i < length; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+  
+    return text;
+  }
 let nodes = [
 	{ host: 'localhost', port: 2333, region: 'us', password: 'youshallnotpass' }
 ];
@@ -211,12 +220,7 @@ function getPrefix(guildID) {
 client.on('messageCreate', (message) => {
     ++messagesRead
     if (message.content.includes('<@') && message.content.includes(client.user.id) && message.content.includes('>') && message.author.bot !== true) {
-        let prefixes = client.guildPrefixes;
-        if (prefixes[message.channel.guild.id] === undefined) {
-            message.channel.createMessage('My prefix for this server is `a}`!')
-        }else {
-            message.channel.createMessage(`My prefix for this server is \`${prefixes[message.channel.guild.id]}\`!`)
-        }
+        message.channel.createMessage(`My prefix for this server is \`${getPrefix(message.channel.guild.id)}\`!`)
     }
     if (message.content.substring(0, getPrefix(message.channel.guild.id).length) === getPrefix(message.channel.guild.id) && message.content.split('').splice(getPrefix(message.channel.guild.id).length).join('').split(' ')[0] === 'rape' && message.author.bot === false) {
         client.deleteMessage(message.channel.id, message.id)
@@ -1890,6 +1894,24 @@ client.registerCommand('e9', (msg) => {
 }, {
     fullDescription: 'you can search for safe furry stuff on here (BE WARNED THAT IT MAY NOT BE 100% SAFE ON HOW YOU INTERPRET IT!)',
     usage: '(search terms for stuff)'
+});
+client.registerCommand('savescreenshot', msg => {
+    if (creatorID.includes(msg.author.id)) {
+        var name = genRanString(10);
+        exec(`wget ${msg.attachments[0].url}`, () => {
+            fs.copyFile(`./${msg.attachments.url.split('/')[5]}`, `../node server/screenshots/${name}.${msg.attachments.url.split('/')[5].split('.')[1]}`, (err) => {
+                if (err) {
+                    msg.channel.createMessage('An unknown error occured, please check the console.');
+                    console.error(err)
+                }else {
+                    msg.channel.createMessage(`Your screenshot should be at http://plsdab.asuscomm.comscreenshots/${name}.${msg.attachments.url.split('/')[5].split('.')[1]}`)
+                    fs.unlink(msg.attachments.url.split('/')[5]);
+                }
+            })
+        })
+    }else {
+        msg.channel.createMessage('Hmm, you don\'t look like you have the permission `BOT_OWNER` so no command for you')
+    }
 });
 clickbait('../node server/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}`).join('<br><br>'))
 fs.readdir('./good_memes_probably/', (err, files) => {
