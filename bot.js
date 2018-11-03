@@ -222,9 +222,11 @@ client.on('messageCreate', (message) => {
     if (message.content.includes('<@') && message.content.includes(client.user.id) && message.content.includes('>') && message.author.bot !== true) {
         message.channel.createMessage(`My prefix for this server is \`${getPrefix(message.channel.guild.id)}\`!`)
     }
-    if (message.content.substring(0, getPrefix(message.channel.guild.id).length) === getPrefix(message.channel.guild.id) && message.content.split('').splice(getPrefix(message.channel.guild.id).length).join('').split(' ')[0] === 'rape' && message.author.bot === false && message.channel.type !== 1) {
-        client.deleteMessage(message.channel.id, message.id)
-        client.createMessage(message.channel.id, message.content.split(' ').splice(1).join(' ') + ' has been raped!!!!!!')
+    if (message.channel.type !== 1) {
+        if (message.content.substring(0, getPrefix(message.channel.guild.id).length) === getPrefix(message.channel.guild.id) && message.content.split('').splice(getPrefix(message.channel.guild.id).length).join('').split(' ')[0] === 'rape' && message.author.bot === false) {
+            client.deleteMessage(message.channel.id, message.id)
+            client.createMessage(message.channel.id, message.content.split(' ').splice(1).join(' ') + ' has been raped!!!!!!')
+        }
     }
     clickbait('../node server/info/theinfostuff/cmdsran.txt', cmdsRan.toString())
     clickbait('../node server/info/theinfostuff/msgs.txt', messagesRead.toString())
