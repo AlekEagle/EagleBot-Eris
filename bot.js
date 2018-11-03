@@ -1906,7 +1906,7 @@ client.registerCommand('savescreenshot', msg => {
                     msg.channel.createMessage('An unknown error occured, please check the console.');
                     console.error(err)
                 }else {
-                    msg.channel.createMessage(`Your screenshot should be at http://plsdab.asuscomm.comscreenshots/${name}.${msg.attachments[0].url.split('/')[6].split('.')[1]}`)
+                    msg.channel.createMessage(`Your screenshot should be at http://plsdab.asuscomm.com/screenshots/${name}.${msg.attachments[0].url.split('/')[6].split('.')[1]}`)
                     fs.unlink(msg.attachments[0].url.split('/')[6]);
                 }
             })
