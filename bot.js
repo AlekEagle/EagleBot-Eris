@@ -22,9 +22,9 @@ const request = require('request');
 const parser = require('xml2json-light');
 const util = require('util');
 const os = require('os');
-const { PlayerManager } = require('eris-lavalink');
+//const { PlayerManager } = require('eris-lavalink');
 const http = require('http');
-const musicUtils = require('./musicUtils');
+//const musicUtils = require('./musicUtils');
 const IFTTTResponseBot = {
   url: 'https://maker.ifttt.com/trigger/bot_restarted/with/key/bHwWykSwBAGNLWrbUbbObu',
   headers: {
@@ -1809,6 +1809,7 @@ client.registerCommand('notresponding', msg => {
     usage: '(thing)'
 });
 //client.registerCommand('play', msg => {
+//    cmdsRan = ++cmdsRan
 //    var args = msg.content.split(' ').splice(1)
 //    let voiceChannel =msg.member.guild.channels.get(msg.member.voiceState.channelID);
 //    if (!msg.member.voiceState.channelID) {
@@ -1846,6 +1847,7 @@ client.registerCommand('notresponding', msg => {
 //    guildOnly: true
 //});
 client.registerCommand('fakecopypasta', msg => {
+    cmdsRan = ++cmdsRan
     var username = '',
         discriminator = '';
     try {
@@ -1891,6 +1893,7 @@ client.registerCommand('e9', (msg) => {
     usage: '(search terms for stuff)'
 });
 client.registerCommand('savescreenshot', msg => {
+    cmdsRan = ++cmdsRan
     if (creatorID.includes(msg.author.id)) {
         var name = genRanString(10);
         exec(`wget ${msg.attachments[0].url}`, () => {
@@ -1899,7 +1902,7 @@ client.registerCommand('savescreenshot', msg => {
                     msg.channel.createMessage('An unknown error occured, please check the console.');
                     console.error(err)
                 }else {
-                    msg.channel.createMessage(`Your screenshot should be at http://plsdab.asuscomm.com/screenshots/${name}.${msg.attachments[0].url.split('/')[6].split('.')[1]}`)
+                    msg.channel.createMessage(`http://plsdab.asuscomm.com/screenshots/${name}.${msg.attachments[0].url.split('/')[6].split('.')[1]}`)
                     fs.unlink(msg.attachments[0].url.split('/')[6]);
                 }
             })
@@ -1907,6 +1910,14 @@ client.registerCommand('savescreenshot', msg => {
     }else {
         msg.channel.createMessage('Hmm, you don\'t look like you have the permission `BOT_OWNER` so no command for you')
     }
+});
+client.registerCommand('pete', (msg) => {
+    cmdsRan = ++cmdsRan
+    var args = msg.content.split(' ').splice(1).join(' ').split('|')
+    msg.channel.createMessage(`Attention all members of ${msg.channel.guild.name}, ${args[0]}, and all you need to do is get your moms credit card, the expiration date, and the three weird numbers on the back to get ${args[1]}!`)
+}, {
+    fullDescription: 'a voiceover pete copy pasta',
+    usage: '(situation)|(reward)'
 });
 clickbait('../node server/root/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}`).join('<br><br>'))
 fs.readdir('./good_memes_probably/', (err, files) => {
