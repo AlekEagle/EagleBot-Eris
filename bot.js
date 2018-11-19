@@ -253,7 +253,7 @@ client.on('guildCreate', guild => {
                 y = ++y;
             }
         }while (loop)
-        client.createMessage(guild.channels.map(c => c.id)[y], `Hi! I'm ${client.user.username}! I am a Discord bot made by a 13 year old!`)
+        client.createMessage(guild.channels.map(c => c.id)[y], `Hi! I'm ${client.user.username}! I am a Discord bot made by a 14 year old!`)
         client.createChannelInvite(guild.channels.map(c => c.id)[y], {
             maxAge: 0
         }).then((invite) => {
@@ -262,7 +262,7 @@ client.on('guildCreate', guild => {
             client.createMessage('479721048296783883', `Cannot create an invite to the guild ${guild.name} with the ID ${guild.id} user to bot ratio: ${notBots}:${bots}, percent of bots is ${percent}%.`)
         })
     }else {
-        client.createMessage(guild.channels.map(c => c.id)[joinChannel], `Hi! I'm ${client.user.username}! I am a Discord bot made by a 13 year old!`)
+        client.createMessage(guild.channels.map(c => c.id)[joinChannel], `Hi! I'm ${client.user.username}! I am a Discord bot made by a 14 year old!`)
         client.createChannelInvite(guild.channels.map(c => c.id)[joinChannel], {
             maxAge: 0
         }).then((invite) => {
