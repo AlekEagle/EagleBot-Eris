@@ -174,7 +174,7 @@ function readWal(id) {
 }
 client.on('ready', () => {
     console.log('THIS BOT IS READY BOIIIIII');
-    clickbait('../node server/root/info/theinfostuff/guilds.txt', client.guilds.size)
+    clickbait('../node_server/root/info/theinfostuff/guilds.txt', client.guilds.size)
     request(IFTTTResponseBot, () => {
         console.log('Told IFTTT that I restarted');
     });
@@ -230,13 +230,13 @@ client.on('messageCreate', (message) => {
             client.createMessage(message.channel.id, message.content.split(' ').splice(1).join(' ') + ' has been raped!!!!!!')
         }
     }
-    clickbait('../node server/root/info/theinfostuff/cmdsran.txt', cmdsRan.toString())
-    clickbait('../node server/root/info/theinfostuff/msgs.txt', messagesRead.toString())
-    clickbait('../node server/root/info/theinfostuff/uptime.txt', `${process.uptime().toString().toHHMMSS()} and ${os.uptime().toString().toHHMMSS()}`)
-    clickbait('../node server/root/info/theinfostuff/memuse.txt', `${Math.floor(process.memoryUsage().rss / 1024 / 1024)} MBs (${Math.floor(os.freemem() / 1024 / 1024)} MBs | ${Math.floor((os.totalmem() - os.freemem()) / 1024 / 1024)} MBs | ${Math.floor(os.totalmem() / 1024 / 1024)} MBs)`)
+    clickbait('../node_server/root/info/theinfostuff/cmdsran.txt', cmdsRan.toString())
+    clickbait('../node_server/root/info/theinfostuff/msgs.txt', messagesRead.toString())
+    clickbait('../node_server/root/info/theinfostuff/uptime.txt', `${process.uptime().toString().toHHMMSS()} and ${os.uptime().toString().toHHMMSS()}`)
+    clickbait('../node_server/root/info/theinfostuff/memuse.txt', `${Math.floor(process.memoryUsage().rss / 1024 / 1024)} MBs (${Math.floor(os.freemem() / 1024 / 1024)} MBs | ${Math.floor((os.totalmem() - os.freemem()) / 1024 / 1024)} MBs | ${Math.floor(os.totalmem() / 1024 / 1024)} MBs)`)
 });
 client.on('guildCreate', guild => {
-    clickbait('../node server/root/info/theinfostuff/guilds.txt', client.guilds.size)
+    clickbait('../node_server/root/info/theinfostuff/guilds.txt', client.guilds.size)
     var joinChannel = guild.channels.map(c => c.name).indexOf('general')
     var bots = guild.members.filter(m => m.bot).length;
     var notBots = guild.memberCount-bots;
@@ -273,7 +273,7 @@ client.on('guildCreate', guild => {
     }
 });
 client.on('guildDelete', guild => {
-    clickbait('../node server/root/info/theinfostuff/guilds.txt', client.guilds.size);
+    clickbait('../node_server/root/info/theinfostuff/guilds.txt', client.guilds.size);
     var bots = guild.members.filter(m => m.bot).length;
     var notBots = guild.memberCount-bots;
     var percent = Math.floor((bots / guild.memberCount) * 100);
@@ -594,7 +594,7 @@ client.registerCommand('meme', (msg) => {
                             client.createMessage(msg.channel.id, 'saved your meme even though it sucks').then(() => {
                         if (err !== undefined) {
                             fs.readdir('./good_memes_probably/', (err, files) => {
-                                clickbait('../node\ server/root/info/theinfostuff/memes.txt', files.join(', ').replace(/.meme/g, ''))
+                                clickbait('../node_server/root/info/theinfostuff/memes.txt', files.join(', ').replace(/.meme/g, ''))
                             });
                         }
                     });
@@ -622,7 +622,6 @@ client.registerCommand('meme', (msg) => {
                     client.createMessage(msg.channel.id, `${err ? 'OOF error whoops! ' + err.code : 'It\'s most likely gone, yeah I\'m pretty sure it\'s gone'}`).then(() => {
                         if (err !== undefined) {
                             fs.readdir('./good_memes_probably/', (err, files) => {
-                                clickbait('../node\ server/root/info/theinfostuff/memes.txt', files.join(', ').replace(/.meme/g, ''))
                             });
                         }
                     });
@@ -782,7 +781,7 @@ client.registerCommand('eval', (msg) => {
             }
             if (evaluation.length > 2000) {
                 client.createMessage(msg.channel.id, 'Output too large, it should be on your website at http://plsdab.asuscomm.com/eval_out').then(() => {
-                    fs.writeFile('../node server/root/eval_out/eval_output.txt', evaluation, (err) => {
+                    fs.writeFile('../node_server/root/eval_out/eval_output.txt', evaluation, (err) => {
                         if (err != undefined) {
                             client.createMessage(msg.channel.id, 'An error occurred while this action was being preformed error code: `' + err.code + '`')
                         }
@@ -836,7 +835,7 @@ client.registerCommand('exec', (msg) => {
                 }else {
                     if (stdout.length > 2000) {
                         client.editMessage(message.channel.id, message.id, 'Output too large, goto http://plsdab.asuscomm.com/exec_out.').then(() => {
-                        fs.writeFile('../node server/root/exec_out/exec_output.txt', stdout.replace(client.token, "(insert token here)"), (err) => {
+                        fs.writeFile('../node_server/root/exec_out/exec_output.txt', stdout.replace(client.token, "(insert token here)"), (err) => {
                             if (err != undefined) {
                                 client.createMessage(message.channel.id, 'An error occurred while this action was being preformed error code: `' + err.code + '`')
                             }
@@ -1897,7 +1896,7 @@ client.registerCommand('savescreenshot', msg => {
     if (creatorID.includes(msg.author.id)) {
         var name = genRanString(10);
         exec(`wget ${msg.attachments[0].url}`, () => {
-            fs.copyFile(`./${msg.attachments[0].url.split('/')[6]}`, `../node server/root/screenshots/${name}.${msg.attachments[0].url.split('/')[6].split('.')[1]}`, (err) => {
+            fs.copyFile(`./${msg.attachments[0].url.split('/')[6]}`, `../node_server/root/screenshots/${name}.${msg.attachments[0].url.split('/')[6].split('.')[1]}`, (err) => {
                 if (err) {
                     msg.channel.createMessage('An unknown error occured, please check the console.');
                     console.error(err)
@@ -1919,9 +1918,9 @@ client.registerCommand('pete', (msg) => {
     fullDescription: 'a voiceover pete copy pasta',
     usage: '(situation)|(reward)'
 });
-clickbait('../node server/root/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}`).join('<br><br>'))
+clickbait('../node_server/root/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}`).join('<br><br>'))
 fs.readdir('./good_memes_probably/', (err, files) => {
-    clickbait('../node\ server/root/info/theinfostuff/memes.txt', files.join(', ').replace(/.meme/g, ''))
+    clickbait('../node_server/root/info/theinfostuff/memes.txt', files.join(', ').replace(/.meme/g, ''))
 });
-clickbait('../node server/root/info/theinfostuff/guilds.txt', client.guilds.size)
+clickbait('../node_server/root/info/theinfostuff/guilds.txt', client.guilds.size)
 client.connect();
