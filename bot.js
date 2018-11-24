@@ -55,6 +55,7 @@ var timesCancerHasBeenCured = '0';
 function puts(error, stdout, stderr) { sys.puts(stdout) }
 var cmdsRan = 0;
 var messagesRead = 0;
+var theGoodStuff = 0;
 var server = net.createServer(onClientConnected);  
 var verified = false
 server.listen(PORT, HOST, function() {  
@@ -1136,6 +1137,7 @@ client.registerCommand('e6', (msg) => {
     cmdsRan = ++cmdsRan
     var tags = msg.content.split(' ').splice(1).join('+')
     if (msg.channel.nsfw) {
+        ++theGoodStuff
         var e6search = {
             url: 'https://e621.net/post/index.json?tags=order:random+' + tags,
             headers: {
@@ -1207,6 +1209,7 @@ client.registerCommand('r34', (msg) => {
     var tags = msg.content.split(' ').splice(1).join('+')
     try {
         if (msg.channel.nsfw) {
+            ++theGoodStuff
             var r34search = {
                 url: 'https://rule34.xxx/index.php?page=dapi&q=index&limit=100&s=post&tags=' + tags + '&q=index',
                 headers: {
@@ -1859,6 +1862,7 @@ client.registerCommand('fakecopypasta', msg => {
 });
 client.registerCommand('e9', (msg) => {
     cmdsRan = ++cmdsRan
+    ++theGoodStuff
     var tags = msg.content.split(' ').splice(1).join('+')
     var e6search = {
         url: 'https://e926.net/post/index.json?tags=order:random+' + tags,
