@@ -782,7 +782,7 @@ client.registerCommand('eval', (msg) => {
             }
             if (evaluation.length > 2000) {
                 client.createMessage(msg.channel.id, 'Output too large, it should be on your website at https://alekeagle.tk/eval_out').then(() => {
-                    fs.writeFile('../node_server/root/eval_out/eval_output.txt', evaluation, (err) => {
+                    fs.writeFile('../node_server/root/eval_out/eval_output.txt', evaluation.replace(/\n/g, '<br>'), (err) => {
                         if (err != undefined) {
                             client.createMessage(msg.channel.id, 'An error occurred while this action was being preformed error code: `' + err.code + '`')
                         }
