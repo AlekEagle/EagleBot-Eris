@@ -614,7 +614,7 @@ client.registerCommand('meme', (msg) => {
             });
         break;
         case 'listmeme':
-            return 'goto http://plsdab.asuscomm.com/info/memes for all of the memes.';
+            return 'goto https://alekeagle.tk/info/memes for all of the memes.';
         break;
         case 'delmeme':
             if (creatorID.includes(msg.author.id)) {
@@ -723,7 +723,7 @@ client.registerCommand('github', () => {
 });
 client.registerCommand('invite', () => {
     cmdsRan = ++cmdsRan
-    return 'here you go: http://plsdab.asuscomm.com/invite';
+    return 'here you go: https://alekeagle.tk/invite';
 }, {
     description: ' ',
     fullDescription: 'Invite me!'
@@ -746,7 +746,7 @@ client.registerCommand('info', (msg) => {
     client.createMessage(msg.channel.id, {
         embed: {
             title: 'Basic Info',
-            description: 'Ummm... I\'m a Discord Bot.\n\n I was made by **__AlekEagle#6978__**\n\n*What else is there about me?* I use the Eris library\n\nThis right there ==> **__' + uptime + '__** is how long I\'ve been running.\n\nThe computer running me has been on for this ==> **__' + osUptime + '__**\n\nI\'m ran on a Raspberry Pi 3 B\n\nI\'m on DBL, here is the link: https://discordbots.org/bot/416274552126177282 \n\nI\'m in... uhh... let me check. Ok here it is: **__' + client.guilds.size + '__** servers.\n\nThe support server is https://discord.gg/72Px4Ag in the category "bot related stuff"\n\nUse `a}invite` to take a clone of me with you to your server\n\nI\'m using: **__' + Math.floor(process.memoryUsage().rss / 1024 / 1024) + 'MB__** of RAM\n\n**__' + cmdsRan + '__** commands have been run since the last time I\'ve been rebooted.\n\n**__' + messagesRead + '__** messages have been read since the last time I\'ve been rebooted.\n\nThat\'s all I know about myself.\n\nIf you want to see it be more organized on a website goto http://plsdab.asuscomm.com/info for that.'
+            description: 'Ummm... I\'m a Discord Bot.\n\n I was made by **__AlekEagle#6978__**\n\n*What else is there about me?* I use the Eris library\n\nThis right there ==> **__' + uptime + '__** is how long I\'ve been running.\n\nThe computer running me has been on for this ==> **__' + osUptime + '__**\n\nI\'m ran on a Raspberry Pi 3 B\n\nI\'m on DBL, here is the link: https://discordbots.org/bot/416274552126177282 \n\nI\'m in... uhh... let me check. Ok here it is: **__' + client.guilds.size + '__** servers.\n\nThe support server is https://discord.gg/72Px4Ag in the category "bot related stuff"\n\nUse `a}invite` to take a clone of me with you to your server\n\nI\'m using: **__' + Math.floor(process.memoryUsage().rss / 1024 / 1024) + 'MB__** of RAM\n\n**__' + cmdsRan + '__** commands have been run since the last time I\'ve been rebooted.\n\n**__' + messagesRead + '__** messages have been read since the last time I\'ve been rebooted.\n\nThat\'s all I know about myself.\n\nIf you want to see it be more organized on a website goto https://alekeagle.tk/info for that.'
         }
     });
 }, {
@@ -781,7 +781,7 @@ client.registerCommand('eval', (msg) => {
                 evaluation = evaluation.replace(client.token, '(insert token here)')
             }
             if (evaluation.length > 2000) {
-                client.createMessage(msg.channel.id, 'Output too large, it should be on your website at http://plsdab.asuscomm.com/eval_out').then(() => {
+                client.createMessage(msg.channel.id, 'Output too large, it should be on your website at https://alekeagle.tk/eval_out').then(() => {
                     fs.writeFile('../node_server/root/eval_out/eval_output.txt', evaluation, (err) => {
                         if (err != undefined) {
                             client.createMessage(msg.channel.id, 'An error occurred while this action was being preformed error code: `' + err.code + '`')
@@ -835,7 +835,7 @@ client.registerCommand('exec', (msg) => {
                     client.editMessage(message.channel.id, message.id, 'OOF I BROKE: ```' + err + '```')
                 }else {
                     if (stdout.length > 2000) {
-                        client.editMessage(message.channel.id, message.id, 'Output too large, goto http://plsdab.asuscomm.com/exec_out.').then(() => {
+                        client.editMessage(message.channel.id, message.id, 'Output too large, goto https://alekeagle.tk/exec_out.').then(() => {
                         fs.writeFile('../node_server/root/exec_out/exec_output.txt', stdout.replace(client.token, "(insert token here)"), (err) => {
                             if (err != undefined) {
                                 client.createMessage(message.channel.id, 'An error occurred while this action was being preformed error code: `' + err.code + '`')
@@ -1575,7 +1575,7 @@ client.registerCommand('payrespects', (msg) => {
 });
 client.registerCommand('help', () => {
     cmdsRan = ++cmdsRan
-    return 'goto http://plsdab.asuscomm.com/info/commands for commands';
+    return 'goto https://alekeagle.tk/info/commands for commands';
 }, {
     fullDescription: 'this help text'
 })
@@ -1905,7 +1905,7 @@ client.registerCommand('savescreenshot', msg => {
                     msg.channel.createMessage('An unknown error occured, please check the console.');
                     console.error(err)
                 }else {
-                    msg.channel.createMessage(`http://plsdab.asuscomm.com/screenshots/${name}.${msg.attachments[0].url.split('/')[6].split('.')[1]}`)
+                    msg.channel.createMessage(`https://alekeagle.tk/screenshots/${name}.${msg.attachments[0].url.split('/')[6].split('.')[1]}`)
                     fs.unlink(msg.attachments[0].url.split('/')[6]);
                 }
             })
