@@ -8,9 +8,9 @@ const client = new Eris.CommandClient(u_wut_m8.token, {
     defaultHelpCommand: false,
     description: 'EagleBot in Eris Form',
     owner: 'AlekEagle#6978',
-    prefix: 'a}'
+    prefix: 'b}'
 });
-const HOST = '192.168.0.74';
+const HOST = '192.168.0.89';
 const PORT = 13332;
 const net = require('net');
 const death = 'idk, but i know its something important';
@@ -1582,10 +1582,10 @@ client.registerCommand('payrespects', (msg) => {
 client.registerCommand('help', (msg) => {
     cmdsRan = ++cmdsRan
     let command = '#command';
-    if (Object.values(client.commands).filter(c => c.label === msg.content.split(' ').splice(1).join(' '))) {
+    if (Object.values(client.commands).filter(c => c.label === msg.content.split(' ').splice(1).join(' '))[0] !== undefined) {
         command = `#${msg.content.split(' ').splice(1).join(' ')}`
-    }else if (Object.values(client.commands).filter(c => c.aliases.include(msg.content.split(' ').splice(1).join(' ')))[0].label) {
-        command = `#${Object.values(client.commands).filter(c => c.aliases.include(msg.content.split(' ').splice(1).join(' ')))[0].label}`
+    }else if (Object.values(client.commands).filter(c => c.aliases.includes(msg.content.split(' ').splice(1).join(' ')))[0] !== undefined) {
+        command = `#${Object.values(client.commands).filter(c => c.aliases.includes(msg.content.split(' ').splice(1).join(' ')))[0].label}`
     }
     return `goto https://alekeagle.tk/info/commands${command} for commands`;
 }, {
