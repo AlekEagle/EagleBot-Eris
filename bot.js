@@ -1581,7 +1581,13 @@ client.registerCommand('payrespects', (msg) => {
 });
 client.registerCommand('help', (msg) => {
     cmdsRan = ++cmdsRan
-    return `goto https://alekeagle.tk/info/commands${msg.content.split(' ').splice(1).join(' ') ? '#' + msg.content.split(' ').splice(1).join(' ') : ''} for commands`;
+    let command = '#command';
+    if (Object.values(client.commands).filter(c => c.label === msg.content.split(' ').splice(1).join(' '))) {
+        command = `#${msg.content.split(' ').splice(1).join(' ')}`
+    }else if (Object.values(client.commands).filter(c => c.aliases.include(msg.content.split(' ').splice(1).join(' ')))[0].label) {
+        command = `#${Object.values(client.commands).filter(c => c.aliases.include(msg.content.split(' ').splice(1).join(' ')))[0].label}`
+    }
+    return `goto https://alekeagle.tk/info/commands${command} for commands`;
 }, {
     fullDescription: 'this help text'
 })
@@ -1928,7 +1934,7 @@ client.registerCommand('pete', (msg) => {
     fullDescription: 'a voiceover pete copy pasta',
     usage: '(situation)|(reward)'
 });
-clickbait('../node_server/root/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `${c.aliases.forEach(a => {return `<div id="${a}"></div>`})} <div id="${c.label}">${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}</div>`).join('<br><br>'))
+clickbait('../node_server/root/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `<div id="${c.label}">${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}</div>`).join('<br><br>'))
 fs.readdir('./good_memes_probably/', (err, files) => {
     clickbait('../node_server/root/info/theinfostuff/memes.txt', files.join(', ').replace(/.meme/g, ''))
 });
