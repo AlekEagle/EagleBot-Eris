@@ -920,6 +920,9 @@ client.registerCommand('avatar', (msg) => {
     cmdsRan = ++cmdsRan
     var avatarLol = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1).join(' ')
     try{
+        if (!avatarLol) {
+            avatarLol = msg.author.id;
+        }
         var type = '';
         if (client.users.get(avatarLol).avatarURL.includes('gif')) {
             type = 'gif'
@@ -1925,7 +1928,7 @@ client.registerCommand('pete', (msg) => {
     fullDescription: 'a voiceover pete copy pasta',
     usage: '(situation)|(reward)'
 });
-clickbait('../node_server/root/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `<div id="${c.label}>${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}</div>`).join('<br><br>'))
+clickbait('../node_server/root/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `<div id="${c.label}">${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}</div>`).join('<br><br>'))
 fs.readdir('./good_memes_probably/', (err, files) => {
     clickbait('../node_server/root/info/theinfostuff/memes.txt', files.join(', ').replace(/.meme/g, ''))
 });
