@@ -1627,7 +1627,7 @@ client.registerCommand('givemoney', (msg) => {
         try {
             username = client.users.get(msg.content.split(' ')[1].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')).username
         }catch(err) {
-            if (err) {
+            if (err ) {
                 valid = false;
                 return 'Not a valid user!'
             }
@@ -1656,7 +1656,7 @@ client.registerCommand('givemoney', (msg) => {
             readWal(msg.author.id).then((cmdExecWal) => {
                 if (parseInt(cmdExecWal.money) < parseInt(msg.content.split(' ')[2])) {
                     msg.channel.createMessage(`You do not have enough e-bucks to give ${username} ${msg.content.split(' ')[2]} e-bucks!`)
-                }else if (msg.content.split(' ')[2].includes('-') === false) {
+                }else if (parseInt(msg.content.split(' ')[2]) < 1) {
                     readWal(msg.content.split(' ')[1].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')).then((nonExecWal) => {
                         updateWal(msg.content.split(' ')[1].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, ''), parseInt(nonExecWal.money) + parseInt(msg.content.split(' ')[2]), nonExecWal.spinner)
                         updateWal(msg.author.id, parseInt(cmdExecWal.money) - parseInt(msg.content.split(' ')[2]), cmdExecWal.spinner)
@@ -1667,7 +1667,7 @@ client.registerCommand('givemoney', (msg) => {
                         msg.channel.createMessage(`Gave ${username} ${msg.content.split(' ')[2]} e-bucks!`)
                     });
                 } else {
-                    msg.channel.createMessage(`Can you don't use \`-\` in your givemoney command, that steals the other users e-bucks!`)
+                    msg.channel.createMessage('You can\'t give someone anything less than 0 e-bucks.')
                 }
             }, (err) => {
                 updateWal(msg.author.id, 0, 0)
