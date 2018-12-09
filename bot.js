@@ -1928,7 +1928,7 @@ client.registerCommand('pete', (msg) => {
     fullDescription: 'a voiceover pete copy pasta',
     usage: '(situation)|(reward)'
 });
-clickbait('../node_server/root/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `${c.aliases.forEach(a => {`<div id="${a}"></div>`})} <div id="${c.label}">${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}</div>`).join('<br><br>'))
+clickbait('../node_server/root/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `${c.aliases.forEach(a => {return `<div id="${a}"></div>`})} <div id="${c.label}">${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}</div>`).join('<br><br>'))
 fs.readdir('./good_memes_probably/', (err, files) => {
     clickbait('../node_server/root/info/theinfostuff/memes.txt', files.join(', ').replace(/.meme/g, ''))
 });
