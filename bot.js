@@ -220,6 +220,12 @@ function getPrefix(guildID) {
         return prefixes[guildID];
     }
 }
+setInterval(() => {
+    clickbait('../node_server/root/info/theinfostuff/cmdsran.txt', cmdsRan.toString())
+    clickbait('../node_server/root/info/theinfostuff/msgs.txt', messagesRead.toString())
+    clickbait('../node_server/root/info/theinfostuff/uptime.txt', `${process.uptime().toString().toHHMMSS()} and ${os.uptime().toString().toHHMMSS()}`)
+    clickbait('../node_server/root/info/theinfostuff/memuse.txt', `${Math.floor(process.memoryUsage().rss / 1024 / 1024)} MBs (${Math.floor(os.freemem() / 1024 / 1024)} MBs | ${Math.floor((os.totalmem() - os.freemem()) / 1024 / 1024)} MBs | ${Math.floor(os.totalmem() / 1024 / 1024)} MBs)`)
+}, 1000);
 client.on('messageCreate', (message) => {
     ++messagesRead
     if (message.content.includes('<@') && message.content.includes(client.user.id) && message.content.includes('>') && message.author.bot !== true) {
@@ -231,10 +237,6 @@ client.on('messageCreate', (message) => {
             client.createMessage(message.channel.id, message.content.split(' ').splice(1).join(' ') + ' has been raped!!!!!!')
         }
     }
-    clickbait('../node_server/root/info/theinfostuff/cmdsran.txt', cmdsRan.toString())
-    clickbait('../node_server/root/info/theinfostuff/msgs.txt', messagesRead.toString())
-    clickbait('../node_server/root/info/theinfostuff/uptime.txt', `${process.uptime().toString().toHHMMSS()} and ${os.uptime().toString().toHHMMSS()}`)
-    clickbait('../node_server/root/info/theinfostuff/memuse.txt', `${Math.floor(process.memoryUsage().rss / 1024 / 1024)} MBs (${Math.floor(os.freemem() / 1024 / 1024)} MBs | ${Math.floor((os.totalmem() - os.freemem()) / 1024 / 1024)} MBs | ${Math.floor(os.totalmem() / 1024 / 1024)} MBs)`)
 });
 client.on('guildCreate', guild => {
     clickbait('../node_server/root/info/theinfostuff/guilds.txt', client.guilds.size)
@@ -1574,9 +1576,9 @@ client.registerCommand('payrespects', (msg) => {
     usage: '(thing to pay respects to)',
     cooldown: 300000
 });
-client.registerCommand('help', () => {
+client.registerCommand('help', (msg) => {
     cmdsRan = ++cmdsRan
-    return 'goto https://alekeagle.tk/info/commands for commands';
+    return `goto https://alekeagle.tk/info/commands${msg.content.split(' ').splice(1).join(' ') ? '#' + msg.content.split(' ').splice(1).join(' ') : ''} for commands`;
 }, {
     fullDescription: 'this help text'
 })
@@ -1923,7 +1925,7 @@ client.registerCommand('pete', (msg) => {
     fullDescription: 'a voiceover pete copy pasta',
     usage: '(situation)|(reward)'
 });
-clickbait('../node_server/root/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}`).join('<br><br>'))
+clickbait('../node_server/root/info/theinfostuff/cmds.txt', Object.values(client.commands).map(c => `<div id="${c.label}>${c.label} ${c.usage}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'none'}</div>`).join('<br><br>'))
 fs.readdir('./good_memes_probably/', (err, files) => {
     clickbait('../node_server/root/info/theinfostuff/memes.txt', files.join(', ').replace(/.meme/g, ''))
 });
