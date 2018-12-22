@@ -883,18 +883,45 @@ client.registerCommand('dbl', (msg) => {
     var botID = msg.content.split(' ').splice(1).join(' ').replace(/<@/ig, '').replace(/!/g, '').replace(/>/g, '');
     if (client.users.get(botID).bot === true) {
         dbl.getBot(botID).then(bot => {
+            var type = '';
+            if (client.users.get(bot.id).avatarURL.includes('gif')) {type = 'gif'}else {type = 'png'}
             client.createMessage(msg.channel.id, {
                 embed: {
-                    title: bot.username + '#' + bot.discriminator,
-                    description: bot.username + '#' + bot.discriminator + `${bot.certifiedBot ? ' Certified Bot' : ' Not Certified Bot'}` + '\nOwner(s): <@' + bot.owners.join('>\n    <@') + '>\nPrefix: ' + bot.prefix + '\nID: ' + bot.id,
+                    title: 'Discord Bot List Bot Info',
                     url: `https://discordbots.org/bot/${botID}`,
+                    thumbnail: `${client.users.get(bot.id).dynamicAvatarURL(type, 512)}`,
+                    fields: [
+                        {
+                            name: 'Username',
+                            value: `${bot.username}#${bot.discriminator}`,
+                            inline: true
+                        },
+                        {
+                            name: 'Owner(s)',
+                            value: `<@${bot.owners.join('>\n<@')}>`,
+                            inline: true
+                        },
+                        {
+                            name: 'Short Description',
+                            value: `${bot.shortdesc}`
+                        },
+                        {
+                            name: 'Other General Bot Info',
+                            value: `ID: ${bot.id}\nPrefix: ${bot.prefix}\nLibrary: ${bot.lib}\nTags: ${bot.tags.join(', ')}\nDay It Was Added To The List: ${bot.date}`
+                        },
+                        {
+                            name: 'Links',
+                            value: `${bot.invite ? `[Invite](${bot.invite})` : 'No Invite'} | ${bot.support ? `[Support Server](${bot.support})` : 'No Support Server'} | ${bot.invite ? `[Invite](${bot.invite})` : 'No Invite'} | ${bot.github ? `[GitHub Page](${bot.github})` : 'No GitHub Page'} | ${bot.website ? `[Website](${bot.website})` : 'No Website'}`
+                        }
+                    ],
                     image: {
                         url: `https://discordbots.org/api/widget/${botID}.png`
                     }
                 }
             });
-        }, () => {
+        }, err => {
             client.createMessage(msg.channel.id, 'I don\'t think I see them on there, hmm.')
+            console.error(err)
         })
         
     }else {
@@ -929,9 +956,9 @@ client.registerCommand('avatar', (msg) => {
         }else {type = 'png'}
         client.createMessage(msg.channel.id, {embed: {
             title: client.users.get(avatarLol).username + '#' + client.users.get(avatarLol).discriminator + '\'s avatar (click for link to avatar)',
-            url: client.users.get(avatarLol).dynamicAvatarURL(type, 1024),
+            url: client.users.get(avatarLol).dynamicAvatarURL(type, 2048),
             image: {
-                url: client.users.get(avatarLol).dynamicAvatarURL(type, 1024)
+                url: client.users.get(avatarLol).dynamicAvatarURL(type, 2048)
             }
         }});
     }catch (err) {
