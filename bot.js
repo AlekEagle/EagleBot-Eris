@@ -8,9 +8,9 @@ const client = new Eris.CommandClient(u_wut_m8.token, {
     defaultHelpCommand: false,
     description: 'EagleBot in Eris Form',
     owner: 'AlekEagle#6978',
-    prefix: 'b}'
+    prefix: 'a}'
 });
-const HOST = '192.168.0.88';
+const HOST = '192.168.0.74';
 const PORT = 13332;
 const net = require('net');
 const death = 'idk, but i know its something important';
@@ -220,12 +220,12 @@ function getPrefix(guildID) {
         return prefixes[guildID];
     }
 }
-//setInterval(() => {
-//    clickbait('../node_server/root/info/theinfostuff/cmdsran.txt', cmdsRan.toString())
-//    clickbait('../node_server/root/info/theinfostuff/msgs.txt', messagesRead.toString())
-//    clickbait('../node_server/root/info/theinfostuff/uptime.txt', `${process.uptime().toString().toHHMMSS()} and ${os.uptime().toString().toHHMMSS()}`)
-//    clickbait('../node_server/root/info/theinfostuff/memuse.txt', `${Math.floor(process.memoryUsage().rss / 1024 / 1024)} MBs (${Math.floor(os.freemem() / 1024 / 1024)} MBs | ${Math.floor((os.totalmem() - os.freemem()) / 1024 / 1024)} MBs | ${Math.floor(os.totalmem() / 1024 / 1024)} MBs)`)
-//}, 1000);
+setInterval(() => {
+    clickbait('../node_server/root/info/theinfostuff/cmdsran.txt', cmdsRan.toString())
+    clickbait('../node_server/root/info/theinfostuff/msgs.txt', messagesRead.toString())
+    clickbait('../node_server/root/info/theinfostuff/uptime.txt', `${process.uptime().toString().toHHMMSS()} and ${os.uptime().toString().toHHMMSS()}`)
+    clickbait('../node_server/root/info/theinfostuff/memuse.txt', `${Math.floor(process.memoryUsage().rss / 1024 / 1024)} MBs (${Math.floor(os.freemem() / 1024 / 1024)} MBs | ${Math.floor((os.totalmem() - os.freemem()) / 1024 / 1024)} MBs | ${Math.floor(os.totalmem() / 1024 / 1024)} MBs)`)
+}, 1000);
 client.on('messageCreate', (message) => {
     ++messagesRead
     if (message.content.includes('<@') && message.content.includes(client.user.id) && message.content.includes('>') && message.author.bot !== true) {
