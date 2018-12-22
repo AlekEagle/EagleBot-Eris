@@ -885,6 +885,7 @@ client.registerCommand('dbl', (msg) => {
         dbl.getBot(botID).then(bot => {
             var type = '';
             if (client.users.get(bot.id).avatarURL.includes('gif')) {type = 'gif'}else {type = 'png'}
+            console.log(client.users.get(bot.id).dynamicAvatarURL(type, 512))
             client.createMessage(msg.channel.id, {
                 embed: {
                     title: 'Discord Bot List Bot Info',
