@@ -913,7 +913,7 @@ client.registerCommand('dbl', (msg) => {
                         },
                         {
                             name: 'Links',
-                            value: `${bot.invite ? `[Invite](${bot.invite})` : 'No Invite'} | ${bot.support ? `[Support Server](${bot.support})` : 'No Support Server'} | ${bot.invite ? `[Invite](${bot.invite})` : 'No Invite'} | ${bot.github ? `[GitHub Page](${bot.github})` : 'No GitHub Page'} | ${bot.website ? `[Website](${bot.website})` : 'No Website'}`
+                            value: `${bot.invite ? `[Invite](${bot.invite})` : 'No Invite'} | ${bot.support ? `[Support Server](https://discord.gg/${bot.support})` : 'No Support Server'} | ${bot.invite ? `[Invite](${bot.invite})` : 'No Invite'} | ${bot.github ? `[GitHub Page](${bot.github})` : 'No GitHub Page'} | ${bot.website ? `[Website](${bot.website})` : 'No Website'}`
                         }
                     ],
                     image: {
