@@ -8,9 +8,9 @@ const client = new Eris.CommandClient(u_wut_m8.token, {
     defaultHelpCommand: false,
     description: 'EagleBot in Eris Form',
     owner: 'AlekEagle#6978',
-    prefix: 'a}'
+    prefix: 'b}'
 });
-const HOST = '192.168.0.74';
+const HOST = '192.168.0.88';
 const PORT = 13332;
 const net = require('net');
 const death = 'idk, but i know its something important';
@@ -220,12 +220,12 @@ function getPrefix(guildID) {
         return prefixes[guildID];
     }
 }
-setInterval(() => {
-    clickbait('../node_server/root/info/theinfostuff/cmdsran.txt', cmdsRan.toString())
-    clickbait('../node_server/root/info/theinfostuff/msgs.txt', messagesRead.toString())
-    clickbait('../node_server/root/info/theinfostuff/uptime.txt', `${process.uptime().toString().toHHMMSS()} and ${os.uptime().toString().toHHMMSS()}`)
-    clickbait('../node_server/root/info/theinfostuff/memuse.txt', `${Math.floor(process.memoryUsage().rss / 1024 / 1024)} MBs (${Math.floor(os.freemem() / 1024 / 1024)} MBs | ${Math.floor((os.totalmem() - os.freemem()) / 1024 / 1024)} MBs | ${Math.floor(os.totalmem() / 1024 / 1024)} MBs)`)
-}, 1000);
+//setInterval(() => {
+//    clickbait('../node_server/root/info/theinfostuff/cmdsran.txt', cmdsRan.toString())
+//    clickbait('../node_server/root/info/theinfostuff/msgs.txt', messagesRead.toString())
+//    clickbait('../node_server/root/info/theinfostuff/uptime.txt', `${process.uptime().toString().toHHMMSS()} and ${os.uptime().toString().toHHMMSS()}`)
+//    clickbait('../node_server/root/info/theinfostuff/memuse.txt', `${Math.floor(process.memoryUsage().rss / 1024 / 1024)} MBs (${Math.floor(os.freemem() / 1024 / 1024)} MBs | ${Math.floor((os.totalmem() - os.freemem()) / 1024 / 1024)} MBs | ${Math.floor(os.totalmem() / 1024 / 1024)} MBs)`)
+//}, 1000);
 client.on('messageCreate', (message) => {
     ++messagesRead
     if (message.content.includes('<@') && message.content.includes(client.user.id) && message.content.includes('>') && message.author.bot !== true) {
@@ -885,12 +885,13 @@ client.registerCommand('dbl', (msg) => {
         dbl.getBot(botID).then(bot => {
             var type = '';
             if (client.users.get(bot.id).avatarURL.includes('gif')) {type = 'gif'}else {type = 'png'}
-            console.log(client.users.get(bot.id).dynamicAvatarURL(type, 512).replace(/?size=512/g, ''))
             client.createMessage(msg.channel.id, {
                 embed: {
                     title: 'Discord Bot List Bot Info',
                     url: `https://discordbots.org/bot/${botID}`,
-                    thumbnail: `${client.users.get(bot.id).dynamicAvatarURL(type, 512)}`,
+                    thumbnail: {
+                        url: client.users.get(bot.id).dynamicAvatarURL(type, 512).split('?')[0]
+                    },
                     fields: [
                         {
                             name: 'Username',
@@ -908,7 +909,7 @@ client.registerCommand('dbl', (msg) => {
                         },
                         {
                             name: 'Other General Bot Info',
-                            value: `ID: ${bot.id}\nPrefix: ${bot.prefix}\nLibrary: ${bot.lib}\nTags: ${bot.tags.join(', ')}\nDay It Was Added To The List: ${bot.date}`
+                            value: `ID: ${bot.id}\nPrefix: ${bot.prefix}\nLibrary: ${bot.lib}\nTags: ${bot.tags.join(', ')}\nDay It Was Added To The List: ${new Date(bot.date)}`
                         },
                         {
                             name: 'Links',
