@@ -256,22 +256,216 @@ client.on('guildCreate', guild => {
                 y = ++y;
             }
         }while (loop)
-        client.createMessage(guild.channels.map(c => c.id)[y], `Hi! I'm ${client.user.username}! I am a Discord bot made by a 14 year old!`)
         client.createChannelInvite(guild.channels.map(c => c.id)[y], {
             maxAge: 0
         }).then((invite) => {
-            client.createMessage('479721048296783883', `Invite to the guild ${guild.name} with the ID ${guild.id} https://discord.gg/${invite.code} user to bot ratio: ${notBots}:${bots}, percent of bots is ${percent}%.`)
+            client.createMessage('479721048296783883', {
+                embed: {
+                    title: 'New Server Alert',
+                    url: `${invite.code ? `https://discord.gg/${invite.code}` : ''}`,
+                    thumbnail: {
+                        url: `${guild.dynamicIconURL('png', 512).split('?')[0]}`
+                    },
+                    author: {
+                        name: `${client.users.get(guild.ownerID).username}#${client.users.get(guild.ownerID).discriminator}`,
+                        icon_url: `${client.users.get(guild.ownerID).dynamicAvatarURL('png', 512).split('?')[0]}`,
+                        url: `${client.users.get(guild.ownerID).dynamicAvatarURL('png', 512).split('?')[0]}`
+                    },
+                    fields: [
+                        {
+                            name: 'Guild Name',
+                            value: guild.name,
+                            inline: true
+                        },
+                        {
+                            name: 'Guild ID',
+                            value: guild.id,
+                            inline: true
+                        },
+                        {
+                            name: 'Categories',
+                            value: guild.channels.filter(c => c.type === 4).length,
+                            inline: true
+                        },
+                        {
+                            name: 'Text Channels',
+                            value: guild.channels.filter(c => c.type === 0).length,
+                            inline: true
+                        },
+                        {
+                            name: 'Voice Channels',
+                            value: guild.channels.filter(c => c.type === 2).length,
+                            inline: true
+                        },
+                        {
+                            name: 'Everything else',
+                            value: `User to Bot Ratio: ${notBots}:${bots}\n\nBot Percentage: ${percent}%\n\nMember Count: ${guild.memberCount}\n\nNew Guild Count: ${client.guilds.size}`,
+                            inline: false
+                        }
+                    ],
+                    footer: {
+                        url: client.user.dynamicAvatarURL('png', 512).split('?')[0],
+                        text: `${invite.code ? 'Invite Valid' : 'No Invite'}`
+                    }
+                }
+            })
         }, () => {
-            client.createMessage('479721048296783883', `Cannot create an invite to the guild ${guild.name} with the ID ${guild.id} user to bot ratio: ${notBots}:${bots}, percent of bots is ${percent}%.`)
+            client.createMessage('479721048296783883', {
+                embed: {
+                    title: 'New Server Alert',
+                    url: `${invite.code ? `https://discord.gg/${invite.code}` : ''}`,
+                    thumbnail: {
+                        url: `${guild.dynamicIconURL('png', 512).split('?')[0]}`
+                    },
+                    author: {
+                        name: `${client.users.get(guild.ownerID).username}#${client.users.get(guild.ownerID).discriminator}`,
+                        icon_url: `${client.users.get(guild.ownerID).dynamicAvatarURL('png', 512).split('?')[0]}`,
+                        url: `${client.users.get(guild.ownerID).dynamicAvatarURL('png', 512).split('?')[0]}`
+                    },
+                    fields: [
+                        {
+                            name: 'Guild Name',
+                            value: guild.name,
+                            inline: true
+                        },
+                        {
+                            name: 'Guild ID',
+                            value: guild.id,
+                            inline: true
+                        },
+                        {
+                            name: 'Categories',
+                            value: guild.channels.filter(c => c.type === 4).length,
+                            inline: true
+                        },
+                        {
+                            name: 'Text Channels',
+                            value: guild.channels.filter(c => c.type === 0).length,
+                            inline: true
+                        },
+                        {
+                            name: 'Voice Channels',
+                            value: guild.channels.filter(c => c.type === 2).length,
+                            inline: true
+                        },
+                        {
+                            name: 'Everything else',
+                            value: `User to Bot Ratio: ${notBots}:${bots}\n\nBot Percentage: ${percent}%\n\nMember Count: ${guild.memberCount}\n\nNew Guild Count: ${client.guilds.size}`,
+                            inline: false
+                        }
+                    ],
+                    footer: {
+                        url: client.user.dynamicAvatarURL('png', 512).split('?')[0],
+                        text: `${invite.code ? 'Invite Valid' : 'No Invite'}`
+                    }
+                }
+            })
         })
     }else {
-        client.createMessage(guild.channels.map(c => c.id)[joinChannel], `Hi! I'm ${client.user.username}! I am a Discord bot made by a 14 year old!`)
         client.createChannelInvite(guild.channels.map(c => c.id)[joinChannel], {
             maxAge: 0
         }).then((invite) => {
-            client.createMessage('479721048296783883', `Invite to the guild ${guild.name} with the ID ${guild.id} https://discord.gg/${invite.code} user to bot ratio: ${notBots}:${bots}, percent of bots is ${percent}%.`)
+            client.createMessage('479721048296783883', {
+                embed: {
+                    title: 'New Server Alert',
+                    url: `${invite.code ? `https://discord.gg/${invite.code}` : ''}`,
+                    thumbnail: {
+                        url: `${guild.dynamicIconURL('png', 512).split('?')[0]}`
+                    },
+                    author: {
+                        name: `${client.users.get(guild.ownerID).username}#${client.users.get(guild.ownerID).discriminator}`,
+                        icon_url: `${client.users.get(guild.ownerID).dynamicAvatarURL('png', 512).split('?')[0]}`,
+                        url: `${client.users.get(guild.ownerID).dynamicAvatarURL('png', 512).split('?')[0]}`
+                    },
+                    fields: [
+                        {
+                            name: 'Guild Name',
+                            value: guild.name,
+                            inline: true
+                        },
+                        {
+                            name: 'Guild ID',
+                            value: guild.id,
+                            inline: true
+                        },
+                        {
+                            name: 'Categories',
+                            value: guild.channels.filter(c => c.type === 4).length,
+                            inline: true
+                        },
+                        {
+                            name: 'Text Channels',
+                            value: guild.channels.filter(c => c.type === 0).length,
+                            inline: true
+                        },
+                        {
+                            name: 'Voice Channels',
+                            value: guild.channels.filter(c => c.type === 2).length,
+                            inline: true
+                        },
+                        {
+                            name: 'Everything else',
+                            value: `User to Bot Ratio: ${notBots}:${bots}\n\nBot Percentage: ${percent}%\n\nMember Count: ${guild.memberCount}\n\nNew Guild Count: ${client.guilds.size}`,
+                            inline: false
+                        }
+                    ],
+                    footer: {
+                        url: client.user.dynamicAvatarURL('png', 512).split('?')[0],
+                        text: `${invite.code ? 'Invite Valid' : 'No Invite'}`
+                    }
+                }
+            })
         }, () => {
-            client.createMessage('479721048296783883', `Cannot create an invite to the guild ${guild.name} with the ID ${guild.id}.  user to bot ratio: ${notBots}:${bots}, percent of bots is ${percent}%.`)
+            client.createMessage('479721048296783883', {
+                embed: {
+                    title: 'New Server Alert',
+                    url: `${invite.code ? `https://discord.gg/${invite.code}` : ''}`,
+                    thumbnail: {
+                        url: `${guild.dynamicIconURL('png', 512).split('?')[0]}`
+                    },
+                    author: {
+                        name: `${client.users.get(guild.ownerID).username}#${client.users.get(guild.ownerID).discriminator}`,
+                        icon_url: `${client.users.get(guild.ownerID).dynamicAvatarURL('png', 512).split('?')[0]}`,
+                        url: `${client.users.get(guild.ownerID).dynamicAvatarURL('png', 512).split('?')[0]}`
+                    },
+                    fields: [
+                        {
+                            name: 'Guild Name',
+                            value: guild.name,
+                            inline: true
+                        },
+                        {
+                            name: 'Guild ID',
+                            value: guild.id,
+                            inline: true
+                        },
+                        {
+                            name: 'Categories',
+                            value: guild.channels.filter(c => c.type === 4).length,
+                            inline: true
+                        },
+                        {
+                            name: 'Text Channels',
+                            value: guild.channels.filter(c => c.type === 0).length,
+                            inline: true
+                        },
+                        {
+                            name: 'Voice Channels',
+                            value: guild.channels.filter(c => c.type === 2).length,
+                            inline: true
+                        },
+                        {
+                            name: 'Everything else',
+                            value: `User to Bot Ratio: ${notBots}:${bots}\n\nBot Percentage: ${percent}%\n\nMember Count: ${guild.memberCount}\n\nNew Guild Count: ${client.guilds.size}`,
+                            inline: false
+                        }
+                    ],
+                    footer: {
+                        url: client.user.dynamicAvatarURL('png', 512).split('?')[0],
+                        text: `${invite.code ? 'Invite Valid' : 'No Invite'}`
+                    }
+                }
+            })
         })
     }
 });
@@ -280,7 +474,55 @@ client.on('guildDelete', guild => {
     var bots = guild.members.filter(m => m.bot).length;
     var notBots = guild.memberCount-bots;
     var percent = Math.floor((bots / guild.memberCount) * 100);
-    client.createMessage('479721048296783883', `left guild ${guild.name} with the ID ${guild.id} user to bot ratio: ${notBots}:${bots}, percent of bots is ${percent}%.`);
+    client.createMessage('479721048296783883', {
+                embed: {
+                    title: 'Server Leave Alert',
+                    thumbnail: {
+                        url: `${guild.dynamicIconURL('png', 512).split('?')[0]}`
+                    },
+                    author: {
+                        name: `${client.users.get(guild.ownerID).username}#${client.users.get(guild.ownerID).discriminator}`,
+                        icon_url: `${client.users.get(guild.ownerID).dynamicAvatarURL('png', 512).split('?')[0]}`,
+                        url: `${client.users.get(guild.ownerID).dynamicAvatarURL('png', 512).split('?')[0]}`
+                    },
+                    fields: [
+                        {
+                            name: 'Guild Name',
+                            value: guild.name,
+                            inline: true
+                        },
+                        {
+                            name: 'Guild ID',
+                            value: guild.id,
+                            inline: true
+                        },
+                        {
+                            name: 'User to Bot Ratio',
+                            value: `${notBots}:${bots}`,
+                            inline: true
+                        },
+                        {
+                            name: 'Bot Percentage',
+                            value: `${percent}%`,
+                            inline: true
+                        },
+                        {
+                            name: 'Member Count',
+                            value: guild.memberCount,
+                            inline: true
+                        },
+                        {
+                            name: 'New Guild Count',
+                            value: client.guilds.size,
+                            inline: true
+                        }
+                    ],
+                    footer: {
+                        url: client.user.dynamicAvatarURL('png', 512).split('?')[0],
+                        text: `${client.user.username}#${client.user.discriminator}`
+                    }
+                }
+            });
 });
 client.registerCommand('ping', (msg) => {
         var apiPingTime = client.shards.map(s => s.latency)[0];
