@@ -28,7 +28,7 @@ const http = require('http');
 const IFTTTResponseBot = {
     method: 'POST',
     url: 'https://maker.ifttt.com/trigger/bot_restarted/with/key/bHwWykSwBAGNLWrbUbbObu',
-    body: {
+    json: {
         value1: 'EagleNugget'
     },
     headers: {
