@@ -29,7 +29,7 @@ const IFTTTResponseBot = {
     method: 'POST',
     url: 'https://maker.ifttt.com/trigger/bot_restarted/with/key/bHwWykSwBAGNLWrbUbbObu',
     body: {
-        "value1": "EagleNugget"
+        value1: 'EagleNugget'
     },
     headers: {
         'User-Agent': 'EagleNugget restart bot service'
