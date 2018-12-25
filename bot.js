@@ -283,6 +283,21 @@ client.on('guildCreate', guild => {
                             inline: true
                         },
                         {
+                            name: 'Member Count',
+                            value: guild.memberCount,
+                            inline: true
+                        },
+                        {
+                            name: 'User to Bot Ratio',
+                            value: `${notBots}:${bots}`,
+                            inline: true
+                        },
+                        {
+                            name: 'Bot Percentage',
+                            value: `${percent}%`,
+                            inline: true
+                        },
+                        {
                             name: 'Categories',
                             value: guild.channels.filter(c => c.type === 4).length,
                             inline: true
@@ -298,14 +313,14 @@ client.on('guildCreate', guild => {
                             inline: true
                         },
                         {
-                            name: 'Everything else',
-                            value: `User to Bot Ratio: ${notBots}:${bots}\n\nBot Percentage: ${percent}%\n\nMember Count: ${guild.memberCount}\n\nNew Guild Count: ${client.guilds.size}`,
+                            name: 'New Guild Count',
+                            value: client.guilds.size,
                             inline: false
                         }
                     ],
                     footer: {
                         url: client.user.dynamicAvatarURL('png', 512).split('?')[0],
-                        text: `${invite.code ? 'Invite Valid' : 'No Invite'}`
+                        text: 'Invite Valid'
                     }
                 }
             })
@@ -313,7 +328,6 @@ client.on('guildCreate', guild => {
             client.createMessage('479721048296783883', {
                 embed: {
                     title: 'New Server Alert',
-                    url: `${invite.code ? `https://discord.gg/${invite.code}` : ''}`,
                     thumbnail: {
                         url: `${guild.dynamicIconURL('png', 512).split('?')[0]}`
                     },
@@ -334,6 +348,21 @@ client.on('guildCreate', guild => {
                             inline: true
                         },
                         {
+                            name: 'Member Count',
+                            value: guild.memberCount,
+                            inline: true
+                        },
+                        {
+                            name: 'User to Bot Ratio',
+                            value: `${notBots}:${bots}`,
+                            inline: true
+                        },
+                        {
+                            name: 'Bot Percentage',
+                            value: `${percent}%`,
+                            inline: true
+                        },
+                        {
                             name: 'Categories',
                             value: guild.channels.filter(c => c.type === 4).length,
                             inline: true
@@ -349,14 +378,14 @@ client.on('guildCreate', guild => {
                             inline: true
                         },
                         {
-                            name: 'Everything else',
-                            value: `User to Bot Ratio: ${notBots}:${bots}\n\nBot Percentage: ${percent}%\n\nMember Count: ${guild.memberCount}\n\nNew Guild Count: ${client.guilds.size}`,
+                            name: 'New Guild Count',
+                            value: client.guilds.size,
                             inline: false
                         }
                     ],
                     footer: {
                         url: client.user.dynamicAvatarURL('png', 512).split('?')[0],
-                        text: `${invite.code ? 'Invite Valid' : 'No Invite'}`
+                        text: 'No Invite'
                     }
                 }
             })
@@ -389,6 +418,21 @@ client.on('guildCreate', guild => {
                             inline: true
                         },
                         {
+                            name: 'Member Count',
+                            value: guild.memberCount,
+                            inline: true
+                        },
+                        {
+                            name: 'User to Bot Ratio',
+                            value: `${notBots}:${bots}`,
+                            inline: true
+                        },
+                        {
+                            name: 'Bot Percentage',
+                            value: `${percent}%`,
+                            inline: true
+                        },
+                        {
                             name: 'Categories',
                             value: guild.channels.filter(c => c.type === 4).length,
                             inline: true
@@ -404,14 +448,14 @@ client.on('guildCreate', guild => {
                             inline: true
                         },
                         {
-                            name: 'Everything else',
-                            value: `User to Bot Ratio: ${notBots}:${bots}\n\nBot Percentage: ${percent}%\n\nMember Count: ${guild.memberCount}\n\nNew Guild Count: ${client.guilds.size}`,
+                            name: 'New Guild Count',
+                            value: client.guilds.size,
                             inline: false
                         }
                     ],
                     footer: {
                         url: client.user.dynamicAvatarURL('png', 512).split('?')[0],
-                        text: `${invite.code ? 'Invite Valid' : 'No Invite'}`
+                        text: 'Invite Valid'
                     }
                 }
             })
@@ -419,7 +463,6 @@ client.on('guildCreate', guild => {
             client.createMessage('479721048296783883', {
                 embed: {
                     title: 'New Server Alert',
-                    url: `${invite.code ? `https://discord.gg/${invite.code}` : ''}`,
                     thumbnail: {
                         url: `${guild.dynamicIconURL('png', 512).split('?')[0]}`
                     },
@@ -440,6 +483,21 @@ client.on('guildCreate', guild => {
                             inline: true
                         },
                         {
+                            name: 'Member Count',
+                            value: guild.memberCount,
+                            inline: true
+                        },
+                        {
+                            name: 'User to Bot Ratio',
+                            value: `${notBots}:${bots}`,
+                            inline: true
+                        },
+                        {
+                            name: 'Bot Percentage',
+                            value: `${percent}%`,
+                            inline: true
+                        },
+                        {
                             name: 'Categories',
                             value: guild.channels.filter(c => c.type === 4).length,
                             inline: true
@@ -455,14 +513,14 @@ client.on('guildCreate', guild => {
                             inline: true
                         },
                         {
-                            name: 'Everything else',
-                            value: `User to Bot Ratio: ${notBots}:${bots}\n\nBot Percentage: ${percent}%\n\nMember Count: ${guild.memberCount}\n\nNew Guild Count: ${client.guilds.size}`,
+                            name: 'New Guild Count',
+                            value: client.guilds.size,
                             inline: false
                         }
                     ],
                     footer: {
                         url: client.user.dynamicAvatarURL('png', 512).split('?')[0],
-                        text: `${invite.code ? 'Invite Valid' : 'No Invite'}`
+                        text: 'No Invite'
                     }
                 }
             })
@@ -1141,8 +1199,18 @@ client.registerCommand('dbl', (msg) => {
                             inline: true
                         },
                         {
+                            name: 'ID',
+                            value: bot.id,
+                            inline: true
+                        },
+                        {
                             name: 'Owner(s)',
                             value: `<@${bot.owners.join('>\n<@')}>`,
+                            inline: true
+                        },
+                        {
+                            name: 'Prefix',
+                            value: bot.prefix,
                             inline: true
                         },
                         {
@@ -1150,12 +1218,22 @@ client.registerCommand('dbl', (msg) => {
                             value: `${bot.shortdesc}`
                         },
                         {
-                            name: 'Other General Bot Info',
-                            value: `ID: ${bot.id}\nPrefix: ${bot.prefix}\nLibrary: ${bot.lib}\nTags: ${bot.tags.join(', ')}\nDay It Was Added To The List: ${new Date(bot.date)}`
+                            name: 'Bot Library',
+                            value: bot.lib,
+                            inline: true
+                        },
+                        {
+                            name: 'DBL Tags',
+                            value: bot.tags.join(', '),
+                            inline: true
+                        },
+                        {
+                            name: 'Added on',
+                            value: new Date(bot.date)
                         },
                         {
                             name: 'Links',
-                            value: `${bot.invite ? `[Invite](${bot.invite})` : 'No Invite'} | ${bot.support ? `[Support Server](https://discord.gg/${bot.support})` : 'No Support Server'} | ${bot.github ? `[GitHub Page](${bot.github})` : 'No GitHub Page'} | ${bot.website ? `[Website](${bot.website})` : 'No Website'}`
+                            value: `${bot.invite ? `[Invite](${bot.invite})` : '~~Invite~~'} | ${bot.support ? `[Support Server](https://discord.gg/${bot.support})` : '~~Support Server~~'} | ${bot.github ? `[GitHub Page](${bot.github})` : '~~GitHub Page~~'} | ${bot.website ? `[Website](${bot.website})` : '~~Website~~'}`
                         }
                     ],
                     image: {
