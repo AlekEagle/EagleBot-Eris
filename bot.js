@@ -26,10 +26,14 @@ const os = require('os');
 const http = require('http');
 //const musicUtils = require('./musicUtils');
 const IFTTTResponseBot = {
-  url: 'https://maker.ifttt.com/trigger/bot_restarted/with/key/bHwWykSwBAGNLWrbUbbObu',
-  headers: {
-    'User-Agent': 'EagleNugget restart bot service'
-  }
+    method: 'POST',
+    url: 'https://maker.ifttt.com/trigger/bot_restarted/with/key/bHwWykSwBAGNLWrbUbbObu',
+    body: {
+        value1: 'EagleNugget'
+    },
+    headers: {
+        'User-Agent': 'EagleNugget restart bot service'
+    }
 }
 function genRanString(length) {
     var text = "";
@@ -1229,7 +1233,7 @@ client.registerCommand('dbl', (msg) => {
                         },
                         {
                             name: 'Added on',
-                            value: new Date(bot.date)
+                            value: new Date(bot.date).toUTCString()
                         },
                         {
                             name: 'Links',
