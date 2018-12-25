@@ -1233,7 +1233,8 @@ client.registerCommand('dbl', (msg) => {
                         },
                         {
                             name: 'Added on',
-                            value: new Date(bot.date).toUTCString()
+                            value: new Date(bot.date).toUTCString(),
+                            inline: true
                         },
                         {
                             name: 'Links',
