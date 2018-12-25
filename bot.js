@@ -25,16 +25,6 @@ const os = require('os');
 //const { PlayerManager } = require('eris-lavalink');
 const http = require('http');
 //const musicUtils = require('./musicUtils');
-const IFTTTResponseBot = {
-    method: 'POST',
-    url: 'https://maker.ifttt.com/trigger/bot_restarted/with/key/bHwWykSwBAGNLWrbUbbObu',
-    json: {
-        value1: 'EagleNugget'
-    },
-    headers: {
-        'User-Agent': 'EagleNugget restart bot service'
-    }
-}
 function genRanString(length) {
     var text = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -180,7 +170,11 @@ function readWal(id) {
 client.on('ready', () => {
     console.log('THIS BOT IS READY BOIIIIII');
     clickbait('../node_server/root/info/theinfostuff/guilds.txt', client.guilds.size)
-    request(IFTTTResponseBot, () => {
+    request.post('https://maker.ifttt.com/trigger/bot_restarted/with/key/bHwWykSwBAGNLWrbUbbObu',{
+        json: {
+            value1: 'EagleNugget'
+        }
+    }, () => {
         console.log('Told IFTTT that I restarted');
     });
 //    if (!(client.voiceConnections instanceof PlayerManager)) {
