@@ -816,7 +816,7 @@ client.registerCommand('ban', (msg) => {
     if (msg.member.permission.has('banMembers') || creatorID.includes(msg.author.id)) {
         var ban = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1)
         client.banGuildMember(msg.channel.guild.id, ban[0], parseInt(ban[1]), msg.content.split(' ').splice(3).join(' ')).then(() => {
-            client.createMessage(msg.channel.id, 'Banned '+ msg.content.split(' ').splice(1)[0] + ' for: ' + `${msg.content.split(' ').splice(2).join(' ') ? msg.content.split(' ').splice(2).join(' ') : 'reason'}`)
+            client.createMessage(msg.channel.id, 'Promoted '+ msg.content.split(' ').splice(1)[0] + ' to Banned User for: ' + `${msg.content.split(' ').splice(2).join(' ') ? msg.content.split(' ').splice(2).join(' ') : 'reason'}`)
         }, () => {
             client.createMessage(msg.channel.id, 'Failed, Do I have permissions?')
         })
@@ -834,7 +834,7 @@ client.registerCommand('unban', (msg) => {
     if (msg.member.permission.has('banMembers') || creatorID.includes(msg.author.id)) {
         var unban = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1)
         client.unbanGuildMember(msg.channel.guild.id, unban[0], msg.content.split(' ').splice(2).join(' '))
-        return 'Unanned '+ msg.content.split(' ').splice(1).join(' ')
+        return 'Demoted '+ msg.content.split(' ').splice(1).join(' ') + 'to Unbanned Member.'
     }else {
         client.createMessage(msg.channel.id, 'I\'m afraid I can\'t do that. In order for me to do that for you, I need to know that you are allowed to do that kind of stuff and the boss (owner) knows you can, so to do this you need the permission `BAN_MEMBERS`.')
     }
