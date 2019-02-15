@@ -109,9 +109,9 @@ function nextShard() {
             }
         })
         app.get('/commands', (req, res) => {
-            res.statusCode = 403;
+            res.statusCode = 200;
             setTimeout(() => {
-                res.end(Object.values(client.commands).map(c => `${!c.hidden ? `<div id="${c.label}">${c.label} ${c.usage ? c.usage : ''}<br>${c.fullDescription}<br>Aliases: ${c.aliases ? c.aliases.join(', ') : 'None'}</div><br><br>` : ``}`))
+                res.end(Object.values(client.commands).map(c => `${c.hidden ? '' : `<div id="${c.label}">${c.label} ${c.usage ? c.usage : ''}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'None'}</div><br><br>`}`).join(''))
             }, 100)
         })
         server.listen(2082)
@@ -165,18 +165,18 @@ function nextShard() {
                         eventlisteners.forEach(ev => {
                             client.removeListener(e, ev);
                         })
-                        var events = fs.readdirSync('./events');
-                        console.log(`Loading ${events.length} events, please wait...`);
-                        events.forEach(e => {
-                            delete require.cache[require.resolve(`./events/${c}`)];
-                            var eventFile = require(`./events/${e}`);
-                            client.on(eventFile.name, (...args) => {
-                                eventFile.exec(client, ...args);
-                            });
-                        });
+                        
                     }
                 });
-                res.end('{ "success": true }');
+                var events = fs.readdirSync('./events');
+                console.log(`Loading ${events.length} events, please wait...`);
+                events.forEach(e => {
+                    delete require.cache[require.resolve(`./events/${e}`)];
+                    var eventFile = require(`./events/${e}`);
+                    client.on(eventFile.name, (...args) => {
+                        eventFile.exec(client, ...args);
+                    });
+                });
             });
             server.listen(parseInt(`3203${i}`))
         }

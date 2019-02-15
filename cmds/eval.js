@@ -8,6 +8,7 @@ let guildCount = require('../functions/getGuilds');
 let eco = require('../functions/economy');
 let prefixes = require('../functions/getPrefixes');
 let toHHMMSS = require('../functions/toReadableTime');
+let fs = require('fs');
 
 module.exports = {
     name: 'eval',

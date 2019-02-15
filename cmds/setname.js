@@ -32,6 +32,7 @@ module.exports = {
     },
 
     options: {
-        fullDescription: 'changes my name! (bot owner only)'
+        fullDescription: 'changes my name! (bot owner only)',
+        hidden: true
     }
 }

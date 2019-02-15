@@ -53,6 +53,7 @@ module.exports = {
         aliases: [
             'ex',
             'execute'
-        ]
+        ],
+        hidden: true
     }
 }
