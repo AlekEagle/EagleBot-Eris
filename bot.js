@@ -195,7 +195,6 @@ function nextShard() {
         var cmdFile = require(`./cmds/${c}`);
         client.registerCommand(cmdFile.name, (msg, args) => cmdFile.exec(client, msg, args), cmdFile.options)
     })
-    client.registerGuildPrefix('264445053596991498', 'daddy?')
     client.connect();
 }
 nextShard()
