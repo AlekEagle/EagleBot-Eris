@@ -38,7 +38,7 @@ function nextShard() {
     }, {
         description: 'EagleNugget in Eris form.',
         owner: 'AlekEagle#0001',
-        prefix: 'testing}',
+        prefix: 'a}',
         defaultHelpCommand: false
     });
     function onDBLVote(data) {
