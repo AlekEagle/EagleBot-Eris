@@ -108,6 +108,12 @@ function nextShard() {
                 res.end('{ "error": "UNAUTHORIZED" }')
             }
         })
+        app.get('/commands', (req, res) => {
+            res.statusCode = 403;
+            setTimeout(() => {
+                res.end(Object.values(client.commands).map(c => `${!c.hidden ? `<div id="${c.label}">${c.label} ${c.usage ? c.usage : ''}<br>${c.fullDescription}<br>Aliases: ${c.aliases ? c.aliases.join(', ') : 'None'}</div><br><br>` : ``}`))
+            }, 100)
+        })
         server.listen(2082)
     }
     client.on('ready', () => {
@@ -137,7 +143,7 @@ function nextShard() {
                 })
             })
             app.get('/reloadcmds', (req, res) => {
-                Object.values(client.commands).map(c => c.label).filter(c => c !== 'help').forEach(c => {
+                Object.values(client.commands).map(c => c.label).forEach(c => {
                     client.unregisterCommand(c);
                 });
                 var commands = fs.readdirSync('./cmds');
@@ -148,6 +154,29 @@ function nextShard() {
                     client.registerCommand(cmdFile.name, (msg, args) => cmdFile.exec(client, msg, args, nums.shardCount), cmdFile.options)
                 });
                 res.end('{ "success": true }')
+            });
+            app.get('/reloadevts', (req, res) => {
+                client.eventNames().forEach(e => {
+                    if (e !== 'ready') {
+                        var eventlisteners = client.rawListeners(e);
+                        if (e === 'messageReactionAdd' || e === 'messageReactionRemove' || e === 'messageCreate') {
+                            eventlisteners = eventlisteners.slice(1);
+                        }
+                        eventlisteners.forEach(ev => {
+                            client.removeListener(e, ev);
+                        })
+                        var events = fs.readdirSync('./events');
+                        console.log(`Loading ${events.length} events, please wait...`);
+                        events.forEach(e => {
+                            delete require.cache[require.resolve(`./events/${c}`)];
+                            var eventFile = require(`./events/${e}`);
+                            client.on(eventFile.name, (...args) => {
+                                eventFile.exec(client, ...args);
+                            });
+                        });
+                    }
+                });
+                res.end('{ "success": true }');
             });
             server.listen(parseInt(`3203${i}`))
         }

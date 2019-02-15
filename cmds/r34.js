@@ -2,6 +2,7 @@
 
 let nums = require('../functions/numbers');
 let manager = require('../functions/blacklistManager');
+let request = require('request')
 
 module.exports = {
     name: 'r34',

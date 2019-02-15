@@ -3,10 +3,6 @@
 let nums = require('../functions/numbers');
 let manager = require('../functions/blacklistManager');
 let owners = require('../functions/getOwners');
-let guildCount = require('../functions/getGuilds');
-let eco = require('../functions/economy');
-let prefixes = require('../functions/getPrefixes');
-let toHHMMSS = require('../functions/toReadableTime');
 
 module.exports = {
     name: 'giveaway',

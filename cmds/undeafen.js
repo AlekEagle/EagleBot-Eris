@@ -5,7 +5,7 @@ let manager = require('../functions/blacklistManager');
 let owners = require('../functions/getOwners');
 
 module.exports = {
-    name: '',
+    name: 'undeafen',
 
     exec: (client, msg, args) => {
         ++nums.cmdsRan

@@ -2,6 +2,7 @@
 
 let nums = require('../functions/numbers');
 let manager = require('../functions/blacklistManager');
+const u_wut_m8 = require('../.auth.json');
 let request = require('request');
 
 module.exports = {
