@@ -1,0 +1,31 @@
+{
+  "permissions": [
+    "createInstantInvite",
+    "kickMembers",
+    "banMembers",
+    "administrator",
+    "manageChannels",
+    "manageGuild",
+    "addReactions",
+    "readMessages",
+    "sendMessages",
+    "sendTTSMessages",
+    "manageMessages",
+    "embedLinks",
+    "attatchFiles",
+    "readMessageHistory",
+    "mentionEveryone",
+    "externalEmojis",
+    "voiceConnect",
+    "voiceSpeak",
+    "voiceMuteMembers",
+    "voiceDeafenMembers",
+    "voiceMoveMembers",
+    "voiceUseVAD",
+    "changeNickname",
+    "manageNicknames",
+    "manageRoles",
+    "manageWebhooks",
+    "manageEmojis"
+  ]
+}
