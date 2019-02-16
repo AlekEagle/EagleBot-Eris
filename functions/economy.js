@@ -1,6 +1,6 @@
 'use strict';
 
-const Map = require('collections/map')
+const Map = require('collections/map');
 const fs = require('fs');
 
 module.exports = {
