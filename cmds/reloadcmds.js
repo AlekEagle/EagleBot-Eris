@@ -9,18 +9,20 @@ module.exports = {
 
     exec: (client, msg, args) => {
         if (owners.isOwner(msg.author.id)) {
-            msg.channel.createMessage('Unloading old commands, updating previous commands, and loading new commands. This may take a bit...')
-            for (let thing = 0; thing < nums.shardCount; thing ++) {
-                request({
-                    method: 'GET',
-                    url: `http://127.0.0.1:3203${thing}/reloadcmds`
-                }, (err, res, body) => {
-                    if (err) {
-                        console.error('can\'t connect to the other shards')
-                        console.error(err)
-                    }
-                })
-            }
+            msg.channel.createMessage(`Unloading \`${Object.values(client.commands).map(c => c.label).length}\` commands and reloading \`${require('fs').readdirSync('./cmds').length}\` commands.`)
+            setTimeout(() => {
+                for (let thing = 0; thing < nums.shardCount; thing ++) {
+                    request({
+                        method: 'GET',
+                        url: `http://127.0.0.1:3203${thing}/reloadcmds`
+                    }, (err, res, body) => {
+                        if (err) {
+                            console.error('can\'t connect to the other shards')
+                            console.error(err)
+                        }
+                    })
+                }
+            }, 500);
         }
     },
 

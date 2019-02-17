@@ -9,18 +9,20 @@ module.exports = {
 
     exec: (client, msg, args) => {
         if (owners.isOwner(msg.author.id)) {
-            msg.channel.createMessage('Reloading event handlers. This may take a bit...')
-            for (let thing = 0; thing < nums.shardCount; thing ++) {
-                request({
-                    method: 'GET',
-                    url: `http://127.0.0.1:3203${thing}/reloadevts`
-                }, (err, res, body) => {
-                    if (err) {
-                        console.error('can\'t connect to the other shards')
-                        console.error(err)
-                    }
-                })
-            }
+            msg.channel.createMessage(`Unloading all events not important to the CommandClient and loading \`${require('fs').readdirSync('./events').length}\` events.`)
+            setTimeout(() => {
+                for (let thing = 0; thing < nums.shardCount; thing ++) {
+                    request({
+                        method: 'GET',
+                        url: `http://127.0.0.1:3203${thing}/reloadevts`
+                    }, (err, res, body) => {
+                        if (err) {
+                            console.error('can\'t connect to the other shards')
+                            console.error(err)
+                        }
+                    })
+                }
+            }, 500);
         }
     },
 
