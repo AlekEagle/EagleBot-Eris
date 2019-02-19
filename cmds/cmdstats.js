@@ -7,7 +7,6 @@ module.exports = {
     name: 'cmdstats',
 
     exec: (client, msg, args) => {
-        stats.updateUses(module.exports.name);
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             var entries = stats.uses.toJSON().sort((a, b) => a[1] - b[1]).reverse();
             if (args[0] === undefined) args[0] = 0; else args[0] = parseInt(args[0])
