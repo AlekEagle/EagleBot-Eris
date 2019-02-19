@@ -1,6 +1,5 @@
 'use strict';
 
-let nums = require('../functions/numbers');
 const fs = require('fs');
 let manager = require('../functions/blacklistManager');
 
@@ -8,7 +7,6 @@ module.exports = {
     name: 'curecancer',
 
     exec: (client, msg, args) => {
-        ++nums.cmdsRan
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             readWal(msg.author.id).then((wal) => {
                 if (parseInt(wal.money) < 100) {msg.channel.createMessage(`You do not have enough e-bucks for research! you need at least ${100 - parseInt(wal.money)} more e-bucks!`)}else {

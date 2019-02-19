@@ -1,13 +1,11 @@
 'use strict';
 
-let nums = require('../functions/numbers');
 let manager = require('../functions/blacklistManager');
 
 module.exports = {
     name: 'vote',
 
     exec: (client, msg, args) => {
-        ++nums.cmdsRan
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             return 'Vote for me at: https://discordbots.org/bot/416274552126177282/vote because yeet.';
         }else {

@@ -9,6 +9,7 @@ let manager = require('./functions/blacklistManager');
 let eco = require('./functions/economy');
 let guilds = require('./functions/getGuilds');
 let toHHMMSS = require('./functions/toReadableTime');
+let stats = require('./functions/commandStatistics');
 const os = require('os');
 let i = 0;
 var corsOptions = {
@@ -151,7 +152,11 @@ function nextShard() {
                 commands.forEach(c => {
                     delete require.cache[require.resolve(`./cmds/${c}`)]
                     var cmdFile = require(`./cmds/${c}`);
-                    client.registerCommand(cmdFile.name, (msg, args) => cmdFile.exec(client, msg, args, nums.shardCount), cmdFile.options)
+                    stats.initializeCommand(cmdFile.name);
+                    client.registerCommand(cmdFile.name, (msg, args) => {
+                        stats.updateUses(cmdFile.name);
+                        cmdFile.exec(client, msg, args);
+                    }, cmdFile.options);
                 });
                 res.end('{ "success": true }')
             });
@@ -222,7 +227,11 @@ function nextShard() {
     console.log(`Loading ${commands.length} commands, please wait...`)
     commands.forEach(c => {
         var cmdFile = require(`./cmds/${c}`);
-        client.registerCommand(cmdFile.name, (msg, args) => cmdFile.exec(client, msg, args), cmdFile.options)
+        stats.initializeCommand(cmdFile.name);
+        client.registerCommand(cmdFile.name, (msg, args) => {
+            stats.updateUses(cmdFile.name);
+            cmdFile.exec(client, msg, args);
+        }, cmdFile.options);
     })
     client.connect();
 }

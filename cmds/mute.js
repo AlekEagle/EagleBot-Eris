@@ -1,6 +1,5 @@
 'use strict';
 
-let nums = require('../functions/numbers');
 let manager = require('../functions/blacklistManager');
 let owners = require('../functions/getOwners');
 
@@ -8,7 +7,6 @@ module.exports = {
     name: 'mute',
 
     exec: (client, msg, args) => {
-        ++nums.cmdsRan
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             var mute = msg.content.replace(/<@/g, '').replace(/!/g, '').replace(/>/g, '').split(' ').splice(1)
             if (msg.member.permission.has('voiceMuteMembers') || owners.isOwner(msg.author.id)) {

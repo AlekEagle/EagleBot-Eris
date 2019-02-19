@@ -1,7 +1,6 @@
 'use strict';
 
-const net = require('net')
-let nums = require('../functions/numbers');
+const net = require('net');
 let manager = require('../functions/blacklistManager');
 let prefixes = require('../functions/getPrefixes');
 let clients = []
@@ -10,7 +9,6 @@ module.exports = {
     name: 'tcp',
 
     exec: (client, msg, args) => {
-        ++nums.cmdsRan
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             switch(args[0]) {
                 case 'connect':

@@ -1,13 +1,11 @@
 'use strict';
 
-let nums = require('../functions/numbers');
 let manager = require('../functions/blacklistManager');
 
 module.exports = {
     name: 'userinfo',
 
     exec: (client, msg, args) => {
-        ++nums.cmdsRan
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             try {
                 var userID = '';

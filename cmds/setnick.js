@@ -1,6 +1,5 @@
 'use strict';
 
-let nums = require('../functions/numbers');
 let owners = require('../functions/getOwners');
 let manager = require('../functions/blacklistManager');
 
@@ -8,7 +7,6 @@ module.exports = {
     name: 'setnick',
 
     exec: (client, msg, args) => {
-        ++nums.cmdsRan
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             if (msg.member.permission.has('manageNicknames') || owners.isOwner(msg.author.id)) {
                 var userID = args[0].replace(/<@/g, '').replace(/>/g, '').replace(/!/g, '')

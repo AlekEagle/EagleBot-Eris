@@ -1,13 +1,11 @@
 'use strict';
 
-let nums = require('../functions/numbers');
 let manager = require('../functions/blacklistManager');
 
 module.exports = {
     name: 'headrub',
 
     exec: (client, msg, args) => {
-        ++nums.cmdsRan
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             var headrubslist = [
                 'http://31.media.tumblr.com/6cccbad91b425c421ae18a1108d03e88/tumblr_ni12jgvWEy1szc9g2o2_500.gif',

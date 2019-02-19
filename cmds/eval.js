@@ -14,7 +14,6 @@ module.exports = {
     name: 'eval',
 
     exec: (client, msg, args) => {
-        nums.cmdsRan = ++nums.cmdsRan
         if (owners.isOwner(msg.author.id)) {
             try {
                 var evalCommand = args.join(' ');

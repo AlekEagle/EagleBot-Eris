@@ -1,6 +1,5 @@
 'use strict';
 
-let nums = require('../functions/numbers');
 let manager = require('../functions/blacklistManager');
 let eco = require('../functions/economy');
 
@@ -8,7 +7,6 @@ module.exports = {
     name: 'spinner',
 
     exec: (client, msg, args) => {
-        ++nums.cmdsRan
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             if (msg.content.split(' ')[1] === undefined) {
                 var displayTime = 0;

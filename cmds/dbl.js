@@ -1,6 +1,5 @@
 'use strict';
 
-let nums = require('../functions/numbers');
 let manager = require('../functions/blacklistManager');
 const u_wut_m8 = require('../.auth.json');
 const DBL = require('dblapi.js');
@@ -10,7 +9,6 @@ module.exports = {
     name: 'dbl',
 
     exec: (client, msg, args) => {
-        ++nums.cmdsRan
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             var botID = msg.content.split(' ').splice(1).join(' ').replace(/<@/ig, '').replace(/!/g, '').replace(/>/g, '');
             if (client.users.get(botID).bot === true) {

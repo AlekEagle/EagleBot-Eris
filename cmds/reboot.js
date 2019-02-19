@@ -1,6 +1,5 @@
 'use strict';
 
-let nums = require('../functions/numbers');
 let manager = require('../functions/blacklistManager');
 let owners = require('../functions/getOwners');
 
@@ -8,7 +7,6 @@ module.exports = {
     name: 'reboot',
 
     exec: (client, msg, args) => {
-        nums.cmdsRan = ++nums.cmdsRan
         if (owners.isOwner(msg.author.id)) {
             client.createMessage(msg.channel.id, `Alright ${msg.author.username}! Imma go take a nap!`)
             setTimeout(() => {

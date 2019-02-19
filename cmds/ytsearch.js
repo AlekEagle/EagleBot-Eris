@@ -1,6 +1,5 @@
 'use strict';
 
-let nums = require('../functions/numbers');
 let manager = require('../functions/blacklistManager');
 const u_wut_m8 = require('../.auth.json');
 let request = require('request');
@@ -9,7 +8,6 @@ module.exports = {
     name: 'ytsearch',
 
     exec: (client, msg, args) => {
-        ++nums.cmdsRan
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             var ytSearch = {
                 'url': `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${msg.content.split(' ').splice(1).join(' ')}&safeSearch=strict&type=video&key=${u_wut_m8.ytauth}&maxResults=50`,

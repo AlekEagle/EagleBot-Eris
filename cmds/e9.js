@@ -1,6 +1,5 @@
 'use strict';
 
-let nums = require('../functions/numbers');
 let manager = require('../functions/blacklistManager');
 let request = require('request');
 
@@ -8,9 +7,7 @@ module.exports = {
     name: 'e9',
 
     exec: (client, msg, args) => {
-        ++nums.cmdsRan
         if (!manager.gblacklist.users.includes(msg.author.id)) {
-            ++nums.theGoodStuff
             var tags = msg.content.split(' ').splice(1).join('+')
             var e6search = {
                 url: 'https://e926.net/post/index.json?tags=order:random+' + tags,

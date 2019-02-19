@@ -1,6 +1,5 @@
 'use strict';
 
-let nums = require('../functions/numbers');
 let manager = require('../functions/blacklistManager');
 let owners = require('../functions/getOwners');
 
@@ -8,7 +7,6 @@ module.exports = {
     name: 'grantrole',
 
     exec: (client, msg, args) => {
-        ++nums.cmdsRan
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             if (msg.member.permission.has('manageRoles') || owners.isOwner(msg.author.id)) {
                 msg.channel.guild.members.get(msg.content.split(' ').splice(1)[0].replace(/<@/g, '').replace(/!/, '').replace(/>/g, '')).addRole(msg.content.split(' ').splice(2).toString().replace(/<@&/g, '').replace(/>/g, ''), msg.author.username + '#' + msg.author.discriminator + ' granted role').then(() => {

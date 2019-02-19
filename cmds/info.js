@@ -9,7 +9,6 @@ module.exports = {
     name: 'info',
 
     exec: (client, msg, args) => {
-        ++nums.cmdsRan
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             var uptime = toHHMMSS(process.uptime().toString())
             var osUptime = toHHMMSS(require('os').uptime().toString())

@@ -1,18 +1,12 @@
 'use strict';
 
-let nums = require('../functions/numbers');
 let manager = require('../functions/blacklistManager');
 let owners = require('../functions/getOwners');
-let guildCount = require('../functions/getGuilds');
-let eco = require('../functions/economy');
-let prefixes = require('../functions/getPrefixes');
-let toHHMMSS = require('../functions/toReadableTime');
 
 module.exports = {
     name: 'setname',
 
     exec: (client, msg, args) => {
-        ++nums.cmdsRan
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             if (owners.isOwner(msg.author.id)) {
                 client.editSelf({

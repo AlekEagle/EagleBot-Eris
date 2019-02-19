@@ -2,18 +2,18 @@
 
 let nums = require('../functions/numbers');
 let manager = require('../functions/blacklistManager');
-let request = require('request')
+let request = require('request');
+let parser = require('xml2json-light')
 
 module.exports = {
     name: 'r34',
 
     exec: (client, msg, args) => {
-        ++nums.cmdsRan
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             var tags = msg.content.split(' ').splice(1).join('+')
             try {
                 if (msg.channel.nsfw) {
-                    ++theGoodStuff
+                    ++nums.theGoodStuff
                     var r34search = {
                         url: 'https://rule34.xxx/index.php?page=dapi&q=index&limit=100&s=post&tags=' + tags + '&q=index',
                         headers: {

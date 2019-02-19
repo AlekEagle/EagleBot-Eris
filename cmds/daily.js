@@ -1,6 +1,5 @@
 'use strict';
 
-let nums = require('../functions/numbers');
 let manager = require('../functions/blacklistManager');
 let eco = require('../functions/economy');
 
@@ -8,7 +7,6 @@ module.exports = {
     name: 'daily',
 
     exec: (client, msg, args) => {
-        ++nums.cmdsRan
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             eco.readWal(msg.author.id).then((wal) => {
                 eco.updateWal(msg.author.id, parseInt(wal.money) + 200, wal.spinner)

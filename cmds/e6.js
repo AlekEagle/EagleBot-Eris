@@ -8,11 +8,10 @@ module.exports = {
     name: 'e6',
 
     exec: (client, msg, args) => {
-        ++nums.cmdsRan
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             var tags = msg.content.split(' ').splice(1).join('+')
             if (msg.channel.nsfw) {
-                ++theGoodStuff
+                ++nums.theGoodStuff
                 var e6search = {
                     url: 'https://e621.net/post/index.json?tags=order:random+' + tags,
                     headers: {

@@ -1,14 +1,13 @@
 'use strict';
 
-let nums = require('../functions/numbers');
 let manager = require('../functions/blacklistManager');
 let owners = require('../functions/getOwners');
+let exec = require('child_process').exec;
 
 module.exports = {
     name: 'exec',
 
     exec: (client, msg, args) => {
-        ++nums.cmdsRan
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             if (owners.isOwner(msg.author.id)) {
                 var execstuff = msg.content.split(' ').splice(1).join(' ')

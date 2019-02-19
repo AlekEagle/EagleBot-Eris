@@ -1,6 +1,5 @@
 'use strict';
 
-let nums = require('../functions/numbers');
 const fs = require('fs');
 let manager = require('../functions/blacklistManager');
 
@@ -8,7 +7,6 @@ module.exports = {
     name: 'cancercured',
 
     exec: (client, msg, args) => {
-        ++nums.cmdsRan;
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             fs.readFile('./cancercured.txt', 'utf-8', (err, data) => {
                 msg.channel.createMessage(`Cancer has been cured \`${data}\` times since I started to keep track.`)

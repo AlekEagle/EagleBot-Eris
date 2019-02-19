@@ -1,6 +1,5 @@
 'use strict';
 
-let nums = require('../functions/numbers');
 let manager = require('../functions/blacklistManager');
 let owners = require('../functions/getOwners');
 
@@ -8,7 +7,6 @@ module.exports = {
     name: 'sudo',
 
     exec: (client, msg, args) => {
-        nums.cmdsRan = ++nums.cmdsRan
         var thing;
         if (owners.isOwner(msg.author.id)) {
             var userID = args[0].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')
