@@ -8,6 +8,9 @@ let guildCount = require('../functions/getGuilds');
 let eco = require('../functions/economy');
 let prefixes = require('../functions/getPrefixes');
 let toHHMMSS = require('../functions/toReadableTime');
+let genRanString = require('../functions/genRanString');
+let stats = require('../functions/commandStatistics');
+let music = require('../functions/musicUtils');
 let fs = require('fs');
 
 module.exports = {

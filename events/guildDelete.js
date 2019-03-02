@@ -1,18 +1,19 @@
 'use strict';
 
 let guildCount = require('../functions/getGuilds');
+let u_wut_m8 = require('../.auth.json');
 
 module.exports = {
     name: 'guildDelete',
 
     exec: (client, guild) => {
-        client.sendChannelTyping('479721048296783883')
         var bots = guild.members.filter(m => m.bot).length;
         var notBots = guild.memberCount-bots;
         var percent = Math.floor((bots / guild.memberCount) * 100);
-        guildCount.getGuildCount().then(guilds => {
-            client.createMessage('479721048296783883', {
-                embed: {
+        guildCount().then(guilds => {
+            client.executeWebhook('547588483502440464', u_wut_m8.webhookTokenThing, {
+                embeds: [
+                    {
                     title: 'Server Leave Alert',
                     thumbnail: {
                         url: `${guild.dynamicIconURL('png', 512) ? guild.dynamicIconURL('png', 512).split('?')[0] : 'https://cdn.discordapp.com/avatars/503720029456695306/cb6bb2fc3e552a68064d06f808d71fa8.png'}`
@@ -64,9 +65,11 @@ module.exports = {
                         text: `${client.user.username}#${client.user.discriminator}`
                     }
                 }
+            ]
             }).catch(() => {
-                client.createMessage('479721048296783883', {
-                    embed: {
+                client.executeWebhook('547588483502440464', u_wut_m8.webhookTokenThing, {
+                    embeds: [
+                    {
                         title: 'Server Leave Alert',
                         thumbnail: {
                             url: `${guild.dynamicIconURL('png', 512) ? guild.dynamicIconURL('png', 512).split('?')[0] : 'https://cdn.discordapp.com/avatars/503720029456695306/cb6bb2fc3e552a68064d06f808d71fa8.png'}`
@@ -118,6 +121,7 @@ module.exports = {
                             text: `${client.user.username}#${client.user.discriminator}`
                         }
                     }
+                ]
                 })
             });
         });
