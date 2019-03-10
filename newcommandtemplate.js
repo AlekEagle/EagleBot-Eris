@@ -1,18 +1,20 @@
 'use strict';
 
-let nums = require('../functions/numbers');
-let manager = require('../functions/blacklistManager');
-let owners = require('../functions/getOwners');
-let guildCount = require('../functions/getGuilds');
-let eco = require('../functions/economy');
-let prefixes = require('../functions/getPrefixes');
-let toHHMMSS = require('../functions/toReadableTime');
+let nums = require('./functions/numbers');
+let manager = require('./functions/blacklistManager');
+let owners = require('./functions/getOwners');
+let guildCount = require('./functions/getGuilds');
+let eco = require('./functions/economy');
+let prefixes = require('./functions/getPrefixes');
+let toHHMMSS = require('./functions/toReadableTime');
+let genRanString = require('./functions/genRanString');
+let stats = require('./functions/commandStatistics');
+let music = require('./functions/musicUtils');
 
 module.exports = {
     name: '',
 
     exec: (client, msg, args) => {
-        ++nums.cmdsRan
         if (!manager.gblacklist.users.includes(msg.author.id)) {
         
         }else {
