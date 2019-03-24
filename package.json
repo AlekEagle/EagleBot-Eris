@@ -5,6 +5,7 @@
   "main": "bot.js",
   "author": "AlekEagleYT",
   "dependencies": {
+    "@sentry/node": "^4.6.4",
     "axios": "^0.18.0",
     "collections": "^5.1.8",
     "cors": "^2.8.5",
