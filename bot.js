@@ -11,6 +11,8 @@ let guilds = require('./functions/getGuilds');
 let toHHMMSS = require('./functions/toReadableTime');
 let stats = require('./functions/commandStatistics');
 const os = require('os');
+const Sentry = require('@sentry/node');
+Sentry.init({ dsn: 'https://56d2fbaa674c4f4ca9290bb7c71963f7@sentry.io/1415433' });
 let i = 0;
 var corsOptions = {
     origin: true,

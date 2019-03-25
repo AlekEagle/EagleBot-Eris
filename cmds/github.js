@@ -7,7 +7,7 @@ module.exports = {
 
     exec: (client, msg, args) => {
         if (!manager.gblacklist.users.includes(msg.author.id)) {
-            return 'here you go: https://github.com/AlekEagleYT/EagleBot-Eris';
+            msg.channel.createMessage('here you go: https://github.com/AlekEagleYT/EagleBot-Eris');
         }else {
             msg.author.getDMChannel().then(chn => {
                 chn.createMessage('You have been blacklisted from EagleNugget! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.').catch(() => {

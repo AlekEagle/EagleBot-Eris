@@ -37,7 +37,7 @@ module.exports = {
                 }catch(err) {
                     if (err) {
                         valid = false;
-                        return 'Not a valid user!'
+                        msg.channel.createMessage('Not a valid user!');
                     }
                 }
                 if (valid) {

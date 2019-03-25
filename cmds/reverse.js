@@ -8,7 +8,7 @@ module.exports = {
     exec: (client, msg, args) => {
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             var reversed = msg.content.split(' ').splice(1).join(' ').split('').reverse().join('')
-            return reversed;
+            msg.channel.createMessage(reversed);
         }else {
             msg.author.getDMChannel().then(chn => {
                 chn.createMessage('You have been blacklisted from EagleNugget! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.').catch(() => {

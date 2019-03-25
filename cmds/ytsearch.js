@@ -34,7 +34,7 @@ module.exports = {
                                 }
                             })
                         }else {
-                            return 'I smell no videos by that name.'
+                            msg.channel.createMessage('I smell no videos by that name.');
                         }
                     }
                 })

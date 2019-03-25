@@ -9,9 +9,9 @@ module.exports = {
     exec: (client, msg, args) => {
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             if (owners.isOwner(msg.author.id)) {
-                return 'Ahh, yes, I remember you, your ' + msg.author.username + '#' + msg.author.discriminator + ', your my dad (I got no mom)'
+                msg.channel.createMessage('Ahh, yes, I remember you, your ' + msg.author.username + '#' + msg.author.discriminator + ', your my dad (I got no mom)');
             }else {
-                return 'PFFFT, No you ain\'t the heccing owner <:DABBIT:478982290530107392>'
+                msg.channel.createMessage('PFFFT, No you ain\'t the heccing owner <:DABBIT:478982290530107392>');
             }
         }else {
             msg.author.getDMChannel().then(chn => {

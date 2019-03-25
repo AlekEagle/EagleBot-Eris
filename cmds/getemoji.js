@@ -10,7 +10,7 @@ module.exports = {
             var emojiID = msg.content.split(' ').splice(1).join(' ').split(':').splice(2).join(':').replace(/>/g, '')
             var animated = msg.content.split(' ').splice(1).join(' ').split(':')[0].replace(/</g, '')
             if (emojiID.length == 0) {
-                return 'This emoji is either not a custom emoji, or is not accessable.'
+                msg.channel.createMessage('This emoji is either not a custom emoji, or is not accessable.');
             }else {
                 client.createMessage(msg.channel.id, {
                     embed: {
