@@ -32,7 +32,7 @@ module.exports = {
                                     client.createMessage(msg.channel.id, 'saved your meme even though it sucks').then(() => {
                                 if (err !== undefined) {
                                     fs.readdir('./good_memes_probably/', (err, files) => {
-                                        clickbait('../node_server/root/info/theinfostuff/memes.txt', files.join(', ').replace(/.meme/g, ''))
+                                        clickbait('../node_server/root/eaglenugget/info/theinfostuff/memes.txt', files.join(', ').replace(/.meme/g, ''))
                                     });
                                 }
                             });
@@ -51,7 +51,7 @@ module.exports = {
                     });
                 break;
                 case 'listmeme':
-                    return 'goto https://alekeagle.tk/info/memes for all of the memes.';
+                    return 'goto https://alekeagle.tk/eaglenugget/info/memes for all of the memes.';
                 break;
                 case 'delmeme':
                     if (owners.isOwner(msg.author.id)) {

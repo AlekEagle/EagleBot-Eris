@@ -13,7 +13,7 @@ module.exports = {
             }else if (Object.values(client.commands).filter(c => c.aliases.includes(msg.content.split(' ').splice(1).join(' ')))[0] !== undefined) {
                 command = `#${Object.values(client.commands).filter(c => c.aliases.includes(msg.content.split(' ').splice(1).join(' ')))[0].label}`
             }
-            return `goto https://alekeagle.tk/info/commands${command} for commands`;
+            msg.channel.createMessage(`goto https://alekeagle.tk/eaglenugget/info/commands${command} for commands`);
         }else {
             msg.author.getDMChannel().then(chn => {
                 chn.createMessage('You have been blacklisted from EagleNugget! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.').catch(() => {

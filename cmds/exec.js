@@ -17,8 +17,8 @@ module.exports = {
                             client.editMessage(message.channel.id, message.id, 'OOF I BROKE: ```' + err + '```')
                         }else {
                             if (stdout.length > 2000) {
-                                client.editMessage(message.channel.id, message.id, 'Output too large, goto https://alekeagle.tk/exec_out.').then(() => {
-                                fs.writeFile('../node_server/root/exec_out/exec_output.txt', stdout.replace(client.token, "(insert token here)"), (err) => {
+                                client.editMessage(message.channel.id, message.id, 'Output too large, goto https://alekeagle.tk/eaglenugget/exec_out.').then(() => {
+                                fs.writeFile('../node_server/root/eaglenugget/exec_out/exec_output.txt', stdout.replace(client.token, "(insert token here)"), (err) => {
                                     if (err != undefined) {
                                         client.createMessage(message.channel.id, 'An error occurred while this action was being preformed error code: `' + err.code + '`')
                                     }

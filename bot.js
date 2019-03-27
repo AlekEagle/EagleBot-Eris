@@ -11,8 +11,7 @@ let guilds = require('./functions/getGuilds');
 let toHHMMSS = require('./functions/toReadableTime');
 let stats = require('./functions/commandStatistics');
 const os = require('os');
-const Sentry = require('@sentry/node');
-Sentry.init({ dsn: 'https://56d2fbaa674c4f4ca9290bb7c71963f7@sentry.io/1415433' });
+
 let i = 0;
 var corsOptions = {
     origin: true,
@@ -129,22 +128,6 @@ function nextShard() {
                 res.statusCode = 200;
                 res.end(client.guilds.size.toString())
             })
-            app.post('/vote', (req, res) => {
-                let body = '';
-                req.on('data', chunk => {
-                    body += chunk.toString();
-                });
-                req.on('end', () => {
-                    body = JSON.parse(body)
-                    if (JSON.parse(body).type === 'test') {
-                        console.log(JSON.parse(body))
-                        onDBLVote(JSON.parse(body))
-                    }else {
-                        onDBLVote(JSON.parse(body))
-                    }
-                    res.end('{"success":"true"}')
-                })
-            })
             app.get('/reloadcmds', (req, res) => {
                 Object.values(client.commands).map(c => c.label).forEach(c => {
                     client.unregisterCommand(c);
@@ -211,12 +194,12 @@ function nextShard() {
                             evaluation = evaluation.replace(client.token, '(insert token here)')
                         }
                         if (evaluation.length > 2000) {
-                            fs.writeFile('/home/pi/node_server/root/eval_out/eval_output.txt', evaluation.replace(/\n/g, '<br>'), (err) => {
+                            fs.writeFile('/home/pi/node_server/root/eaglenugget/eval_out/eval_output.txt', evaluation.replace(/\n/g, '<br>'), (err) => {
                                 if (err != undefined) {
                                     res.end('An error occurred while this action was being preformed error code: `' + err.code + '`')
                                 }
                             });
-                            res.end('Output too large, it should be on your website at https://alekeagle.tk/eval_out')
+                            res.end('Output too large, it should be on your website at https://alekeagle.tk/eaglenugget/eval_out')
                         }else {
                             res.end(evaluation)
                         }
