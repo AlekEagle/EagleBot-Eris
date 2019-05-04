@@ -4,6 +4,8 @@ let manager = require('../functions/blacklistManager');
 const u_wut_m8 = require('../.auth.json');
 const DBL = require('dblapi.js');
 const dbl = new DBL(u_wut_m8.dblToken, {});
+const Logger = require('./functions/logger');
+const console = new Logger();
 
 module.exports = {
     name: 'dbl',

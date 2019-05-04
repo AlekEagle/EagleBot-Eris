@@ -3,6 +3,8 @@
 const owners = require('../functions/getOwners');
 const request = require('request');
 let nums = require('../functions/numbers');
+const Logger = require('./functions/logger');
+const console = new Logger();
 
 module.exports = {
     name: 'reloadcmds',

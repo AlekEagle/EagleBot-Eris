@@ -3,7 +3,9 @@ const fs = require('fs');
 const u_wut_m8 = require('./.auth.json');
 const DBL = require('dblapi.js');
 const request = require('request');
-const cors = require('cors')
+const cors = require('cors');
+const Logger = require('./functions/logger');
+const console = new Logger();
 let nums = require('./functions/numbers');
 let manager = require('./functions/blacklistManager');
 let eco = require('./functions/economy');
@@ -11,16 +13,17 @@ let guilds = require('./functions/getGuilds');
 let toHHMMSS = require('./functions/toReadableTime');
 let stats = require('./functions/commandStatistics');
 const os = require('os');
-
+const Sentry = require('@sentry/node');
+Sentry.init({ dsn: 'https://56d2fbaa674c4f4ca9290bb7c71963f7@sentry.io/1415433' });
 let i = 0;
 var corsOptions = {
     origin: true,
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-  }
+}
 const options = {
     key: fs.readFileSync('../node_server/alekeagle.tk.key'),
     cert: fs.readFileSync('../node_server/alekeagle.tk.pem')
-  }
+}
 const dbl = new DBL(u_wut_m8.dblToken, {});
 manager.manageBlacklist({action: 'refresh', blklist: 'gblk'}).then(list => {
     console.log(`Loaded global user blacklist. There are currently ${list.users.length} user entry(s).`);
@@ -94,7 +97,7 @@ function nextShard() {
                 req.on('end', () => {
                     body = JSON.parse(body)
                     if (body.bot === '503720029456695306'){
-                        request.post(`http://localhost:42030/vote`,{
+                        request.post(`http://localhost:4200/vote`,{
                             json: body
                         });
                     }else if (body.type === 'test') {
@@ -116,7 +119,7 @@ function nextShard() {
                 res.end(Object.values(client.commands).map(c => `${c.hidden ? '' : `<div id="${c.label}">${c.label} ${c.usage ? c.usage : ''}<br>${c.fullDescription}<br>Aliases: ${c.aliases[0] ? c.aliases.join(', ') : 'None'}</div><br><br>`}`).join(''))
             }, 100)
         })
-        server.listen(2082)
+        server.listen(2083)
     }
     client.on('ready', () => {
         console.log(`Connected to shard ${i}`);

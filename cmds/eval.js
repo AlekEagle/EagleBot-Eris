@@ -12,6 +12,8 @@ let genRanString = require('../functions/genRanString');
 let stats = require('../functions/commandStatistics');
 let music = require('../functions/musicUtils');
 let fs = require('fs');
+const Logger = require('./functions/logger');
+const console = new Logger();
 
 module.exports = {
     name: 'eval',
@@ -22,7 +24,7 @@ module.exports = {
                 var evalCommand = args.join(' ');
                 let evaluation = eval(evalCommand);
                 if (typeof evaluation !== "string") {
-                    evaluation = util.inspect(evaluation).replace(client.token, '(insert token here)')
+                    evaluation = JSON.stringify(evaluation).replace(client.token, '(insert token here)')
                 }else {
                     evaluation = evaluation.replace(client.token, '(insert token here)')
                 }

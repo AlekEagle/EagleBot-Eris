@@ -1,6 +1,8 @@
 'use strict';
 
 let manager = require('../functions/blacklistManager');
+const Logger = require('./functions/logger');
+const console = new Logger();
 
 module.exports = {
     name: 'say',
@@ -8,9 +10,9 @@ module.exports = {
     exec: (client, msg, args) => {
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             var sayMessage = args.join(' ');
-            console.log(msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ') Made the bot say: ' + sayMessage);
+            console.info(msg.author.username + '#' + msg.author.discriminator + ' (' + msg.author.id + ') Made the bot say: ' + sayMessage);
             client.deleteMessage(msg.channel.id, msg.id).catch(() => {});
-            return sayMessage;
+            msg.channel.createMessage(sayMessage);
         }else {
             msg.author.getDMChannel().then(chn => {
                 chn.createMessage('You have been blacklisted from EagleNugget! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.').catch(() => {

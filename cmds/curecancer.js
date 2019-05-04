@@ -2,7 +2,9 @@
 
 const fs = require('fs');
 let manager = require('../functions/blacklistManager');
-let eco = require('../functions/economy')
+let eco = require('../functions/economy');
+const Logger = require('./functions/logger');
+const console = new Logger();
 
 module.exports = {
     name: 'curecancer',

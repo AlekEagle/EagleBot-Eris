@@ -14,7 +14,7 @@
     "eris-lavalink": "^1.0.2",
     "express": "^4.16.4",
     "moment": "^2.22.2",
-    "npm": "^6.4.1",
+    "npm": "^6.9.0",
     "request": "^2.88.0",
     "snekfetch": "^4.0.4",
     "winston": "^3.0.0",
