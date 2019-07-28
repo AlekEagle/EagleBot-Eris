@@ -18,7 +18,7 @@ module.exports = {
                             msg.channel.createMessage('An unknown error occured, please check the console.');
                             console.error(err)
                         }else {
-                            msg.channel.createMessage(`https://alekeagle.tk/screenshots/${name}.${msg.attachments[0].url.split('/')[6].split('.')[1]}`)
+                            msg.channel.createMessage(`https://alekeagle.com/screenshots/${name}.${msg.attachments[0].url.split('/')[6].split('.')[1]}`)
                             fs.unlink(msg.attachments[0].url.split('/')[6]);
                         }
                     })
@@ -28,8 +28,8 @@ module.exports = {
             }
         }else {
             msg.author.getDMChannel().then(chn => {
-                chn.createMessage('You have been blacklisted from EagleNugget! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.').catch(() => {
-                    msg.channel.createMessage(`<@${msg.author.id}> You have been blacklisted from EagleNugget! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.`)
+                chn.createMessage('You have been blacklisted from EagleNugget! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.').catch(() => {
+                    msg.channel.createMessage(`<@${msg.author.id}> You have been blacklisted from EagleNugget! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.`)
                 })
             })
         }

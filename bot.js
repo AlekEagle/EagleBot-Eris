@@ -21,8 +21,8 @@ var corsOptions = {
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 const options = {
-    key: fs.readFileSync('../node_server/alekeagle.tk.key'),
-    cert: fs.readFileSync('../node_server/alekeagle.tk.pem')
+    key: fs.readFileSync('../node_server/alekeagle.com.key'),
+    cert: fs.readFileSync('../node_server/alekeagle.com.pem')
 }
 const dbl = new DBL(u_wut_m8.dblToken, {});
 manager.manageBlacklist({action: 'refresh', blklist: 'gblk'}).then(list => {
@@ -202,7 +202,7 @@ function nextShard() {
                                     res.end('An error occurred while this action was being preformed error code: `' + err.code + '`')
                                 }
                             });
-                            res.end('Output too large, it should be on your website at https://alekeagle.tk/eaglenugget/eval_out')
+                            res.end('Output too large, it should be on your website at https://alekeagle.com/eaglenugget/eval_out')
                         }else {
                             res.end(evaluation)
                         }

@@ -17,7 +17,7 @@ module.exports = {
                             client.editMessage(message.channel.id, message.id, 'OOF I BROKE: ```' + err + '```')
                         }else {
                             if (stdout.length > 2000) {
-                                client.editMessage(message.channel.id, message.id, 'Output too large, goto https://alekeagle.tk/eaglenugget/exec_out.').then(() => {
+                                client.editMessage(message.channel.id, message.id, 'Output too large, goto https://alekeagle.com/eaglenugget/exec_out.').then(() => {
                                 fs.writeFile('../node_server/root/eaglenugget/exec_out/exec_output.txt', stdout.replace(client.token, "(insert token here)"), (err) => {
                                     if (err != undefined) {
                                         client.createMessage(message.channel.id, 'An error occurred while this action was being preformed error code: `' + err.code + '`')
@@ -39,8 +39,8 @@ module.exports = {
             }
         }else {
             msg.author.getDMChannel().then(chn => {
-                chn.createMessage('You have been blacklisted from EagleNugget! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.').catch(() => {
-                    msg.channel.createMessage(`<@${msg.author.id}> You have been blacklisted from EagleNugget! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.`)
+                chn.createMessage('You have been blacklisted from EagleNugget! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.').catch(() => {
+                    msg.channel.createMessage(`<@${msg.author.id}> You have been blacklisted from EagleNugget! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.`)
                 })
             })
         }

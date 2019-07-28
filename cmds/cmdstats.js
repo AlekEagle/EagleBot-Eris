@@ -15,8 +15,8 @@ module.exports = {
             msg.channel.createMessage(`This is page ${args[0] + 1} of ${Math.ceil(entries.length / 5)}\n\`\`\`${entries.slice(0 + (5 * args[0]), 5 + (5 * args[0])).map(e => `${entries.indexOf(e) + 1}. ${e[0]}: ${e[1]} uses`).join('\n')}\`\`\``)
         }else {
             msg.author.getDMChannel().then(chn => {
-                chn.createMessage('You have been blacklisted from dad bot! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.').catch(() => {
-                    msg.channel.createMessage(`<@${msg.author.id}> You have been blacklisted from dad bot! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.`)
+                chn.createMessage('You have been blacklisted from dad bot! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.').catch(() => {
+                    msg.channel.createMessage(`<@${msg.author.id}> You have been blacklisted from dad bot! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.`)
                 })
             })
         }
